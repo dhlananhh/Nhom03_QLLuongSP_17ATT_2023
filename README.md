@@ -1,2 +1,2 @@
-# Nhom03_DeTai03_17ATT_2023
+# Nhom03_QLLuongSP_17ATT_2023
  Đề tài Quản lý lương sản phẩm
