@@ -28,7 +28,6 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	private JPanel pnContent, pnNorth, pnCenter, pnSouth;
 	private JLabel lblTieuDe, lblTaiKhoan, lblMatKhauMoi, lblNhapLaiMKMoi;
 	private JTextField txtTaiKhoan;
 	private JPasswordField txtMatKhauMoi, txtNhapLaiMKMoi;
@@ -37,90 +36,68 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 	
 	
 	public GUI_QuenMatKhau() {
-		buildGUI();
-	}
-	
-	
-	public void buildGUI() {
-		setTitle("Đổi mật khẩu");
+		setTitle("QUÊN MẬT KHẨU");
 		setSize(500, 350);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(true);
-		setLocationRelativeTo(null);
-		
+		setLocationRelativeTo(null);	
 		createAndDisplayGUI();
 	}
-	
-	
 	public void createAndDisplayGUI() {
-		Color bgColor = new Color(0, 153, 204);
+		Color bgColor = new Color(0, 102, 204);
 		
-		//main panel
-		pnContent = new JPanel();
-		pnContent.setLayout(new BorderLayout());
+		//panel
+		JPanel pContent = new JPanel();
+		pContent.setLayout(new BorderLayout());
 		
-		//pnNorth chứa tiêu đề
-		pnNorth = new JPanel();
-		pnContent.add(pnNorth, BorderLayout.NORTH);
-		pnNorth.setBackground(bgColor);
+		JPanel pTop = new JPanel();
+		pContent.add(pTop, BorderLayout.NORTH);
+		pTop.setBackground(bgColor);
 		
-		lblTieuDe = new JLabel("QUÊN MẬT KHẨU");
+		pTop.add(lblTieuDe = new JLabel("QUÊN MẬT KHẨU"));
 		lblTieuDe.setFont(new Font("Arial", Font.BOLD, 25));
 		lblTieuDe.setForeground(Color.WHITE);
-		pnNorth.add(lblTieuDe);
+	
+		JPanel pCenter = new JPanel();
+		pContent.add(pCenter, BorderLayout.CENTER);
 		
-		//pnCenter chứa các box, label & textfield username, password
-		pnCenter = new JPanel();
-		pnContent.add(pnCenter, BorderLayout.CENTER);
-		
-		Box b = Box.createVerticalBox();
-		Box b1 = Box.createHorizontalBox();
-		Box b2 = Box.createHorizontalBox();
-		Box b3 = Box.createHorizontalBox();
-		Box b4 = Box.createHorizontalBox();
-		Box b5 = Box.createHorizontalBox();
-		Box b6 = Box.createHorizontalBox();
-		
-		lblTaiKhoan = new JLabel("Tài khoản: ");
-		lblMatKhauMoi = new JLabel("Mật khẩu mới: ");
-		lblNhapLaiMKMoi = new JLabel("Nhập lại mật khẩu mới: ");
-		
-		txtTaiKhoan = new JTextField(20);
-		txtMatKhauMoi = new JPasswordField(20);
-		txtNhapLaiMKMoi = new JPasswordField(20);
-		chkShowPwd = new JCheckBox("Show password");
-		
+		JPanel pBot = new JPanel();
+		pContent.add(pBot, BorderLayout.SOUTH);
+		//Box
+		Box b, b1, b2, b3, b4;
+		b = Box.createVerticalBox();
+		b1 = Box.createVerticalBox();
+		b2 = Box.createVerticalBox();
+		b3 = Box.createVerticalBox();
+		//b1
+		b1.add(lblTaiKhoan = new JLabel("Tài khoản: "));
+		b1.add(Box.createVerticalStrut(10));
+		b1.add(txtTaiKhoan = new JTextField(20));
+		//b2
+		b2.add(lblMatKhauMoi = new JLabel("Mật khẩu mới: "));
+		b2.add(Box.createVerticalStrut(10));
+		b2.add(txtMatKhauMoi = new JPasswordField(20));
+		//b3
+		b3.add(lblNhapLaiMKMoi = new JLabel("Nhập lại mật khẩu mới: "));
+		b3.add(Box.createVerticalStrut(10));
+		b3.add(txtNhapLaiMKMoi = new JPasswordField(20));
+		//btn
+		pBot.add(btnXacNhan = new JButton("Xác nhận"));
+		//pBot.add(new Di)
+		pBot.add(btnHuy = new JButton("Hủy bỏ"));
+		//chkShowPwd = new JCheckBox("Show password");
+		//font label
 		lblTaiKhoan.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		lblMatKhauMoi.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		lblNhapLaiMKMoi.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		
-		b1.add(lblTaiKhoan);
-		b1.add(txtTaiKhoan);
-		b2.add(lblMatKhauMoi);
-		b2.add(txtMatKhauMoi);
-		b3.add(lblNhapLaiMKMoi);
-		b3.add(txtNhapLaiMKMoi);
-		b4.add(chkShowPwd);
-		
-		btnXacNhan = new JButton("Xác nhận");
-		btnHuy = new JButton("Hủy");
-		
 		btnXacNhan.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		btnHuy.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		
-		btnXacNhan.setBackground(bgColor);
+		btnXacNhan.setBackground(new Color(37, 187, 214));
 		btnXacNhan.setForeground(Color.WHITE);
-		btnHuy.setBackground(bgColor);
+		btnHuy.setBackground(new Color(37, 187, 214));
 		btnHuy.setForeground(Color.WHITE);
-		
-		b5.add(btnXacNhan);
-		b5.add(Box.createHorizontalStrut(10));
-		b5.add(btnHuy);
-		
-		lblTaiKhoan.setPreferredSize(lblNhapLaiMKMoi.getPreferredSize());
-		lblMatKhauMoi.setPreferredSize(lblNhapLaiMKMoi.getPreferredSize());
-		
-		//thêm các box con (b1,b2...) vào box lớn b
+	
+		//add box
 		b.add(Box.createRigidArea(new Dimension(0, 20)));
 		b.add(b1);
 		b.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -128,34 +105,20 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		b.add(Box.createRigidArea(new Dimension(0, 20)));
 		b.add(b3);
 		b.add(Box.createRigidArea(new Dimension(0, 20)));
-		b.add(b4);
-		b.add(Box.createRigidArea(new Dimension(0, 20)));
-		b.add(b5);
-		b.add(Box.createRigidArea(new Dimension(0, 20)));
-				
-		//thêm box b vào pnCenter
-		pnCenter.add(b);
-		
-		addActionEvent();
-		
-		Container container = getContentPane();
-		container.add(pnContent);
-	}
-	
-	
-	//đăng ký sự kiện cho các button
-	public void addActionEvent() {
+		pContent.add(b);
+		//action
 		btnXacNhan.addActionListener(this);
 		btnHuy.addActionListener(this);
-		chkShowPwd.addActionListener(this);
+		//chkShowPwd.addActionListener(this);
+		
+		Container container = getContentPane();
+		container.add(pContent);
 	}
 	
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-Object o = e.getSource();
-		
+		Object o = e.getSource();
+
 		if (o.equals(btnXacNhan)) {
 			String userText;
             String pwdText;
@@ -174,7 +137,7 @@ Object o = e.getSource();
                 System.exit(0); 
             }
 		} 
-		else if (o.equals(chkShowPwd)) {
+		/*else if (o.equals(chkShowPwd)) {
 			if (chkShowPwd.isSelected()) {
 				txtMatKhauMoi.setEchoChar((char) 0);
 				txtNhapLaiMKMoi.setEchoChar((char) 0);
@@ -183,16 +146,16 @@ Object o = e.getSource();
             	txtNhapLaiMKMoi.setEchoChar('*');
             }
 		}
-		
+		*/
 	}
 	
 	
 	public static void main(String[] args) throws Exception {
-//		try {
-//		    UIManager.setLookAndFeel( new FlatLightLaf() );
-//		} catch( Exception ex ) {
-//		    System.err.println( "Failed to initialize LaF" );
-//		}
+		try {
+		    UIManager.setLookAndFeel( new FlatLightLaf() );
+		} catch( Exception ex ) {
+		    System.err.println( "Failed to initialize LaF" );
+		}
 		
 		FlatDarculaLaf.updateUI();
 		
