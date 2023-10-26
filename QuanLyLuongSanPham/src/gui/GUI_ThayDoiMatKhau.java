@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,18 +26,18 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 
-public class GUI_QuenMatKhau extends JFrame implements ActionListener {
+public class GUI_ThayDoiMatKhau extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel pnNorth, pnCenter, pnSouth;
-	private JLabel lblTieuDe, lblTaiKhoan, lblMatKhauMoi, lblNhapLaiMKMoi;
-	private JTextField txtTaiKhoan;
+	private JLabel lblTieuDe, lblMatKhauCu, lblMatKhauMoi, lblNhapLaiMKMoi;
+	private JTextField txtMatKhauCu;
 	private JPasswordField txtMatKhauMoi, txtNhapLaiMKMoi;
 	private JButton btnXacNhan, btnHuy;
 	private JCheckBox chkShowPwd;
 	
 	
-	public GUI_QuenMatKhau() {
-		setTitle("Quên mật khẩu");
+	public GUI_ThayDoiMatKhau() {
+		setTitle("Đổi mật khẩu");
 		setSize(500, 350);
 		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		//setSize(screenSize.width, screenSize.height);
@@ -76,9 +75,9 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		Box b5 = Box.createHorizontalBox();
 		Box b6 = Box.createHorizontalBox();
 		//b1
-		b1.add(lblTaiKhoan = new JLabel("Tài khoản: "));
+		b1.add(lblMatKhauCu = new JLabel("Mật khẩu cũ: "));
 		b1.add(Box.createVerticalStrut(10));
-		b1.add(txtTaiKhoan = new JTextField(20));
+		b1.add(txtMatKhauCu= new JTextField(20));
 		//b2
 		b2.add(lblMatKhauMoi = new JLabel("Mật khẩu mới: "));
 		b2.add(Box.createVerticalStrut(10));
@@ -88,12 +87,12 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		b3.add(Box.createVerticalStrut(10));
 		b3.add(txtNhapLaiMKMoi = new JPasswordField(20));
 		//preference
-		lblTaiKhoan.setPreferredSize(lblNhapLaiMKMoi.getPreferredSize());
+		lblMatKhauCu.setPreferredSize(lblNhapLaiMKMoi.getPreferredSize());
 		lblMatKhauMoi.setPreferredSize(lblNhapLaiMKMoi.getPreferredSize());
 		//chkShowPwd = new JCheckBox("Show password");
 		//b4.add(chkShowPwd);
 		//font
-		lblTaiKhoan.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		lblMatKhauCu.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		lblMatKhauMoi.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		lblNhapLaiMKMoi.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		//add box
@@ -128,11 +127,11 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
 		if (o.equals(btnXacNhan)) {
-			String userText;
+			String oldPwd;
             String pwdText;
-            userText = txtTaiKhoan.getText();
+            oldPwd = txtMatKhauCu.getText();
             pwdText = txtMatKhauMoi.getText();
-            if (userText.equalsIgnoreCase("admin") && pwdText.equalsIgnoreCase("123456")) {
+            if (oldPwd.equalsIgnoreCase("admin") && pwdText.equalsIgnoreCase("123456")) {
                 JOptionPane.showMessageDialog(this, "Login Successful");
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Username or Password");
@@ -161,6 +160,6 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 	
 	public static void main(String[] args) throws Exception {
 		FlatLightLaf.setup();	
-		new GUI_QuenMatKhau().setVisible(true);
+		new GUI_ThayDoiMatKhau().setVisible(true);
 	}
 }
