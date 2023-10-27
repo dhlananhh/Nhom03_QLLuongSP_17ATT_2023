@@ -31,6 +31,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 
 public class GUI_TinhLuong extends JFrame implements ActionListener {
+	private static final long serialVersionUID = 1L;
 	private JPanel pnContent, pnNorth, pnCenter;
 	private JPanel pnTable, pnTableNV, pnTableCN;
 	private JLabel lblTieuDe, lblNam, lblThang, lblLoaiBangLuong;
@@ -42,11 +43,13 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 	
 
 	public GUI_TinhLuong() {
+		//set JFrame properties
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width, screenSize.height);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
+		//load fonts
 		try {
 			String fileName = "src/fonts/BeVietnamPro-Black.ttf";
 			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
@@ -56,6 +59,7 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 		
+		//create new color
 		Color headerColor = new Color(0, 102, 204);
 		Color bgColor = new Color(245, 251, 255);
 		Color buttonColor = new Color(0, 153, 204);
@@ -67,7 +71,7 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 		pnContent.add(pnNorth, BorderLayout.NORTH);
 		pnNorth.setBackground(headerColor);
 		
-		lblTieuDe = new JLabel("Tính lương");
+		lblTieuDe = new JLabel("TÍNH LƯƠNG");
 		pnNorth.add(lblTieuDe);
 		lblTieuDe.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 25));
 		lblTieuDe.setForeground(Color.WHITE);
@@ -85,34 +89,41 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 		Box b1 = Box.createHorizontalBox();
 		
 		lblNam = new JLabel("Năm: ");
-		String[] years = {
+		lblNam.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		String[] years = {"---Chọn---",
 	            "2020", "2021", "2022", "2023", "2024"
 	        };
 		cbNam = new JComboBox<>(years);
+		cbNam.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		
 		lblThang = new JLabel("Tháng: ");
-		String[] months = {
+		lblThang.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		String[] months = {"---Chọn---",
 	            "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
 	            "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
 	        };
 		cbThang = new JComboBox<>(months);
+		cbThang.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		
 		lblLoaiBangLuong = new JLabel("Loại bảng lương: ");
+		lblLoaiBangLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		cbLoaiBangLuong = new JComboBox();
-		cbLoaiBangLuong.addItem("Lương NVHC");
-		cbLoaiBangLuong.addItem("Lương CNSX");
+		cbLoaiBangLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		cbLoaiBangLuong.addItem("---Chọn---");
+		cbLoaiBangLuong.addItem("Lương tháng");
+		cbLoaiBangLuong.addItem("Lương sản phẩm");
 		
 		btnLoc = new JButton("Lọc");
 		btnXoa = new JButton("Xóa");
 		btnLuu = new JButton("Lưu");
 		
-		btnLoc.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 12));
+		btnLoc.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		btnLoc.setBackground(buttonColor);
 		btnLoc.setForeground(Color.WHITE);
-		btnXoa.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 12));
+		btnXoa.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		btnXoa.setBackground(buttonColor);
 		btnXoa.setForeground(Color.WHITE);
-		btnLuu.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 12));
+		btnLuu.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		btnLuu.setBackground(buttonColor);
 		btnLuu.setForeground(Color.WHITE);
 		
@@ -202,7 +213,7 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 		
 		if (o.equals(btnLoc)) {
 			String str = (String) cbLoaiBangLuong.getSelectedItem();
-			if (str.contains("Lương NVHC")) {
+			if (str.contains("Lương tháng")) {
 				pnTableNV.setVisible(true);
 				pnTableCN.setVisible(false);
 			} else {
