@@ -113,7 +113,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		
 		btnLoc.setBackground(new Color(0, 153, 204));
 		btnLoc.setForeground(Color.WHITE);
-		//tạo panel chứa box b3 chứa dữ liệu
+		//tạo panel chứa box b3 chứa dữ liệu.
 		JPanel pnBoxContent = new JPanel();
 		pnBoxContent.setBackground(new Color(206, 234, 255));
 		b2.add(pnBoxContent);
