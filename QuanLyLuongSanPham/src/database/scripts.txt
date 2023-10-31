@@ -1,0 +1,107 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table SanPham {
+  ID integer [PK]
+  TenSP nvarchar
+  GhiChu nvarchar 
+}
+
+Table CongDoan {
+  ID integer [PK]
+  TenCD nvarchar
+  GhiChu nvarchar 
+}
+
+Table CongDoan_SanPham {
+  ID integer [PK]
+  SP_ID [FK]
+  CD_ID [FK]
+  DonGia double
+}
+
+
+Ref: CongDoan_SanPham.SP_ID > SanPham.ID
+Ref: CongDoan_SanPham.CD_ID > CongDoan.ID
+
+Table Luong {
+  ID integer [PK]
+  Nam integer
+  Thang integer
+  Loai nvarchar(2) //1: lương hành chính, 2: lương sản phẩm
+  TenBangLuong nvarchar
+  TrangThai boolean
+}
+
+Table ChiTietLHC {
+  ID integer [PK]
+  Luong_ID [FK]
+  NhanVien_ID [FK]
+}
+
+Table ChiTietLSP {
+  ID integer [PK]
+  Luong_ID [FK]
+  NhanVien_ID [FK]
+}
+
+Ref: ChiTietLHC.ID > Luong.ID
+Ref: ChiTietLSP.ID > Luong.ID
+Ref: ChiTietLHC.NhanVien_ID > NhanVien.ID
+Ref: ChiTietLSP.NhanVien_ID > NhanVien.ID
+
+Table NhanVien {
+  ID integer [PK]
+  HoTen nvarchar
+  NgaySinh datetime
+  GioiTinh boolean
+  CCCD nvarchar
+  BHXH nvarchar
+  MST nvarchar
+  PhongBan_ID [FK]
+  ChucDanh_ID [FK]
+  NgayVao datetime
+  TrangThai boolean
+  CheDoLuong boolean
+}
+
+Table TaiKhoan {
+  ID integer [PK]
+  TenTK nvarchar
+  MatKhau nvarchar
+}
+
+Table PhongBan {
+  ID integer [PK]
+  TenPB nvarchar
+  GhiChu nvarchar 
+}
+
+Table ChucDanh {
+  ID integer [PK]
+  TenCD nvarchar
+  GhiChu nvarchar
+}
+
+Ref: NhanVien.PhongBan_ID > PhongBan.ID
+Ref: NhanVien.ChucDanh_ID > ChucDanh.ID
+
+Table ThongTinLuong {
+  NhanVien_ID [FK]
+  LuongChinh double
+  PCTrachNhiem double
+  PCAnTrua double
+  PCDienThoai double
+  PCXangXe double
+  DonGiaSP double
+  CongViec_ID [FK]
+}
+
+Ref: ThongTinLuong.NhanVien_ID - NhanVien.ID
+Ref: ThongTinLuong.CongViec_ID > CongDoan_SanPham.ID
+
+Table ThamSoHeThong {
+  ID integer [PK]
+  Ten nvarchar
+  GiaTri nvarchar
+}
