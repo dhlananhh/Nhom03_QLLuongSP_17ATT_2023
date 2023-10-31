@@ -95,7 +95,7 @@ public class GUI_BangChamCong extends JFrame {
 		pnContent.add(pnBot, BorderLayout.SOUTH);
 		pnBot.setBackground(new Color(245, 251, 255));
 		pnBot.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
-		//pCenter
+		//pnCenter
 		Box b, b1, b2, b2_1, b2_2;
 		b = Box.createVerticalBox();
 		b1 = Box.createHorizontalBox();
