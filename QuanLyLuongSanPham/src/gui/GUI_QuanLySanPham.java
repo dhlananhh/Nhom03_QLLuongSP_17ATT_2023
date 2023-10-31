@@ -59,9 +59,9 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 	private Font BVNPro;
 	public GUI_QuanLySanPham() {
 		setTitle("Quản lý sản phẩm");
-		//setSize(1900, 600);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setSize(screenSize.width, screenSize.height);
+		setSize(1300, 700);
+		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		//setSize(screenSize.width, screenSize.height);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
@@ -101,7 +101,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		b1 = Box.createHorizontalBox();
 		b2 = Box.createHorizontalBox();
 		//b1
-		b1.add(Box.createHorizontalStrut(900));
+		b1.add(Box.createHorizontalStrut(700));
 		b1.add(btnLoc = new JButton("Lọc"));
 		b1.add(Box.createHorizontalStrut(10));
 		b1.add(cbLoc = new JComboBox<String>());
@@ -110,6 +110,9 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		cbLoc.addItem("Trạng thái");
 		b1.add(Box.createHorizontalStrut(10));
 		b1.add(txtLoc = new JTextField(15));
+		
+		btnLoc.setBackground(new Color(0, 153, 204));
+		btnLoc.setForeground(Color.WHITE);
 		//tạo panel chứa box b3 chứa dữ liệu
 		JPanel pnBoxContent = new JPanel();
 		pnBoxContent.setBackground(new Color(206, 234, 255));
@@ -166,6 +169,13 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		b3_6.add(btnSua = new JButton("Sửa"));
 		b3_6.add(Box.createHorizontalStrut(50));
 		b3_6.add(btnXoa = new JButton("Xóa"));
+		
+		btnThem.setBackground(new Color(0, 153, 204));
+		btnThem.setForeground(Color.WHITE);
+        btnSua.setBackground(new Color(0, 153, 204));
+        btnSua.setForeground(Color.WHITE);
+        btnXoa.setBackground(new Color(0, 153, 204));
+        btnXoa.setForeground(Color.WHITE);
 		//preferencec b3
 		lblMSP.setPreferredSize(lblTenSP.getPreferredSize());
 		lblTrangThai.setPreferredSize(lblTenSP.getPreferredSize());
@@ -202,6 +212,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		modelSP = new DefaultTableModel(col2, 0);
 		tableSP = new JTable(modelSP);
 		JScrollPane scrollSP = new JScrollPane(tableSP);
+		scrollSP.setPreferredSize(new Dimension(500, 250));
 		c.add(scrollSP);
 		c.add(Box.createHorizontalStrut(80));
 		//table Cong doan
@@ -209,6 +220,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		modelCD = new DefaultTableModel(col3, 0);
 		tableCD = new JTable(modelCD);
 		JScrollPane scrollCD = new JScrollPane(tableCD);
+		scrollCD.setPreferredSize(new Dimension(500, 250));
 		c.add(scrollCD);
 		pnBot.add(c);
 
