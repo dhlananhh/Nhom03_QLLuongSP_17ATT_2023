@@ -37,8 +37,8 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		//set JFrame properties
 //		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 //		setSize(screenSize.width, screenSize.height);
-//		setExtendedState(MAXIMIZED_BOTH);
-		
+		setExtendedState(MAXIMIZED_BOTH);
+//		setSize(new Dimension(500, 200));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
@@ -84,6 +84,7 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		JPanel pnTTLuong = new JPanel();
 		pnCenter.add(pnTTLuong, BorderLayout.CENTER);
 		pnTTLuong.setBackground(bgColor);
+//		pnTTLuong.setLayout(new BorderLayout());
 		
 		JPanel pnTTLuongHC = new JPanel();
 		pnTTLuong.add(pnTTLuongHC);
@@ -449,47 +450,47 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		
 		pnTTLuongHC.add(k);
 				
-		Box t = Box.createVerticalBox();
-		Box t1 = Box.createHorizontalBox();
-		pnTTLuongSP.add(t);
-		
-		t1.add(lblCongViec);
-		t1.add(cbCongViec);
-		t.add(t1);
-		pnTTLuongSP.add(t);
-		
-		JPanel pnPhuCapCN = new JPanel();
-		pnPhuCapCN.setBorder(BorderFactory.createTitledBorder(null, "Phụ cấp"));
-		pnTTLuongSP.add(pnPhuCapCN, BorderLayout.CENTER);
-		pnPhuCapCN.setBackground(bgColor);
-		
-		Box g = Box.createVerticalBox();
-		Box h = Box.createVerticalBox(); 		
-		
-		Box g1 = Box.createHorizontalBox();
-		
-		Box h1 = Box.createHorizontalBox();
-		Box h2 = Box.createHorizontalBox();
-		
-		//cột 1
-		g1.add(lblAnTruaCN);
-		g1.add(txtAnTruaCN);
-		
-		g.add(Box.createVerticalStrut(10));
-		g.add(g1);
-		
-		//cột 2
-		h1.add(lblDienThoaiCN);
-		h1.add(txtDienThoaiCN);
-		h2.add(lblXangXeCN);
-		h2.add(txtXangXeCN);
-		
-		lblXangXeCN.setPreferredSize(lblDienThoaiCN.getPreferredSize());
-		
-		h.add(Box.createVerticalStrut(10));
-		h.add(h1);
-		h.add(Box.createVerticalStrut(10));
-		h.add(h2);
+//		Box t = Box.createVerticalBox();
+//		Box t1 = Box.createHorizontalBox();
+//		pnTTLuongSP.add(t);
+//		
+//		t1.add(lblCongViec);
+//		t1.add(cbCongViec);
+//		t.add(t1);
+//		pnTTLuongSP.add(t);
+//		
+//		JPanel pnPhuCapCN = new JPanel();
+//		pnPhuCapCN.setBorder(BorderFactory.createTitledBorder(null, "Phụ cấp"));
+//		pnTTLuongSP.add(pnPhuCapCN, BorderLayout.CENTER);
+//		pnPhuCapCN.setBackground(bgColor);
+//		
+//		Box g = Box.createVerticalBox();
+//		Box h = Box.createVerticalBox(); 		
+//		
+//		Box g1 = Box.createHorizontalBox();
+//		
+//		Box h1 = Box.createHorizontalBox();
+//		Box h2 = Box.createHorizontalBox();
+//		
+//		//cột 1
+//		g1.add(lblAnTruaCN);
+//		g1.add(txtAnTruaCN);
+//		
+//		g.add(Box.createVerticalStrut(10));
+//		g.add(g1);
+//		
+//		//cột 2
+//		h1.add(lblDienThoaiCN);
+//		h1.add(txtDienThoaiCN);
+//		h2.add(lblXangXeCN);
+//		h2.add(txtXangXeCN);
+//		
+//		lblXangXeCN.setPreferredSize(lblDienThoaiCN.getPreferredSize());
+//		
+//		h.add(Box.createVerticalStrut(10));
+//		h.add(h1);
+//		h.add(Box.createVerticalStrut(10));
+//		h.add(h2);
 		
 		
 		JPanel pnSouth = new JPanel();

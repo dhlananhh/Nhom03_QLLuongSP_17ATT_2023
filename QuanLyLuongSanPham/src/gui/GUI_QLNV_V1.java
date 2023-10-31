@@ -232,7 +232,7 @@ public class GUI_QLNV_V1 extends JFrame implements ActionListener {
 		
 		cbCheDoLuong = new JComboBox();
 		cbCheDoLuong.addItem("---Chọn---");
-		cbCheDoLuong.addItem("Lương tháng");
+		cbCheDoLuong.addItem("Lương hành chính");
 		cbCheDoLuong.addItem("Lương sản phẩm");
 		
 		lblCheDoLuong = new JLabel("Chế độ lương: ");
