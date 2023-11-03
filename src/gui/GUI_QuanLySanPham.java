@@ -29,33 +29,13 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 	private JPanel pnContent;
-	private JLabel lblTieuDe;
+	private JLabel lblTieuDe, lblMSP, lblMCD, lblTenSP, lblTenCD, lblLuongSP, lblTrangThai, lblSoLuong, lblGiaThanh;
 	private DefaultTableModel modelSP;
-	private JTable tableSP;
+	private JTable tableSP, tableCD;
 	private DefaultTableModel modelCD;
-	private JTable tableCD;
-	private JButton btnLoc;
-	private JComboBox<String> cbLoc;
-	private JTextField txtLoc;
-	private JLabel lblMSP;
-	private JTextField txtMSP;
-	private JLabel lblMCD;
-	private JTextField txtMCD;
-	private JLabel lblTenSP;
-	private JTextField txtTenSP;
-	private JLabel lblTenCD;
-	private JTextField txtTenCD;
-	private JLabel lblLuongSP;
-	private JTextField txtLuongSP;
-	private JLabel lblTrangThai;
-	private JComboBox<String> cbTrangThai;
-	private JLabel lblSoLuong;
-	private JTextField txtSoLuong;
-	private JLabel lblGiaThanh;
-	private JTextField txtGiaThanh;
-	private JButton btnThem;
-	private JButton btnSua;
-	private JButton btnXoa;
+	private JButton btnLoc, btnThem, btnSua, btnXoa;
+	private JComboBox<String> cbLoc, cbTrangThai;
+	private JTextField txtLoc, txtMSP, txtMCD, txtTenSP, txtTenCD, txtLuongSP, txtSoLuong, txtGiaThanh;
 	private Font BVNPro;
 	public GUI_QuanLySanPham() {
 		setTitle("Quản lý sản phẩm");
@@ -146,11 +126,11 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		b3_3.add(lblTrangThai = new JLabel("Trạng thái:"));
 		b3_3.add(Box.createHorizontalStrut(20));
 		b3_3.add(cbTrangThai = new JComboBox<String>());
-		cbTrangThai.addItem("Còn hàng");
-		cbTrangThai.addItem("Hết hàng");
-		b3_3.add(Box.createHorizontalStrut(280));
+		cbTrangThai.addItem("Còn sản xuất");
+		cbTrangThai.addItem("Ngưng sản xuất");
+		b3_3.add(Box.createHorizontalStrut(248));
 		b3_3.add(lblLuongSP = new JLabel("Lương sản phẩm:"));
-		b3_3.add(Box.createHorizontalStrut(20));
+		b3_3.add(Box.createHorizontalStrut(22));
 		b3_3.add(txtLuongSP = new JTextField(15));
 		
 		b3_4.add(lblSoLuong = new JLabel("Số lượng:"));

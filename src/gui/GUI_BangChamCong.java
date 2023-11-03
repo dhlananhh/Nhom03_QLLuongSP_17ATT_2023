@@ -29,34 +29,15 @@ import com.toedter.calendar.JDateChooser;
 
 public class GUI_BangChamCong extends JFrame {
 	private JPanel pnContent;
-	private JLabel lblTieuDe;
+	private JLabel lblTieuDe, lblNgay, lblMaCN, lblTenCD, lblMaSP, lblTenSP, lblMaCD, lblTenCN, lblChiTieu, lblSoLuongHT;
 	private Font BVNPro;
-	private DefaultTableModel modelCC;
-	private JTable tableCC;
-	private JLabel lblNgay;
-	private JButton btnLoc;
+	private DefaultTableModel modelCC, modelHT;
+	private JTable tableCC, tableHT;
+	//private JLabel lblNgay;
+	private JButton btnLoc, btnLuu;
 	private JComboBox<String> cbLoc;
-	private JTextField txtLoc;
+	private JTextField txtLoc, txtMaCN, txtTenCN, txtMaSP, txtTenSP, txtMaCD, txtTenCD, txtChiTieu, txtSoLuongHT;
 	private JCheckBox ckDatCT;
-	private JLabel lblMaCN;
-	private JTextField txtMaCN;
-	private JTextField txtTenCN;
-	private JLabel lblTenCD;
-	private JTextField txtMaSP;
-	private JLabel lblMaSP;
-	private JLabel lblTenSP;
-	private JTextField txtTenSP;
-	private JLabel lblMaCD;
-	private JTextField txtMaCD;
-	private JTextField txtTenCD;
-	private JLabel lblTenCN;
-	private JLabel lblChiTieu;
-	private JTextField txtChiTieu;
-	private JLabel lblSoLuongHT;
-	private JTextField txtSoLuongHT;
-	private JButton btnLuu;
-	private DefaultTableModel modelHT;
-	private JTable tableHT;
 	public GUI_BangChamCong() {
 		setTitle("Bảng chấm công");
 		setSize(1300, 700);
@@ -66,7 +47,7 @@ public class GUI_BangChamCong extends JFrame {
 		setLocationRelativeTo(null);
 		//font
 		try {
-			String fileName = "src/fonts/BeVietnamPro-Black.ttf";
+			String fileName = "fonts/BeVietnamPro-Black.ttf";
 			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)));
@@ -217,7 +198,14 @@ public class GUI_BangChamCong extends JFrame {
         b.add(Box.createRigidArea(new Dimension(0, 20)));
         b.add(b2);
         pnCenter.add(b);
-        
+        //
+        txtMaCN.setEditable(false);
+        txtTenCN.setEditable(false);
+        txtMaCD.setEditable(false);
+        txtTenCD.setEditable(false);
+        txtChiTieu.setEditable(false);
+        txtMaSP.setEditable(false);
+        txtTenSP.setEditable(false);
 		//pbot
 		String col[] = {"Mã công nhân","Tên công nhân","Mã sản phẩm","Tên sản phẩm","Mã công đoạn"
 				,"Tên công đoạn","Chỉ tiêu","Hoàn thành"};
