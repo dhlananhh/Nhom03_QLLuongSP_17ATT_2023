@@ -34,8 +34,8 @@ public class GUI_ThayDoiMatKhau extends JFrame implements ActionListener {
 	private JPasswordField txtMatKhauMoi, txtNhapLaiMKMoi;
 	private JButton btnXacNhan, btnHuy;
 	private JCheckBox chkShowPwd;
-	
-	
+
+
 	public GUI_ThayDoiMatKhau() {
 		setTitle("Đổi mật khẩu");
 		setSize(500, 350);
@@ -43,25 +43,25 @@ public class GUI_ThayDoiMatKhau extends JFrame implements ActionListener {
 		//setSize(screenSize.width, screenSize.height);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-	
+
 		//panel
 		JPanel pnContent = new JPanel();
 		pnContent.setLayout(new BorderLayout());
 		add(pnContent);
-		
+
 		JPanel pnTop = new JPanel();
 		pnContent.add(pnTop, BorderLayout.NORTH);
 		pnTop.setBackground(new Color(0, 102, 204));
-		
+
 		lblTieuDe = new JLabel("QUÊN MẬT KHẨU");
 		lblTieuDe.setFont(new Font("Arial", Font.BOLD, 25));
 		lblTieuDe.setForeground(Color.WHITE);
 		pnTop.add(lblTieuDe);
-		
+
 		pnCenter = new JPanel();
 		pnContent.add(pnCenter, BorderLayout.CENTER);
 		pnCenter.setBackground(new Color(245, 251, 255));
-		
+
 		JPanel pnBot = new JPanel();
 		pnContent.add(pnBot, BorderLayout.SOUTH);
 		pnBot.setBackground(new Color(245, 251, 255));
@@ -118,7 +118,7 @@ public class GUI_ThayDoiMatKhau extends JFrame implements ActionListener {
 		btnHuy.addActionListener(this);
 		btnHuy.setPreferredSize(btnXacNhan.getPreferredSize());
 		//chkShowPwd.addActionListener(this);
-		
+
 	}
 
 
@@ -153,11 +153,11 @@ public class GUI_ThayDoiMatKhau extends JFrame implements ActionListener {
             	txtNhapLaiMKMoi.setEchoChar('*');
             }
 		}*/
-		
-		
+
+
 	}
-	
-	
+
+
 	public static void main(String[] args) throws Exception {
 		FlatLightLaf.setup();	
 		new GUI_ThayDoiMatKhau().setVisible(true);

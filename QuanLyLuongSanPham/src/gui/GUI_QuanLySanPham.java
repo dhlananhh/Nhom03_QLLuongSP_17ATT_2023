@@ -60,13 +60,12 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 	public GUI_QuanLySanPham() {
 		setTitle("Quản lý sản phẩm");
 		setSize(1300, 700);
-		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		//setSize(screenSize.width, screenSize.height);
+		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
 		try {
-			String fileName = "src/fonts/BeVietnamPro-Black.ttf";
+			String fileName = "fonts/BeVietnamPro-Black.ttf";
 			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)));
