@@ -43,7 +43,7 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		
 		//load fonts
 		try {
-			String fileName = "src/fonts/BeVietnamPro-Black.ttf";
+			String fileName = "fonts/BeVietnamPro-Black.ttf";
 			Font BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)));
@@ -127,11 +127,20 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		cbTrangThai.addItem("Đang làm");
 		cbTrangThai.addItem("Nghỉ việc");
 		
-		JLabel lblCheDoLuong = new JLabel("Chế độ lương: ");
-		JComboBox cbCheDoLuong = new JComboBox();
-		cbCheDoLuong.addItem("---Chọn---");
-		cbCheDoLuong.addItem("Lương hành chính");
-		cbCheDoLuong.addItem("Lương sản phẩm");
+		JLabel lblBangCap = new JLabel("Bằng cấp: ");
+		JComboBox cbBangCap = new JComboBox();
+		cbBangCap.addItem("---Chọn---");
+		cbBangCap.addItem("Cử nhân");
+		cbBangCap.addItem("Thạc sỹ");
+		cbBangCap.addItem("Tiến sỹ");
+		
+		JTextField txtLuongChinh = new JTextField();
+		JLabel lblPhuCap = new JLabel("Phụ cấp: ");
+		JTextField txtPhuCap = new JTextField();
+		JLabel lblGiamTru = new JLabel("Giảm trừ: ");
+		JTextField txtGiamTru = new JTextField();
+		JLabel lblTamUng = new JLabel("Tạm ứng: ");
+		JTextField txtTamUng = new JTextField();
 		
 		lblHoTenNV.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		txtHoTenNV.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
@@ -154,12 +163,20 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		lblChucDanh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		cbChucDanh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblTrangThai.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		cbTrangThai.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblCheDoLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		cbCheDoLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		cbTrangThai.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));		
+		lblBangCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		cbBangCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		txtLuongChinh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		lblPhuCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		txtPhuCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		lblGiamTru.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		txtGiamTru.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		lblTamUng.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		txtTamUng.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		
 		JPanel pnThongTin = new JPanel();
 		pnCenter.add(pnThongTin, BorderLayout.NORTH);
+		pnThongTin.setBackground(bgColor);
 		
 		Box a = Box.createVerticalBox();
 		Box b = Box.createVerticalBox();
@@ -218,6 +235,7 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		
 		lblBHXH.setPreferredSize(lblCCCD.getPreferredSize());
 		lblMST.setPreferredSize(lblCCCD.getPreferredSize());
+		lblNgayVao.setPreferredSize(lblCCCD.getPreferredSize());
 		
 		b.add(b1);
 		b.add(Box.createVerticalStrut(10));
@@ -232,7 +250,6 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		Box c2 = Box.createHorizontalBox();
 		Box c3 = Box.createHorizontalBox();
 		Box c4 = Box.createHorizontalBox();
-		Box c5 = Box.createHorizontalBox();
 		
 		c1.add(lblPhongBan);
 		c1.add(cbPhongBan);
@@ -240,13 +257,13 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		c2.add(cbChucDanh);
 		c3.add(lblTrangThai);
 		c3.add(cbTrangThai);
-		c4.add(lblCheDoLuong);
-		c4.add(cbCheDoLuong);
+		c4.add(lblBangCap);
+		c4.add(cbBangCap);
 		
-		lblNgayVao.setPreferredSize(lblCheDoLuong.getPreferredSize());
-		lblPhongBan.setPreferredSize(lblCheDoLuong.getPreferredSize());
-		lblChucDanh.setPreferredSize(lblCheDoLuong.getPreferredSize());
-		lblTrangThai.setPreferredSize(lblCheDoLuong.getPreferredSize());
+		lblPhongBan.setPreferredSize(lblChucDanh.getPreferredSize());
+		lblChucDanh.setPreferredSize(lblChucDanh.getPreferredSize());
+		lblTrangThai.setPreferredSize(lblChucDanh.getPreferredSize());
+		lblBangCap.setPreferredSize(lblChucDanh.getPreferredSize());
 		
 		c.add(c1);
 		c.add(Box.createVerticalStrut(10));
@@ -255,20 +272,36 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		c.add(c3);
 		c.add(Box.createVerticalStrut(10));
 		c.add(c4);
-		c.add(Box.createVerticalStrut(10));
-		c.add(c5);
 		
-		Box d1 = Box.createHorizontalBox();
-		btnThietLapLuong = new JButton("Thiết lập lương");
-		btnThietLapLuong.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 15));
-		btnThietLapLuong.setBackground(buttonColor);
-		btnThietLapLuong.setForeground(Color.WHITE);
-		
-		d1.add(btnThietLapLuong);
-		d.add(d1);
+//		Box d1 = Box.createHorizontalBox();
+//		Box d2 = Box.createHorizontalBox();
+//		Box d3 = Box.createHorizontalBox();
+//		Box d4 = Box.createHorizontalBox();
+//				
+//		d1.add(lblBangCap);
+//		d1.add(txtLuongChinh);
+//		d2.add(lblPhuCap);
+//		d2.add(txtPhuCap);
+//		d3.add(lblGiamTru);
+//		d3.add(txtGiamTru);
+//		d4.add(lblTamUng);
+//		d4.add(txtTamUng);
+//		
+//		lblPhuCap.setPreferredSize(lblBangCap.getPreferredSize());
+//		lblGiamTru.setPreferredSize(lblBangCap.getPreferredSize());
+//		lblTamUng.setPreferredSize(lblBangCap.getPreferredSize());
+//		
+//		d.add(d1);
+//		d.add(Box.createVerticalStrut(10));
+//		d.add(d2);
+//		d.add(Box.createVerticalStrut(10));
+//		d.add(d3);
+//		d.add(Box.createVerticalStrut(10));
+//		d.add(d4);
 		
 		JPanel pnTacVu = new JPanel();
 		pnCenter.add(pnTacVu, BorderLayout.CENTER);
+		pnTacVu.setBackground(bgColor);
 		
 		JComboBox cbLoc = new JComboBox();
 		cbLoc.addItem("---Chọn---");
@@ -292,6 +325,7 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		
 		JPanel pnTable = new JPanel();
 		pnCenter.add(pnTable, BorderLayout.SOUTH);
+		pnTable.setBackground(bgColor);
 		
 		DefaultTableModel model = new DefaultTableModel();
 		JTable table = new JTable(model);
@@ -309,7 +343,7 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		model.addColumn("Phòng ban");
 		model.addColumn("Chức danh");
 		model.addColumn("Trạng thái");
-		model.addColumn("Chế độ lương");
+		model.addColumn("Bằng cấp");
 		
 		JScrollPane sp = new 	JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -320,7 +354,7 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		container.add(pnContent);
 		
 		btnLoc.addActionListener(this);
-		btnThietLapLuong.addActionListener(this);
+
 	}
 	
 	
