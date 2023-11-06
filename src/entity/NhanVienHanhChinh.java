@@ -18,6 +18,9 @@ public class NhanVienHanhChinh implements Serializable {
 	private ChucDanh chucDanh;
 	private String trangThai;
 	private String bangCap;
+	private double luongCoBan;
+	private double phuCap;
+	private float heSoLuong;
 	
 	
 	//---constructors---
@@ -34,7 +37,7 @@ public class NhanVienHanhChinh implements Serializable {
 
 	public NhanVienHanhChinh(String maNV, String hoTenNV, String gioiTinh, LocalDate ngaySinh, String diaChi,
 			String CCCD, String BHXH, String MST, LocalDate ngayVao, PhongBan phongBan, ChucDanh chucDanh,
-			String trangThai, String bangCap) {
+			String trangThai, String bangCap, double luongCoBan, double phuCap, float heSoLuong) {
 		this.maNV = maNV;
 		this.hoTenNV = hoTenNV;
 		this.gioiTinh = gioiTinh;
@@ -48,6 +51,9 @@ public class NhanVienHanhChinh implements Serializable {
 		this.chucDanh = chucDanh;
 		this.trangThai = trangThai;
 		this.bangCap = bangCap;
+		this.luongCoBan = luongCoBan;
+		this.phuCap = phuCap;
+		this.heSoLuong = heSoLuong;
 	}
 
 
@@ -179,6 +185,36 @@ public class NhanVienHanhChinh implements Serializable {
 
 	public void setBangCap(String bangCap) {
 		this.bangCap = bangCap;
+	}
+
+	
+	public double getLuongCoBan() {
+		return luongCoBan;
+	}
+
+
+	public void setLuongCoBan(double luongCoBan) {
+		this.luongCoBan = luongCoBan;
+	}
+
+
+	public double getPhuCap() {
+		return phuCap;
+	}
+
+
+	public void setPhuCap(double phuCap) {
+		this.phuCap = phuCap;
+	}
+
+
+	public float getHeSoLuong() {
+		return heSoLuong;
+	}
+
+
+	public void setHeSoLuong(float heSoLuong) {
+		this.heSoLuong = heSoLuong;
 	}
 
 

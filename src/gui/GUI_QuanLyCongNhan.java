@@ -1,10 +1,10 @@
 package gui;
 
 
+import javax.swing.JFrame;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,7 +26,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-
 
 
 public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
@@ -107,6 +106,7 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
 		
 		JLabel lblToSanXuat = new JLabel("Tổ sản xuất: ");
 		JComboBox cbToSanXuat = new JComboBox();
+		cbToSanXuat.addItem("---Chọn---");
 		cbToSanXuat.addItem("1");
 		cbToSanXuat.addItem("2");
 		cbToSanXuat.addItem("3");
@@ -126,7 +126,7 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
 		cbCheDoLuong.addItem("Lương sản phẩm");
 		
 		JLabel lblLuongSP = new JLabel("Lương sản phẩm: ");
-		JTextField txtLuongChinh = new JTextField();
+		JTextField txtLuongSP = new JTextField();
 		JLabel lblPhuCap = new JLabel("Phụ cấp: ");
 		JTextField txtPhuCap = new JTextField();
 		JLabel lblGiamTru = new JLabel("Giảm trừ: ");
@@ -141,6 +141,13 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
 		cbBangCap.addItem("Thạc sỹ");
 		cbBangCap.addItem("Tiến sỹ");
 		
+		JLabel lblPhongBan = new JLabel("Phòng ban: ");
+		JComboBox cbPhongBan = new JComboBox();
+		cbPhongBan.addItem("---Chọn---");
+		cbPhongBan.addItem("Quản lý");
+		cbPhongBan.addItem("Hành chính");
+		cbPhongBan.addItem("Kế toán");
+		cbPhongBan.addItem("Sản xuất");
 		
 		lblHoTenNV.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		txtHoTenNV.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
@@ -159,7 +166,7 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
 		lblNgayVao.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		dcNgayVao.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblTayNghe.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblTayNghe.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		txtTayNghe.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblToSanXuat.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		cbToSanXuat.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblTrangThai.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
@@ -167,7 +174,7 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
 		lblCheDoLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		cbCheDoLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblLuongSP.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtLuongChinh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		txtLuongSP.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblPhuCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		txtPhuCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblGiamTru.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
@@ -176,6 +183,8 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
 		txtTamUng.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblBangCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		cbBangCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		lblPhongBan.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		cbPhongBan.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		
 		JPanel pnThongTin = new JPanel();
 		pnCenter.add(pnThongTin, BorderLayout.NORTH);
@@ -254,8 +263,9 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
 		Box c3 = Box.createHorizontalBox();
 		Box c4 = Box.createHorizontalBox();
 		
-		c1.add(lblTayNghe);
-		c1.add(txtTayNghe);
+//		
+		c1.add(lblPhongBan);
+		c1.add(cbPhongBan);
 		c2.add(lblToSanXuat);
 		c2.add(cbToSanXuat);
 		c3.add(lblTrangThai);
@@ -263,7 +273,7 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
 		c4.add(lblBangCap);
 		c4.add(cbBangCap);
 		
-		lblTayNghe.setPreferredSize(lblToSanXuat.getPreferredSize());
+		lblPhongBan.setPreferredSize(lblToSanXuat.getPreferredSize());
 		lblToSanXuat.setPreferredSize(lblToSanXuat.getPreferredSize());
 		lblTrangThai.setPreferredSize(lblToSanXuat.getPreferredSize());
 		lblBangCap.setPreferredSize(lblToSanXuat.getPreferredSize());
@@ -276,31 +286,27 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
 		c.add(Box.createVerticalStrut(10));
 		c.add(c4);
 		
-//		Box d1 = Box.createHorizontalBox();
-//		Box d2 = Box.createHorizontalBox();
-//		Box d3 = Box.createHorizontalBox();
-//		Box d4 = Box.createHorizontalBox();
-//		
-//		d1.add(lblLuongSP);
-//		d1.add(txtLuongChinh);
-//		d2.add(lblPhuCap);
-//		d2.add(txtPhuCap);
-//		d3.add(lblGiamTru);
-//		d3.add(txtGiamTru);
-//		d4.add(lblTamUng);
-//		d4.add(txtTamUng);
-//		
-//		lblPhuCap.setPreferredSize(lblLuongSP.getPreferredSize());
-//		lblGiamTru.setPreferredSize(lblLuongSP.getPreferredSize());
-//		lblTamUng.setPreferredSize(lblLuongSP.getPreferredSize());
-//		
-//		d.add(d1);
-//		d.add(Box.createVerticalStrut(10));
-//		d.add(d2);
-//		d.add(Box.createVerticalStrut(10));
-//		d.add(d3);
-//		d.add(Box.createVerticalStrut(10));
-//		d.add(d4);
+		Box d1 = Box.createHorizontalBox();
+		Box d2 = Box.createHorizontalBox();
+		Box d3 = Box.createHorizontalBox();
+		Box d4 = Box.createHorizontalBox();
+		
+		d1.add(lblTayNghe);
+		d1.add(txtTayNghe);
+		d2.add(lblLuongSP);
+		d2.add(txtLuongSP);
+		d3.add(lblPhuCap);
+		d3.add(txtPhuCap);
+		
+		lblPhuCap.setPreferredSize(lblLuongSP.getPreferredSize());
+		lblTayNghe.setPreferredSize(lblLuongSP.getPreferredSize());
+		
+		d.add(d1);
+		d.add(Box.createVerticalStrut(10));
+		d.add(d2);
+		d.add(Box.createVerticalStrut(10));
+		d.add(d3);
+		d.add(Box.createVerticalStrut(10));
 		
 		JPanel pnTacVu = new JPanel();
 		pnCenter.add(pnTacVu, BorderLayout.CENTER);
@@ -343,10 +349,14 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener {
 		model.addColumn("BHXH");
 		model.addColumn("MST");
 		model.addColumn("Ngày vào");
-		model.addColumn("Tay nghề");
+		model.addColumn("Phòng ban");
 		model.addColumn("Tổ SX");
 		model.addColumn("Trạng thái");
 		model.addColumn("Bằng cấp");
+		model.addColumn("Tay nghề");
+		model.addColumn("Lương SP");
+		model.addColumn("Phụ cấp");
+		
 		
 		JScrollPane sp = new 	JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

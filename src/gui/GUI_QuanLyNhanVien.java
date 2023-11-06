@@ -1,10 +1,10 @@
 package gui;
 
 
+import javax.swing.JFrame;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,8 +26,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-
-
 
 
 public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
@@ -134,13 +132,16 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		cbBangCap.addItem("Thạc sỹ");
 		cbBangCap.addItem("Tiến sỹ");
 		
-		JTextField txtLuongChinh = new JTextField();
+		JLabel lblLuongCoBan = new JLabel("Lương cơ bản: ");
+		JTextField txtLuongCoBan = new JTextField();
 		JLabel lblPhuCap = new JLabel("Phụ cấp: ");
 		JTextField txtPhuCap = new JTextField();
 		JLabel lblGiamTru = new JLabel("Giảm trừ: ");
 		JTextField txtGiamTru = new JTextField();
 		JLabel lblTamUng = new JLabel("Tạm ứng: ");
 		JTextField txtTamUng = new JTextField();
+		JLabel lblHeSoLuong = new JLabel("Hệ số lương: ");
+		JTextField txtHeSoLuong = new JTextField();
 		
 		lblHoTenNV.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		txtHoTenNV.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
@@ -166,13 +167,16 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		cbTrangThai.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));		
 		lblBangCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		cbBangCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtLuongChinh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		lblLuongCoBan.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		txtLuongCoBan.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblPhuCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		txtPhuCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblGiamTru.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		txtGiamTru.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		lblTamUng.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		txtTamUng.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		lblHeSoLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		txtHeSoLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
 		
 		JPanel pnThongTin = new JPanel();
 		pnCenter.add(pnThongTin, BorderLayout.NORTH);
@@ -273,29 +277,30 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		c.add(Box.createVerticalStrut(10));
 		c.add(c4);
 		
-//		Box d1 = Box.createHorizontalBox();
-//		Box d2 = Box.createHorizontalBox();
-//		Box d3 = Box.createHorizontalBox();
-//		Box d4 = Box.createHorizontalBox();
-//				
-//		d1.add(lblBangCap);
-//		d1.add(txtLuongChinh);
-//		d2.add(lblPhuCap);
-//		d2.add(txtPhuCap);
+		Box d1 = Box.createHorizontalBox();
+		Box d2 = Box.createHorizontalBox();
+		Box d3 = Box.createHorizontalBox();
+		Box d4 = Box.createHorizontalBox();
+				
+		d1.add(lblLuongCoBan);
+		d1.add(txtLuongCoBan);
+		d2.add(lblPhuCap);
+		d2.add(txtPhuCap);
+		d3.add(lblHeSoLuong);
+		d3.add(txtHeSoLuong);
 //		d3.add(lblGiamTru);
 //		d3.add(txtGiamTru);
 //		d4.add(lblTamUng);
 //		d4.add(txtTamUng);
-//		
-//		lblPhuCap.setPreferredSize(lblBangCap.getPreferredSize());
-//		lblGiamTru.setPreferredSize(lblBangCap.getPreferredSize());
-//		lblTamUng.setPreferredSize(lblBangCap.getPreferredSize());
-//		
-//		d.add(d1);
-//		d.add(Box.createVerticalStrut(10));
-//		d.add(d2);
-//		d.add(Box.createVerticalStrut(10));
-//		d.add(d3);
+		
+		lblPhuCap.setPreferredSize(lblLuongCoBan.getPreferredSize());
+		lblHeSoLuong.setPreferredSize(lblLuongCoBan.getPreferredSize());
+		
+		d.add(d1);
+		d.add(Box.createVerticalStrut(10));
+		d.add(d2);
+		d.add(Box.createVerticalStrut(10));
+		d.add(d3);
 //		d.add(Box.createVerticalStrut(10));
 //		d.add(d4);
 		
@@ -344,10 +349,13 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		model.addColumn("Chức danh");
 		model.addColumn("Trạng thái");
 		model.addColumn("Bằng cấp");
+		model.addColumn("Lương CB");
+		model.addColumn("Phụ cấp");
+		model.addColumn("Hệ số lương");
 		
 		JScrollPane sp = new 	JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		sp.setPreferredSize(new Dimension(1000, 400));
+		sp.setPreferredSize(new Dimension(1200, 400));
 		pnTable.add(sp);
 		
 		Container container = getContentPane();
