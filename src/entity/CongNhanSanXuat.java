@@ -13,10 +13,13 @@ public class CongNhanSanXuat {
 	private String BHXH;
 	private String MST;
 	private LocalDate ngayVao;
-	private int tayNghe;
+	private PhongBan phongBan;
 	private int toSanXuat;
 	private String trangThai;
 	private String bangCap;
+	private int tayNghe;
+	private double luongSanPham;
+	private double phuCap;
 	
 	
 	//---constructors---
@@ -26,15 +29,14 @@ public class CongNhanSanXuat {
 
 
 	public CongNhanSanXuat(String maCN, String hoTenCN) {
-		super();
 		this.maCN = maCN;
 		this.hoTenCN = hoTenCN;
 	}
 
-
+	
 	public CongNhanSanXuat(String maCN, String hoTenCN, String gioiTinh, LocalDate ngaySinh, String diaChi, 
-			String CCCD, String BHXH, String MST, LocalDate ngayVao, int tayNghe, int toSanXuat, 
-			String trangThai, String bangCap) {
+			String CCCD, String BHXH, String MST, LocalDate ngayVao, PhongBan phongBan, 
+			int toSanXuat, String trangThai, String bangCap, int tayNghe, double luongSanPham, double phuCap) {
 		this.maCN = maCN;
 		this.hoTenCN = hoTenCN;
 		this.gioiTinh = gioiTinh;
@@ -44,10 +46,13 @@ public class CongNhanSanXuat {
 		this.BHXH = BHXH;
 		this.MST = MST;
 		this.ngayVao = ngayVao;
-		this.tayNghe = tayNghe;
+		this.phongBan = phongBan;
 		this.toSanXuat = toSanXuat;
 		this.trangThai = trangThai;
 		this.bangCap = bangCap;
+		this.tayNghe = tayNghe;
+		this.luongSanPham = luongSanPham;
+		this.phuCap = phuCap;
 	}
 
 
@@ -179,6 +184,36 @@ public class CongNhanSanXuat {
 
 	public void setBangCap(String bangCap) {
 		this.bangCap = bangCap;
+	}
+
+	
+	public PhongBan getPhongBan() {
+		return phongBan;
+	}
+
+
+	public void setPhongBan(PhongBan phongBan) {
+		this.phongBan = phongBan;
+	}
+
+
+	public double getLuongSanPham() {
+		return luongSanPham;
+	}
+
+
+	public void setLuongSanPham(double luongSanPham) {
+		this.luongSanPham = luongSanPham;
+	}
+
+
+	public double getPhuCap() {
+		return phuCap;
+	}
+
+
+	public void setPhuCap(double phuCap) {
+		this.phuCap = phuCap;
 	}
 
 
