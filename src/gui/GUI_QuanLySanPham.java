@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -27,43 +31,33 @@ import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
+import connection.ConnectDB;
+import dao.CongDoan_dao;
+import dao.SanPham_dao;
+import entity.CongDoan;
+import entity.SanPham;
+
 public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 	private JPanel pnContent;
-	private JLabel lblTieuDe;
+	private JLabel lblTieuDe, lblMSP, lblMCD, lblTenSP, lblTenCD, lblLuongSP, lblTrangThai, lblSoLuong, lblGiaThanh, lblThuTu;
 	private DefaultTableModel modelSP;
-	private JTable tableSP;
+	private JTable tableSP, tableCD;
 	private DefaultTableModel modelCD;
-	private JTable tableCD;
-	private JButton btnLoc;
-	private JComboBox<String> cbLoc;
-	private JTextField txtLoc;
-	private JLabel lblMSP;
-	private JTextField txtMSP;
-	private JLabel lblMCD;
-	private JTextField txtMCD;
-	private JLabel lblTenSP;
-	private JTextField txtTenSP;
-	private JLabel lblTenCD;
-	private JTextField txtTenCD;
-	private JLabel lblLuongSP;
-	private JTextField txtLuongSP;
-	private JLabel lblTrangThai;
-	private JComboBox<String> cbTrangThai;
-	private JLabel lblSoLuong;
-	private JTextField txtSoLuong;
-	private JLabel lblGiaThanh;
-	private JTextField txtGiaThanh;
-	private JButton btnThem;
-	private JButton btnSua;
-	private JButton btnXoa;
+	private JButton btnLoc, btnThem, btnSua, btnXoa;
+	private JComboBox<String> cbLoc, cbTrangThai;
+	private JTextField txtLoc, txtMSP, txtMCD, txtTenSP, txtTenCD, txtLuongSP, txtSoLuong, txtGiaThanh, txtThuTu;
 	private Font BVNPro;
+	private CongDoan_dao cd_dao;
+	private SanPham_dao sp_dao;
+	private int soLuongSP;
+	
 	public GUI_QuanLySanPham() {
 		setTitle("Quản lý sản phẩm");
 		setSize(1300, 700);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-		
+		//font
 		try {
 			String fileName = "fonts/BeVietnamPro-Black.ttf";
 			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
@@ -72,7 +66,16 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 		}
+		//connect
+		try {
+			ConnectDB.getInstance().connect();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		cd_dao = new CongDoan_dao();
+		sp_dao = new SanPham_dao();
 		
+		//panel
 		pnContent = new JPanel();
 		pnContent.setLayout(new BorderLayout());
 		add(pnContent);
@@ -146,17 +149,20 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		b3_3.add(lblTrangThai = new JLabel("Trạng thái:"));
 		b3_3.add(Box.createHorizontalStrut(20));
 		b3_3.add(cbTrangThai = new JComboBox<String>());
-		cbTrangThai.addItem("Còn hàng");
-		cbTrangThai.addItem("Hết hàng");
-		b3_3.add(Box.createHorizontalStrut(280));
+		cbTrangThai.addItem("Còn sản xuất");
+		cbTrangThai.addItem("Ngưng sản xuất");
+		b3_3.add(Box.createHorizontalStrut(248));
 		b3_3.add(lblLuongSP = new JLabel("Lương sản phẩm:"));
-		b3_3.add(Box.createHorizontalStrut(20));
+		b3_3.add(Box.createHorizontalStrut(22));
 		b3_3.add(txtLuongSP = new JTextField(15));
 		
 		b3_4.add(lblSoLuong = new JLabel("Số lượng:"));
 		b3_4.add(Box.createHorizontalStrut(20));
 		b3_4.add(txtSoLuong = new JTextField(15));
-		b3_4.add(Box.createHorizontalStrut(480));
+		b3_4.add(Box.createHorizontalStrut(200));
+		b3_4.add(lblThuTu = new JLabel("Thứ tự:"));
+		b3_4.add(Box.createHorizontalStrut(21));
+		b3_4.add(txtThuTu = new JTextField(15));
 		
 		b3_5.add(lblGiaThanh = new JLabel("Giá thành:"));
 		b3_5.add(Box.createHorizontalStrut(20));
@@ -183,6 +189,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		
 		lblMCD.setPreferredSize(lblLuongSP.getPreferredSize());
 		lblTenCD.setPreferredSize(lblLuongSP.getPreferredSize());
+		lblThuTu.setPreferredSize(lblLuongSP.getPreferredSize());
 		//add có box b3 nhỏ
 		b3.add(Box.createRigidArea(new Dimension(20,20)));
 		b3.add(b3_1);
@@ -207,21 +214,36 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		Box c, c1, c2;
 		c = Box.createHorizontalBox();
 		//table San pham
-		String col2[] = {"Mã sản phẩm", "Tên sản phẩm","Số lượng","Trạng thái","Giá thành"};
+		JPanel pnSP = new JPanel();
+		pnSP.setBorder(BorderFactory.createTitledBorder("Bảng sản phẩm"));
+		pnSP.setBackground(new Color(245, 251, 255));
+		String col2[] = {"Mã sản phẩm", "Tên sản phẩm","Số lượng","Giá thành","Trạng thái"};
 		modelSP = new DefaultTableModel(col2, 0);
 		tableSP = new JTable(modelSP);
 		JScrollPane scrollSP = new JScrollPane(tableSP);
 		scrollSP.setPreferredSize(new Dimension(500, 250));
-		c.add(scrollSP);
+		pnSP.add(scrollSP);
+		c.add(pnSP);
 		c.add(Box.createHorizontalStrut(80));
 		//table Cong doan
-		String col3[] = {"Mã công đoạn", "Tên công đoạn","Lương SP"};
+		JPanel pnCD = new JPanel();
+		pnCD.setBorder(BorderFactory.createTitledBorder("Bảng công đoạn"));
+		pnCD.setBackground(new Color(245, 251, 255));
+		String col3[] = {"Mã công đoạn", "Tên công đoạn","Lương SP","Thứ tự"};
 		modelCD = new DefaultTableModel(col3, 0);
 		tableCD = new JTable(modelCD);
 		JScrollPane scrollCD = new JScrollPane(tableCD);
 		scrollCD.setPreferredSize(new Dimension(500, 250));
-		c.add(scrollCD);
+		pnCD.add(scrollCD);
+		c.add(pnCD);
 		pnBot.add(c);
+		//docdulieu
+		DocDuLieuDatabaseVaoTable();
+		//action
+		btnThem.addActionListener(this);
+		btnSua.addActionListener(this);
+		btnXoa.addActionListener(this);
+		btnLoc.addActionListener(this);
 
 		
 	}
@@ -231,8 +253,83 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+		Object o = e.getSource();
+		if(o.equals(btnThem)) {
+			themDuLieuSP();
+		}
+		if(o.equals(btnSua)) {
+			
+		}
+		if(o.equals(btnXoa)) {
+			
+		}
+		if(o.equals(btnLoc)) {
+			
+		}
 	}
-
+	public void DocDuLieuDatabaseVaoTable() {
+		List<CongDoan> dsCD = cd_dao.getalltbCongDoan();
+		for (CongDoan cd : dsCD) {
+			modelCD.addRow(new Object[] {cd.getMaCD(), cd.getTenCD()
+					,cd.getLuongTheoSanPham(), cd.getSp().getMaSP(),
+					cd.getThuTu()});
+		}
+		List<SanPham> dsSP  = sp_dao.getalltbSanPham();
+		soLuongSP = dsSP.size();
+		for (SanPham sp : dsSP) {
+			String tt = sp.getTrangThai().toString();
+			String trangThai = tt.equals("0")?"NSX":"CSX";
+			modelSP.addRow(new Object[] {
+				sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon(), sp.getGiaThanh(),
+				trangThai
+			});
+		}
+	}
+	/*public boolean kiemTraRangBuoc() {
+		String tenSP = txtTenSP.getText();
+		String tenCD = txtTenCD.getText();
+		String soLuong = txtSoLuong.getText();
+		String giaThanh = txtGiaThanh.getText();
+		String thuTu = txtThuTu.getText();
+		String luongSP = txtLuongSP.getText();
+		if(!tenSP.matches("[a-zA-Z' ]+")) {
+			JOptionPane.showMessageDialog(this,	"Tên sản phẩm phải là ký tự");
+			return false;
+		}
+		if(!tenCD.matches("[a-zA-Z' ]+")) {
+			JOptionPane.showMessageDialog(this,	"Tên công đoạn phải là ký tự");
+			return false;
+		}
+		if(soLuong.length()>0) {
+			try {
+				int sl = Integer.parseInt(soLuong);
+				if(sl < 0) {
+					JOptionPane.showMessageDialog(this,	"Số lượng sản phẩm không được âm");
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(this,	"Số lượng phải là số");
+				return false;
+			}
+		}
+		return true;
+	}*/
+	public void themDuLieuSP() {
+		//String tenCD = txtTenCD.getText();
+		String tenSP = txtTenSP.getText();
+		int soLuongTon = Integer.parseInt(txtSoLuong.getText());
+		String trangThai = cbTrangThai.getSelectedItem().toString();
+		//double luongSP = Double.parseDouble(txtLuongSP.getText());
+		//int thuTu = Integer.parseInt(txtThuTu.getText());
+		double gia = Double.parseDouble(txtGiaThanh.getText());
+		String maSP = String.format("%s%02d","SP",++soLuongSP);
+		SanPham sp = new SanPham(maSP, tenSP, soLuongTon, gia, trangThai);
+		//CongDoan cd = new CongDoan(trangThai, tenCD, luongSP, sp, thuTu);
+		try {
+			modelSP.addRow(new Object[] {sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon()
+					,sp.getGiaThanh(), sp.getTrangThai()});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
