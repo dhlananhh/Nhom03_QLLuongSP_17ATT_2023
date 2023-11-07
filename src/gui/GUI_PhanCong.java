@@ -10,9 +10,25 @@ import javax.swing.BoxLayout;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import com.toedter.calendar.JDateChooser;
+
+import connection.ConnectDB;
+import dao.ChamCong_dao;
+import dao.CongDoan_dao;
+import dao.SanPham_dao;
+import entity.ChamCong;
+import entity.CongDoan;
+import entity.SanPham;
+
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -24,20 +40,26 @@ import javax.swing.SpinnerNumberModel;
 
 import java.awt.Component;
 import javax.swing.table.TableModel;
+
+import org.w3c.dom.CDATASection;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
-public class GUI_PhanCong extends JFrame {
+public class GUI_PhanCong extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
+	private JDateChooser chooserNgay = new JDateChooser();
 	private JTextField txtMaCN, txtTenCN, txtTenSP, txtTenCD;
 	private JComboBox<String> cbMaSP, cbMaCD;
 	private JSpinner spinChiTieu;
 	private JButton btnLuu, btnXoa;
 	private DefaultTableModel modelCongNhan, modelPhanCong;
 	private JTable tableCongNhan, tablePhanCong;
-
+	private ChamCong_dao chamCong_dao;
+	private SanPham_dao sanPham_dao = new SanPham_dao();
+	private CongDoan_dao congDoan_dao = new CongDoan_dao();
 	/**
 	 * Launch the application.
 	 */
@@ -56,8 +78,10 @@ public class GUI_PhanCong extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
-	public GUI_PhanCong() {
+	public GUI_PhanCong() throws SQLException {
+		ConnectDB.getInstance().connect();;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setBounds(100, 100, 1600, 900);
 		setSize(1300, 700);
@@ -78,7 +102,6 @@ public class GUI_PhanCong extends JFrame {
 		JLabel lblNewLabel = new JLabel("Ngày");
 		horizontalBox.add(lblNewLabel);
 		
-		JDateChooser chooserNgay = new JDateChooser();
 		chooserNgay.getCalendarButton().setToolTipText("Chọn ngày phân công");
 		chooserNgay.getCalendarButton().setPreferredSize(new Dimension(30, 24));
 		chooserNgay.getCalendarButton().setBackground(new Color(138, 255, 255));
@@ -116,13 +139,14 @@ public class GUI_PhanCong extends JFrame {
 		b1.add(lblMaCN);
 		b1.add(Box.createHorizontalStrut(30));
 		txtMaCN = new JTextField();
+		txtMaCN.setEditable(false);
 		b1.add(txtMaCN);
 		b1.add(Box.createHorizontalStrut(30));
 		JLabel lblTenCN = new JLabel("Tên công nhân:");
 		b1.add(lblTenCN);
 		b1.add(Box.createHorizontalStrut(30));
 		txtTenCN = new JTextField();
-		txtTenCN.setText("");
+		txtTenCN.setEditable(false);
 		b1.add(txtTenCN);
 		txtTenCN.setColumns(10);
 		
@@ -135,6 +159,20 @@ public class GUI_PhanCong extends JFrame {
 		b2.add(Box.createHorizontalStrut(30));
 
 		cbMaSP = new JComboBox<>();
+		for (SanPham sp : sanPham_dao.getalltbSanPham()) {
+			cbMaSP.addItem(sp.getMaSP());
+		}
+		cbMaSP.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				cbMaCD.removeAllItems();
+				for (CongDoan cd : congDoan_dao.getalltbCongDoan()) {
+					cbMaCD.addItem(cd.getMaCD());
+				}
+			}
+		});
 		b2.add(cbMaSP);
 		cbMaSP.setPreferredSize(new Dimension(200, 10));
 		b2.add(Box.createHorizontalStrut(30));
@@ -206,4 +244,25 @@ public class GUI_PhanCong extends JFrame {
 		
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		if(o.equals(btnLuu)) {
+			
+		}
+	}
+	
+	public void themPhanCong() {
+		String maCN = txtMaCN.getText();
+		String tenCN = txtTenCN.getText();
+		String maSP = cbMaSP.getSelectedItem().toString();
+		String tenSP = txtTenSP.getText();
+		String maCD = cbMaCD.getSelectedItem().toString();
+		String tenCD = txtTenCD.getText();
+		String chiTieu = spinChiTieu.getValue().toString();
+		ChamCong phanCong = new ChamCong(maCN, maSP, new java.sql.Date(chooserNgay.getDate().getTime()) , Integer.parseInt(chiTieu));
+		String object[] = {maCN, tenCN, maSP, tenSP, maCD, tenCD, chiTieu};
+		modelPhanCong.addRow(object);
+	}
 }

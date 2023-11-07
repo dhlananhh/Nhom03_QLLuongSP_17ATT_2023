@@ -29,11 +29,11 @@ public class GUI_DiemDanh extends JFrame {
 	private JComboBox<Integer> cbThang, cbNam, cbMaNV;
 	private JTextField txtNghiPhep;
 	private JTextField txtTenNV;
-	private JTextField txtKhongPhep;
 	private DefaultTableModel modelDiemDanh;
 	private JTable tableDiemDanh;
 	private int month;
 	List<String> columnsDD = new ArrayList<>();
+	private JTextField txtKhongPhep;
 
 
 	/**
@@ -90,62 +90,72 @@ public class GUI_DiemDanh extends JFrame {
 			
 		JPanel pnCenter = new JPanel();
 		contentPane.add(pnCenter, BorderLayout.CENTER);
-		pnCenter.setLayout(new BoxLayout(pnCenter, BoxLayout.Y_AXIS));
+		pnCenter.setLayout(new BoxLayout(pnCenter, BoxLayout.X_AXIS));
 		pnCenter.add(Box.createVerticalStrut(50));
 		
-		Box b1 = Box.createHorizontalBox();
+		Box b1 = Box.createVerticalBox();
 		pnCenter.add(b1);
+		b1.add(Box.createVerticalStrut(30));
 		
-		b1.add(Box.createHorizontalStrut(300));
-		JLabel lblMaNV = new JLabel("Mã nhân viên");
-		b1.add(lblMaNV);
+		Box b3 = Box.createHorizontalBox();
+		b3.add(Box.createHorizontalStrut(300));
+		JLabel lblMaNV = new JLabel("Mã nhân viên:   ");
+		b3.add(lblMaNV);
 		
 		cbMaNV = new JComboBox();
-		b1.add(cbMaNV);
+		b3.add(cbMaNV);
 		cbMaNV.setPreferredSize(new Dimension(200, 5));
-		
-		b1.add(Box.createHorizontalStrut(300));
-		JLabel lblNghiPhep = new JLabel("Số ngày nghỉ có phép:");
-		b1.add(lblNghiPhep);
-		txtNghiPhep = new JTextField();
-		txtNghiPhep.setText("");
-		b1.add(txtNghiPhep);
-		txtNghiPhep.setColumns(10);
-		b1.add(Box.createHorizontalStrut(200));
+		b1.add(b3);
+		b1.add(Box.createVerticalStrut(30));
 
 		pnCenter.add(Box.createVerticalStrut(20));
-		Box b2 = Box.createHorizontalBox();
+		Box b2 = Box.createVerticalBox();
 		pnCenter.add(b2);
+		b2.add(Box.createVerticalStrut(30));
+		Box b4 = Box.createHorizontalBox();
+		b4.add(Box.createHorizontalStrut(300));
+		JLabel lblNghiPhep = new JLabel("Số ngày nghỉ có phép:         ");
+		b4.add(lblNghiPhep);
+		txtNghiPhep = new JTextField();
+		txtNghiPhep.setText("");
+		b4.add(txtNghiPhep);
+		txtNghiPhep.setColumns(10);
+		b4.add(Box.createHorizontalStrut(200));
 		
-		b2.add(Box.createHorizontalStrut(300));
-		JLabel lblTenNV = new JLabel("Tên nhân viên:");
-		b2.add(lblTenNV);
+		b2.add(b4);
+		b2.add(Box.createVerticalStrut(30));
+		Box b5= Box.createHorizontalBox();
+		b5.add(Box.createHorizontalStrut(300));
+		JLabel lblTenNV = new JLabel("Tên nhân viên:  ");
+		b5.add(lblTenNV);
 		
 		txtTenNV = new JTextField();
 		txtTenNV.setText("");
-		b2.add(txtTenNV);
+		b5.add(txtTenNV);
 		txtTenNV.setColumns(10);
-		b2.add(Box.createHorizontalStrut(200));
-		JLabel lblKhongPhep = new JLabel("Số ngày nghỉ không phép:");
-		b2.add(lblKhongPhep);
 		
+		b1.add(b5);
+		b1.add(Box.createVerticalStrut(70));
+		Box b6 = Box.createHorizontalBox();
+		b2.add(b6);
+		b2.add(Box.createVerticalStrut(60));
+		b6.add(Box.createHorizontalStrut(300));
+		JLabel lblKhongPhep = new JLabel("Số ngày nghỉ không phép:   ");
+		b6.add(lblKhongPhep);
 		txtKhongPhep = new JTextField();
-		txtKhongPhep.setText("");
-		b2.add(txtKhongPhep);
-		txtKhongPhep.setPreferredSize(txtNghiPhep.getPreferredSize());
-		b2.add(Box.createHorizontalStrut(200));
+		b6.add(txtKhongPhep);
+		b6.add(Box.createHorizontalStrut(200));
 		
-		JPanel pnTable = new JPanel();
+		JPanel pnTable = new JPanel(new BorderLayout());
 		modelDiemDanh = new DefaultTableModel(columnsDD.toArray(), 0);
 		tableDiemDanh = new JTable(modelDiemDanh);
 		taoCotTheoThang();
-		
 		JScrollPane spTableDD = new JScrollPane(tableDiemDanh, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		spTableDD.setPreferredSize(new Dimension(1200,400));
 		contentPane.add(pnTable, BorderLayout.SOUTH);
 		tableDiemDanh.setFillsViewportHeight(true);
-		pnTable.add(spTableDD);
+		pnTable.add(spTableDD, BorderLayout.CENTER);
 		
 		cbThang.addItemListener(new ItemListener() {
 			@Override
