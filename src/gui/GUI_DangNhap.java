@@ -63,10 +63,10 @@ public class GUI_DangNhap extends JFrame implements ActionListener {
 	public void createAndDisplayGUI() {
 		//load fonts
 		try {
-			String fileName = "src/fonts/BeVietnamPro-Black.ttf";
+			String fileName = "fonts/BeVietnamPro-Regular.ttf";
 			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)));
+			ge.registerFont(BVNPro);
 		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 		}
@@ -84,7 +84,7 @@ public class GUI_DangNhap extends JFrame implements ActionListener {
 		pnNorth.setBackground(bgColor);
 		
 		lblTieuDe = new JLabel("ĐĂNG NHẬP");
-		lblTieuDe.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 20));
+		lblTieuDe.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 20));
 		lblTieuDe.setForeground(Color.WHITE);
 		pnNorth.add(lblTieuDe);
 		
@@ -107,8 +107,8 @@ public class GUI_DangNhap extends JFrame implements ActionListener {
 		txtMatKhau = new JPasswordField(20);
 		chkShowPwd = new JCheckBox("Show password");
 		
-		lblTaiKhoan.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 15));
-		lblMatKhau.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 15));
+		lblTaiKhoan.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		lblMatKhau.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
 		
 		b1.add(lblTaiKhoan);
 		b1.add(txtTaiKhoan);
@@ -120,9 +120,9 @@ public class GUI_DangNhap extends JFrame implements ActionListener {
 		btnQuenMatKhau = new JButton("Quên mật khẩu");
 		btnThoat = new JButton("Thoát");
 		
-		btnDangNhap.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 15));
-		btnQuenMatKhau.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 15));
-		btnThoat.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 15));
+		btnDangNhap.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		btnQuenMatKhau.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		btnThoat.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
 		
 		btnDangNhap.setBackground(bgColor);
 		btnDangNhap.setForeground(Color.WHITE);

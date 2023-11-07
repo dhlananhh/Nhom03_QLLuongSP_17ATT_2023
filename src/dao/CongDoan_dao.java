@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,7 +32,32 @@ public class CongDoan_dao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+	
 		return dsCongDoan;
+	}
+	public boolean themCD(CongDoan cd) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getCon();
+		PreparedStatement statement = null;
+		int n = 0;
+		try {
+			statement = con.prepareStatement("insert into CongDoan values(?, ?, ?, ?, ?)");
+			statement.setString(1, cd.getMaCD());
+			statement.setString(2, cd.getTenCD());
+			statement.setDouble(3, cd.getLuongTheoSanPham());
+			statement.setString(4, cd.getSp().getMaSP());
+			statement.setInt(5, cd.getThuTu());
+			n = statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return n > 0;
 	}
 }
