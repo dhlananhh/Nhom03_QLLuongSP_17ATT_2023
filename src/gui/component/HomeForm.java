@@ -20,7 +20,7 @@ public class HomeForm extends javax.swing.JPanel {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+
     private void initComponents() {
 
         geoChart = new raven.chart.geo.GeoChart();
@@ -57,4 +57,7 @@ public class HomeForm extends javax.swing.JPanel {
     private raven.chart.geo.GeoChart geoChart;
     private raven.chart.geo.GeoChartDataView geoChartDataView;
     // End of variables declaration//GEN-END:variables
+    public static void main(String[] args) {
+		new HomeForm().setVisible(true);
+	}
 }
