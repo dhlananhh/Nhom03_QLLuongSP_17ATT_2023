@@ -5,14 +5,14 @@ public class SanPham {
 	private String tenSP;
 	private int soLuongTon;
 	private double giaThanh;
-	private String trangThai;
+	private boolean trangThai;
 	public SanPham() {
 		super();
 	}
 	public SanPham(String maSP) {
 		this.maSP = maSP;
 	}
-	public SanPham(String maSP, String tenSP, int soLuongTon, double giaThanh, String trangThai) {
+	public SanPham(String maSP, String tenSP, int soLuongTon, double giaThanh, boolean trangThai) {
 		super();
 		this.maSP = maSP;
 		this.tenSP = tenSP;
@@ -44,10 +44,10 @@ public class SanPham {
 	public void setGiaThanh(double giaThanh) {
 		this.giaThanh = giaThanh;
 	}
-	public String getTrangThai() {
+	public boolean getTrangThai() {
 		return trangThai;
 	}
-	public void setTrangThai(String trangThai) {
+	public void setTrangThai(boolean trangThai) {
 		this.trangThai = trangThai;
 	}
 	@Override
