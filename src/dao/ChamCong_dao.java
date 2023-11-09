@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -66,12 +67,12 @@ public class ChamCong_dao {
 		con.close();
 		return false;
 	}
-	public List<ChamCong> getDSChamCong(){
+	public List<ChamCong> getDSChamCongTheoNgay(Date ngay){
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getCon();
 		List<ChamCong> dsChamCong = new ArrayList<ChamCong>();
 		try {
-			PreparedStatement ps = con.prepareStatement("select * from ChamCong");
+			PreparedStatement ps = con.prepareStatement("select * from ChamCong where ngayCham= '"+ ngay +"' ");
 			ResultSet resultSet = ps.executeQuery();
 			while (resultSet.next()) {
 				dsChamCong.add(new ChamCong(resultSet.getString(1), resultSet.getString(2), resultSet.getDate(3),

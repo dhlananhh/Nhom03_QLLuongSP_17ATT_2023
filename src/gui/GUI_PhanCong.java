@@ -14,9 +14,11 @@ import com.toedter.calendar.JDateChooser;
 import connection.ConnectDB;
 import dao.ChamCong_dao;
 import dao.CongDoan_dao;
+import dao.CongNhan_dao;
 import dao.SanPham_dao;
 import entity.ChamCong;
 import entity.CongDoan;
+import entity.CongNhanSanXuat;
 import entity.SanPham;
 
 import javax.swing.border.LineBorder;
@@ -26,8 +28,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.awt.Dimension;
 import javax.swing.JScrollPane;
@@ -47,7 +52,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
-public class GUI_PhanCong extends JFrame implements ActionListener{
+public class GUI_PhanCong extends JFrame implements ActionListener, MouseListener{
 
 	private JPanel contentPane;
 	private JDateChooser chooserNgay = new JDateChooser();
@@ -60,6 +65,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener{
 	private ChamCong_dao chamCong_dao;
 	private SanPham_dao sanPham_dao = new SanPham_dao();
 	private CongDoan_dao congDoan_dao = new CongDoan_dao();
+	private CongNhan_dao congNhan_dao = new CongNhan_dao();
 	/**
 	 * Launch the application.
 	 */
@@ -126,6 +132,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener{
 		spTableCN.setViewportView(tableCongNhan);
 		pnCongNhan.add(Box.createVerticalStrut(50));
 		
+		loadBangCN();
+		
 		JPanel pnInput = new JPanel();
 		contentPane.add(pnInput, BorderLayout.CENTER);
 		pnInput.setLayout(new BoxLayout(pnInput, BoxLayout.Y_AXIS));
@@ -169,7 +177,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener{
 				// TODO Auto-generated method stub
 				cbMaCD.removeAllItems();
 				for (CongDoan cd : congDoan_dao.getalltbCongDoan()) {
-					cbMaCD.addItem(cd.getMaCD());
+					if(cbMaSP.getSelectedItem().toString().equals(cd.getSp().getMaSP()))
+						cbMaCD.addItem(cd.getMaCD());
 				}
 			}
 		});
@@ -182,7 +191,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener{
 		b2.add(Box.createHorizontalStrut(30));
 
 		txtTenSP = new JTextField();
-		txtTenSP.setText("");
+		txtTenSP.setEditable(false);
 		b2.add(txtTenSP);
 		txtTenSP.setColumns(10);
 		
@@ -203,7 +212,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener{
 		b3.add(Box.createHorizontalStrut(30));
 		txtTenCD = new JTextField();
 		b3.add(txtTenCD);
-		txtTenCD.setColumns(10);
+		txtTenCD.setEditable(false);
 		
 		Box b4 = Box.createHorizontalBox();
 		pnInput.add(b4);
@@ -240,7 +249,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener{
 		spTablePC.setPreferredSize(new Dimension(1500, 300));
 		contentPane.add(spTablePC, BorderLayout.SOUTH);
 		spTablePC.setViewportView(tablePhanCong);
-		
+		tableCongNhan.addMouseListener(this);
+
 		
 	}
 
@@ -252,7 +262,18 @@ public class GUI_PhanCong extends JFrame implements ActionListener{
 			
 		}
 	}
-	
+	public void loadBangCN() {
+		for (CongNhanSanXuat cn : congNhan_dao.getDSCongNhan()) {
+			String[] row = {cn.getMaCN(), cn.getHoTenCN(), cn.getToSanXuat()+""};
+			modelCongNhan.addRow(row);
+		}
+	}
+	public void loadBangPhanCong() {
+		Date ngay = chooserNgay.getDate();
+		for (ChamCong phanCong : chamCong_dao.getDSChamCongTheoNgay(new java.sql.Date(ngay.getTime()))) {
+			String[] row = {phanCong.getMaCN(), "","","",phanCong.getMaCD(),"", phanCong.getChiTieu()+""};
+		}
+	}
 	public void themPhanCong() {
 		String maCN = txtMaCN.getText();
 		String tenCN = txtTenCN.getText();
@@ -264,5 +285,43 @@ public class GUI_PhanCong extends JFrame implements ActionListener{
 		ChamCong phanCong = new ChamCong(maCN, maSP, new java.sql.Date(chooserNgay.getDate().getTime()) , Integer.parseInt(chiTieu));
 		String object[] = {maCN, tenCN, maSP, tenSP, maCD, tenCD, chiTieu};
 		modelPhanCong.addRow(object);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int rowCN = tableCongNhan.getSelectedRow();
+		txtMaCN.setText(modelCongNhan.getValueAt(rowCN, 0).toString());
+		txtTenCN.setText(modelCongNhan.getValueAt(rowCN, 1).toString());
+		
+		int rowPC = tablePhanCong.getSelectedRow();
+		txtMaCN.setText(modelPhanCong.getValueAt(rowPC, 0).toString());
+		txtTenCN.setText(modelPhanCong.getValueAt(rowPC, 1).toString());
+		cbMaSP.setSelectedItem(modelPhanCong.getValueAt(rowPC, 2));
+		cbMaCD.setSelectedItem(modelPhanCong.getValueAt(rowPC, 3));
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
