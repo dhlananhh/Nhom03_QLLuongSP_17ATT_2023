@@ -51,12 +51,12 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 	private JButton btnLoc, btnThem, btnSua, btnXoa, btnXoaTrang, btnLuu;
 	private JComboBox<String> cbLoc, cbTrangThai;
 	private JTextField txtLoc, txtMSP, txtMCD, txtTenSP, txtTenCD, txtLuongSP, txtSoLuong, txtGiaThanh, txtThuTu;
-	private Font BVNPro;
 	private CongDoan_dao cd_dao;
 	private SanPham_dao sp_dao;
 	private int soLuongSP;
 	private int soLuongCD;
 	private Map<String, Boolean> daNhap = new HashMap<>();
+	private Font BVNPro;
 	public GUI_QuanLySanPham() {
 		setTitle("Quản lý sản phẩm");
 		setSize(1300, 700);
@@ -65,7 +65,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		setLocationRelativeTo(null);
 		//font
 		try {
-			String fileName = "fonts/BeVietnamPro-Black.ttf";
+			String fileName = "fonts/BeVietnamPro-Regular.ttf";
 			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)));
@@ -224,7 +224,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		b.add(b2);
 		pnCenter.add(b);
 		//bot
-		Box c, c1, c2;
+		Box c;
 		c = Box.createHorizontalBox();
 		//table San pham
 		JPanel pnSP = new JPanel();
