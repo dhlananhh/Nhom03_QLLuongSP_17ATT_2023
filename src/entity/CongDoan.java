@@ -4,7 +4,7 @@ public class CongDoan {
 	private String maCD;
 	private String tenCD;
 	private double luongTheoSanPham;
-	private SanPham sp;
+	private SanPham maSP;
 	private int thuTu;
 	public CongDoan() {
 		super();
@@ -13,12 +13,12 @@ public class CongDoan {
 		super();
 		this.maCD = maCD;
 	}
-	public CongDoan(String maCD, String tenCD, double luongTheoSanPham, SanPham sp, int thuTu) {
+	public CongDoan(String maCD, String tenCD, double luongTheoSanPham, SanPham maSP, int thuTu) {
 		super();
 		this.maCD = maCD;
 		this.tenCD = tenCD;
 		this.luongTheoSanPham = luongTheoSanPham;
-		this.sp = sp;
+		this.maSP = maSP;
 		this.thuTu = thuTu;
 	}
 	public String getMaCD() {
@@ -39,11 +39,11 @@ public class CongDoan {
 	public void setLuongTheoSanPham(double luongTheoSanPham) {
 		this.luongTheoSanPham = luongTheoSanPham;
 	}
-	public SanPham getSp() {
-		return sp;
+	public SanPham getMaSP() {
+		return maSP;
 	}
-	public void setSp(SanPham sp) {
-		this.sp = sp;
+	public void setMaSP(SanPham maSP) {
+		this.maSP = maSP;
 	}
 	public int getThuTu() {
 		return thuTu;
@@ -53,8 +53,9 @@ public class CongDoan {
 	}
 	@Override
 	public String toString() {
-		return "CongDoan [maCD=" + maCD + ", tenCD=" + tenCD + ", luongTheoSanPham=" + luongTheoSanPham + ", sp=" + sp
-				+ ", thuTu=" + thuTu + "]";
+		return "CongDoan [maCD=" + maCD + ", tenCD=" + tenCD + ", luongTheoSanPham=" + luongTheoSanPham + ", maSP="
+				+ maSP + ", thuTu=" + thuTu + "]";
 	}
+	
 	
 }

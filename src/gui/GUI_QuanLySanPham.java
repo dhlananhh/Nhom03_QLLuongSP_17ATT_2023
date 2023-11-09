@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -9,11 +10,16 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -28,7 +34,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import connection.ConnectDB;
@@ -37,20 +42,21 @@ import dao.SanPham_dao;
 import entity.CongDoan;
 import entity.SanPham;
 
-public class GUI_QuanLySanPham extends JFrame implements ActionListener {
+public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseListener {
 	private JPanel pnContent;
 	private JLabel lblTieuDe, lblMSP, lblMCD, lblTenSP, lblTenCD, lblLuongSP, lblTrangThai, lblSoLuong, lblGiaThanh, lblThuTu;
 	private DefaultTableModel modelSP;
 	private JTable tableSP, tableCD;
 	private DefaultTableModel modelCD;
-	private JButton btnLoc, btnThem, btnSua, btnXoa;
+	private JButton btnLoc, btnThem, btnSua, btnXoa, btnXoaTrang, btnLuu;
 	private JComboBox<String> cbLoc, cbTrangThai;
 	private JTextField txtLoc, txtMSP, txtMCD, txtTenSP, txtTenCD, txtLuongSP, txtSoLuong, txtGiaThanh, txtThuTu;
-	private Font BVNPro;
 	private CongDoan_dao cd_dao;
 	private SanPham_dao sp_dao;
 	private int soLuongSP;
-	
+	private int soLuongCD;
+	private Map<String, Boolean> daNhap = new HashMap<>();
+	private Font BVNPro;
 	public GUI_QuanLySanPham() {
 		setTitle("Quản lý sản phẩm");
 		setSize(1300, 700);
@@ -59,7 +65,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 		//font
 		try {
-			String fileName = "fonts/BeVietnamPro-Black.ttf";
+			String fileName = "fonts/BeVietnamPro-Regular.ttf";
 			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)));
@@ -136,7 +142,6 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		b3_1.add(lblMCD = new JLabel("Mã công đoạn:"));
 		b3_1.add(Box.createHorizontalStrut(20));
 		b3_1.add(txtMCD = new JTextField(15));
-		txtMSP.setEditable(false);
 		
 		b3_2.add(lblTenSP = new JLabel("Tên sản phẩm:"));
 		b3_2.add(Box.createHorizontalStrut(20));
@@ -174,6 +179,10 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		b3_6.add(btnSua = new JButton("Sửa"));
 		b3_6.add(Box.createHorizontalStrut(50));
 		b3_6.add(btnXoa = new JButton("Xóa"));
+		b3_6.add(Box.createHorizontalStrut(50));
+		b3_6.add(btnXoaTrang = new JButton("Xóa Trắng"));
+		b3_6.add(Box.createHorizontalStrut(50));
+		b3_6.add( btnLuu = new JButton("Lưu"));
 		
 		btnThem.setBackground(new Color(0, 153, 204));
 		btnThem.setForeground(Color.WHITE);
@@ -181,6 +190,10 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
         btnSua.setForeground(Color.WHITE);
         btnXoa.setBackground(new Color(0, 153, 204));
         btnXoa.setForeground(Color.WHITE);
+        btnXoaTrang.setBackground(new Color(0, 153, 204));
+        btnXoaTrang.setForeground(Color.WHITE);
+        btnLuu.setBackground(new Color(0, 153, 204));
+        btnLuu.setForeground(Color.WHITE);
 		//preferencec b3
 		lblMSP.setPreferredSize(lblTenSP.getPreferredSize());
 		lblTrangThai.setPreferredSize(lblTenSP.getPreferredSize());
@@ -211,7 +224,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		b.add(b2);
 		pnCenter.add(b);
 		//bot
-		Box c, c1, c2;
+		Box c;
 		c = Box.createHorizontalBox();
 		//table San pham
 		JPanel pnSP = new JPanel();
@@ -220,6 +233,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		String col2[] = {"Mã sản phẩm", "Tên sản phẩm","Số lượng","Giá thành","Trạng thái"};
 		modelSP = new DefaultTableModel(col2, 0);
 		tableSP = new JTable(modelSP);
+        
 		JScrollPane scrollSP = new JScrollPane(tableSP);
 		scrollSP.setPreferredSize(new Dimension(500, 250));
 		pnSP.add(scrollSP);
@@ -238,14 +252,20 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 		c.add(pnCD);
 		pnBot.add(c);
 		//docdulieu
-		DocDuLieuDatabaseVaoTable();
+		//docDuLieuCDVaoTable();
+		docDuLieuSPVaoTable();
+		txtMSP.setEditable(false);
+		txtMCD.setEditable(false);
+		khoaCD();
 		//action
 		btnThem.addActionListener(this);
 		btnSua.addActionListener(this);
 		btnXoa.addActionListener(this);
 		btnLoc.addActionListener(this);
-
-		
+		btnXoaTrang.addActionListener(this);
+		btnLuu.addActionListener(this);
+		tableSP.addMouseListener(this);
+		tableCD.addMouseListener(this);
 	}
 	public static void main(String[] args) {
 		FlatLightLaf.setup();		
@@ -255,49 +275,129 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		if(o.equals(btnThem)) {
-			themDuLieuSP();
+			if(txtTenSP.isEditable()) {
+				if(kiemTraRangBuocSP()) {
+					themDuLieuSP();
+					khoaSP();
+					moCD();
+				}
+			}
+			else if(txtTenCD.isEditable()) {
+				if(kiemTraRangBuocCD()) {
+					themDuLieuCD(txtMSP.getText());
+					txtMCD.setText("");
+					txtTenCD.setText("");
+					txtLuongSP.setText("");
+					txtThuTu.setText("");
+				}
+			}
+			
 		}
 		if(o.equals(btnSua)) {
-			
+			if(!txtTenSP.getText().equals("") && !txtTenCD.getText().equals("")) {
+				if(cbTrangThai.getSelectedItem().equals("Ngưng sản xuất")) {
+					JOptionPane.showMessageDialog(this, "Sản phẩm ngưng sản xuất, không thể sửa công đoạn");
+					return;
+				}
+				txtTenCD.setText("");
+				txtLuongSP.setText("");
+				txtThuTu.setText("");
+				moCD();
+			}
+			else {
+				moSP();
+				khoaCD();
+				txtTenSP.setText("");
+				txtGiaThanh.setText("");
+				txtSoLuong.setText("");
+			}
+		}
+		if(o.equals(btnLuu)) {
+			if(!txtTenSP.getText().equals("") && !txtTenCD.getText().equals("")) {
+				suaDuLieuSP();
+				modelSP.getDataVector().removeAllElements();
+				docDuLieuSPVaoTable();
+				suaDuLieuCD();
+				modelCD.getDataVector().removeAllElements();
+				docDuLieuCDVaoTable(txtMSP.getText());
+			}
+			else if(txtTenSP.getText().equals("")) {
+				suaDuLieuCD();
+				modelCD.getDataVector().removeAllElements();
+				docDuLieuCDVaoTable(txtMSP.getText());
+			}
+			else {
+				suaDuLieuSP();
+				modelSP.getDataVector().removeAllElements();
+				docDuLieuSPVaoTable();
+			}
 		}
 		if(o.equals(btnXoa)) {
-			
-		}
+			int r = tableSP.getSelectedRow();
+			String maSP = modelSP.getValueAt(r, 0).toString();
+			modelSP.removeRow(r);
+			txtMSP.setText("");
+			txtTenSP.setText("");
+			txtGiaThanh.setText("");
+			txtSoLuong.setText("");
+			ArrayList<CongDoan> dsCD = cd_dao.getAllCongDoanTheoSP(maSP);
+			for(int i = dsCD.size()-1; i >= 0 ; i--) {
+				modelCD.removeRow(i);
+			}
+		}	
 		if(o.equals(btnLoc)) {
-			
+			if(cbLoc.getSelectedItem().equals("Mã sản phẩm")) {
+				modelSP.getDataVector().removeAllElements();
+				timSPTheoMa();
+			}
+			else if(cbLoc.getSelectedItem().equals("Tên sản phẩm")) {
+				modelSP.getDataVector().removeAllElements();
+				timSPTheoTen();
+			}
+			else {
+				modelSP.getDataVector().removeAllElements();
+				timSPTheoTrangThai();
+			}
+		}
+		if(o.equals(btnXoaTrang)) {
+			txtMSP.setText("");
+			txtTenSP.setText("");
+			txtMCD.setText("");
+			txtTenCD.setText("");
+			txtLuongSP.setText("");
+			txtGiaThanh.setText("");
+			txtThuTu.setText("");
+			txtSoLuong.setText("");
+			khoaCD();
+			moSP();
 		}
 	}
-	public void DocDuLieuDatabaseVaoTable() {
-		List<CongDoan> dsCD = cd_dao.getalltbCongDoan();
-		for (CongDoan cd : dsCD) {
-			modelCD.addRow(new Object[] {cd.getMaCD(), cd.getTenCD()
-					,cd.getLuongTheoSanPham(), cd.getSp().getMaSP(),
-					cd.getThuTu()});
-		}
+	public void docDuLieuSPVaoTable() {
 		List<SanPham> dsSP  = sp_dao.getalltbSanPham();
 		soLuongSP = dsSP.size();
 		for (SanPham sp : dsSP) {
-			String tt = sp.getTrangThai().toString();
-			String trangThai = tt.equals("0")?"NSX":"CSX";
 			modelSP.addRow(new Object[] {
 				sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon(), sp.getGiaThanh(),
-				trangThai
+				sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"
 			});
 		}
 	}
-	/*public boolean kiemTraRangBuoc() {
+	public void docDuLieuCDVaoTable(String maSP) {
+		List<CongDoan> dsCD = cd_dao.getAllCongDoanTheoSP(maSP);
+		soLuongCD = dsCD.size();
+		for (CongDoan cd : dsCD) {
+			modelCD.addRow(new Object[] {cd.getMaCD(), cd.getTenCD()
+					,cd.getLuongTheoSanPham(),
+					cd.getThuTu()});
+		}
+	}
+	public boolean kiemTraRangBuocSP() {
 		String tenSP = txtTenSP.getText();
-		String tenCD = txtTenCD.getText();
 		String soLuong = txtSoLuong.getText();
 		String giaThanh = txtGiaThanh.getText();
-		String thuTu = txtThuTu.getText();
-		String luongSP = txtLuongSP.getText();
+		
 		if(!tenSP.matches("[a-zA-Z' ]+")) {
 			JOptionPane.showMessageDialog(this,	"Tên sản phẩm phải là ký tự");
-			return false;
-		}
-		if(!tenCD.matches("[a-zA-Z' ]+")) {
-			JOptionPane.showMessageDialog(this,	"Tên công đoạn phải là ký tự");
 			return false;
 		}
 		if(soLuong.length()>0) {
@@ -312,24 +412,218 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener {
 				return false;
 			}
 		}
+		if(giaThanh.length()>0) {
+			try {
+				Double gt = Double.parseDouble(giaThanh);
+				if(gt < 0) {
+					JOptionPane.showMessageDialog(this,	"Giá thành không âm");
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(this,	"Giá thành phải là số");
+				return false;
+			}
+		}
+		
 		return true;
-	}*/
-	public void themDuLieuSP() {
-		//String tenCD = txtTenCD.getText();
+	}
+	public boolean kiemTraRangBuocCD() {
+		String tenCD = txtTenCD.getText();
+		String thuTu = txtThuTu.getText();
+		String luongSP = txtLuongSP.getText();
+		if(!tenCD.matches("[a-zA-Z' ]+")) {
+			JOptionPane.showMessageDialog(this,	"Tên công đoạn phải là ký tự");
+			return false;
+		}
+		if(luongSP.length()>0) {
+			try {
+				Double sp = Double.parseDouble(luongSP);
+				if(sp < 0) {
+					JOptionPane.showMessageDialog(this,	"Lương SP của công đoạn không âm");
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(this,	"Lương SP phải là số");
+				return false;
+			}
+		}
+		if(thuTu.length()>0) {
+			
+			try {
+				int tt = Integer.parseInt(thuTu);
+				if(tt < 0 || tt > 5) {
+					JOptionPane.showMessageDialog(this,	"Thứ từ của công đoạn phải từ 1-5");
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(this,	"Thứ tự phải là số");
+				return false;
+			}
+		}
+		return true;
+	}
+	public boolean themDuLieuSP() {	
 		String tenSP = txtTenSP.getText();
 		int soLuongTon = Integer.parseInt(txtSoLuong.getText());
-		String trangThai = cbTrangThai.getSelectedItem().toString();
-		//double luongSP = Double.parseDouble(txtLuongSP.getText());
-		//int thuTu = Integer.parseInt(txtThuTu.getText());
+		String trangThaiString = cbTrangThai.getSelectedItem().toString();
+		boolean trangThai = (trangThaiString.equals("Còn sản xuất"))?true:false;
 		double gia = Double.parseDouble(txtGiaThanh.getText());
+		
 		String maSP = String.format("%s%02d","SP",++soLuongSP);
-		SanPham sp = new SanPham(maSP, tenSP, soLuongTon, gia, trangThai);
-		//CongDoan cd = new CongDoan(trangThai, tenCD, luongSP, sp, thuTu);
+		SanPham sp = new SanPham(maSP, tenSP, soLuongTon, gia, trangThai);	
 		try {
+			sp_dao.themSP(sp);
 			modelSP.addRow(new Object[] {sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon()
-					,sp.getGiaThanh(), sp.getTrangThai()});
+					,sp.getGiaThanh(), sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"});
+			txtMSP.setText(maSP);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return true;
+	}
+	public boolean themDuLieuCD(String slsp) {
+		String tenCD = txtTenCD.getText();
+		double luongSP = Double.parseDouble(txtLuongSP.getText());
+		int thuTu = Integer.parseInt(txtThuTu.getText());
+		String maCD = String.format("%s%s%02d", slsp,"CD", ++soLuongCD);
+		String maSP = txtMSP.getText();
+		SanPham sp = new SanPham(maSP);
+		CongDoan cd = new CongDoan(maCD, tenCD, luongSP, sp, thuTu);
+		try {
+			cd_dao.themCD(cd);
+			modelCD.addRow(new Object[] {cd.getMaCD(), cd.getTenCD(), cd.getLuongTheoSanPham()
+					,cd.getThuTu()});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+	public void khoaCD() {
+		txtMCD.setEditable(false);
+		txtTenCD.setEditable(false);
+		txtLuongSP.setEditable(false);
+		txtThuTu.setEditable(false);
+	}
+	public void moCD() {
+		txtTenCD.setEditable(true);
+		txtLuongSP.setEditable(true);
+		txtThuTu.setEditable(true);
+	}
+	public void khoaSP() {
+		txtMSP.setEditable(false);
+		txtTenSP.setEditable(false);
+		txtGiaThanh.setEditable(false);
+		txtSoLuong.setEditable(false);
+	}
+	public void moSP() {
+		txtTenSP.setEditable(true);
+		txtGiaThanh.setEditable(true);
+		txtSoLuong.setEditable(true);
+	}
+	public void timSPTheoMa() {
+		String maSP = txtLoc.getText();
+		List<SanPham> dssp = sp_dao.getalltbSanPhamTheoMa(maSP);
+		for (SanPham sp : dssp) {
+			modelSP.addRow(new Object[] {sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon()
+					,sp.getGiaThanh(), sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"});
+		}
+	}
+	public void timSPTheoTen() {
+		String tenSP = txtLoc.getText();
+		List<SanPham> dssp = sp_dao.getalltbSanPhamTheoTen(tenSP);
+		for (SanPham sp : dssp) {
+			modelSP.addRow(new Object[] {sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon()
+					,sp.getGiaThanh(), sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"});
+		}
+	}
+	public void timSPTheoTrangThai() {
+		String tt = txtLoc.getText();
+		boolean trangThai = true;
+		if(tt.equals("Còn sản xuất")) {
+			List<SanPham> dssp = sp_dao.getalltbSanPhamTheoTrangThai(trangThai);
+			for (SanPham sp : dssp) {
+				modelSP.addRow(new Object[] {sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon()
+						,sp.getGiaThanh(), sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"});
+			}
+		}
+		else {
+			trangThai = false;
+			List<SanPham> dssp = sp_dao.getalltbSanPhamTheoTrangThai(trangThai);
+			for (SanPham sp : dssp) {
+				modelSP.addRow(new Object[] {sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon()
+						,sp.getGiaThanh(), sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"});
+			}
+		}	
+	}
+	public void suaDuLieuSP() {
+		String maSp = txtMSP.getText();
+		String tenSP = txtTenSP.getText();
+		int soLuongTon = Integer.parseInt(txtSoLuong.getText());
+		double giaThanh = Double.parseDouble(txtGiaThanh.getText());
+		String trangThaiString = cbTrangThai.getSelectedItem().toString();
+		boolean trangThai = (trangThaiString.equals("Còn sản xuất"))?true:false;
+		SanPham sp = new SanPham(maSp, tenSP, soLuongTon, giaThanh, trangThai);
+		sp_dao.capNhatSP(sp);	
+	}
+	public void suaDuLieuCD() {
+		String maCD = txtMCD.getText();
+		String tenCD = txtTenCD.getText();
+		double luongTheoSP = Double.parseDouble(txtLuongSP.getText());
+		int thuTu = Integer.parseInt(txtThuTu.getText());
+		String maSP = txtMSP.getText();
+		SanPham sp = new SanPham(maSP);
+		CongDoan cd = new CongDoan(maCD, tenCD, luongTheoSP, sp, thuTu);
+		cd_dao.capNhatCD(cd);
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		Object o = e.getSource();
+		if(o.equals(tableSP)) {
+		int rowSP = tableSP.getSelectedRow();
+			txtMSP.setText(modelSP.getValueAt(rowSP, 0).toString());
+			txtTenSP.setText(modelSP.getValueAt(rowSP, 1).toString());
+			txtSoLuong.setText(modelSP.getValueAt(rowSP, 2).toString());
+			txtGiaThanh.setText(modelSP.getValueAt(rowSP, 3).toString());
+			cbTrangThai.setSelectedItem(modelSP.getValueAt(rowSP, 4).toString());
+			String maSP = txtMSP.getText();
+			if (!daNhap.containsKey(maSP) || !daNhap.get(maSP)) {
+				modelCD.getDataVector().removeAllElements();
+	            docDuLieuCDVaoTable(maSP);
+	            daNhap.clear();
+	            daNhap.put(maSP, true);
+	        }
+			khoaSP();
+			moCD();
+			if(cbTrangThai.getSelectedItem().equals("Ngưng sản xuất")) {
+				khoaCD();
+			}
+		}
+		if(o.equals(tableCD)) {
+			int rowCD = tableCD.getSelectedRow();
+			txtMCD.setText(modelCD.getValueAt(rowCD, 0).toString());
+			txtTenCD.setText(modelCD.getValueAt(rowCD, 1).toString());
+			txtLuongSP.setText(modelCD.getValueAt(rowCD, 2).toString());
+			txtThuTu.setText(modelCD.getValueAt(rowCD, 3).toString());
+		}
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
