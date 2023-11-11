@@ -20,7 +20,7 @@ public class ChamCong_dao {
 		Connection con = ConnectDB.getCon();
 		try {
 
-			PreparedStatement ps = con.prepareStatement("insert into ChamCong values (?, ?, ?, ?)");
+			PreparedStatement ps = con.prepareStatement("insert into ChamCong values (?, ?, ?, ?, null)");
 			ps.setString(1, phanCong.getMaCN());
 			ps.setString(2, phanCong.getMaCD());
 			ps.setDate(3, phanCong.getNgayCham());
@@ -40,10 +40,10 @@ public class ChamCong_dao {
 		Connection con = ConnectDB.getCon();
 		try {
 			PreparedStatement ps = con.prepareStatement(
-					"update ChamCong set soLuongHoanThanh = ? where maNV = ? and ngayCham = ?");
+					"update ChamCong set soLuongHoanThanh = ? where maCN = ? and ngayCham = ?");
 			ps.setInt(1, o.getSoLuongHoanThanh());
 			ps.setString(2, o.getMaCN());
-			ps.setDate(4, o.getNgayCham());
+			ps.setDate(3, o.getNgayCham());
 			return ps.executeUpdate() > 0;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -52,13 +52,13 @@ public class ChamCong_dao {
 		con.close();
 		return false;
 	}
-	public boolean xoaPhanCong(ChamCong o) throws SQLException {
+	public boolean xoaPhanCong(String macn, Date date) throws SQLException {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getCon();
 		try {
-			PreparedStatement ps = con.prepareStatement("delete ChamCong where maNV = ? and ngayCham = ?");
-			ps.setString(1, o.getMaCN());
-			ps.setDate(2, o.getNgayCham());
+			PreparedStatement ps = con.prepareStatement("delete ChamCong where maCN = ? and ngayCham = ?");
+			ps.setString(1, macn);
+			ps.setDate(2, date);
 			return ps.executeUpdate() > 0;
 		} catch (Exception e) {
 			// TODO: handle exception

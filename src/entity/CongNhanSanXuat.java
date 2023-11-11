@@ -28,9 +28,8 @@ public class CongNhanSanXuat {
 	}
 
 
-	public CongNhanSanXuat(String maCN, String hoTenCN) {
+	public CongNhanSanXuat(String maCN) {
 		this.maCN = maCN;
-		this.hoTenCN = hoTenCN;
 	}
 
 	

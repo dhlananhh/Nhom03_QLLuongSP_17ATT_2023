@@ -84,6 +84,27 @@ public class CongDoan_dao {
 		}
 		return dsCD;
 	}
+	public CongDoan getCongDoanTheoMa(String maCD){
+		CongDoan cd = new CongDoan(maCD);
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getCon();
+		PreparedStatement statement = null;
+		try {
+			String sql = "Select * from CongDoan where maCD = ?";
+			statement = con.prepareStatement(sql);
+			statement.setString(1,maCD);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				cd.setTenCD(rs.getString(2));
+				cd.setLuongTheoSanPham(rs.getDouble(3));
+				cd.setMaSP(new SanPham(rs.getString(4)));
+				cd.setThuTu(rs.getInt(5));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cd;
+	}
 	public boolean capNhatCD(CongDoan cd) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getCon();

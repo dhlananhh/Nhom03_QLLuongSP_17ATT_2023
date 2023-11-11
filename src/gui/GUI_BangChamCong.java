@@ -7,8 +7,14 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -17,28 +23,44 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
 
-public class GUI_BangChamCong extends JFrame {
+import connection.ConnectDB;
+import dao.ChamCong_dao;
+import dao.CongDoan_dao;
+import dao.CongNhan_dao;
+import dao.SanPham_dao;
+import entity.ChamCong;
+
+public class GUI_BangChamCong extends JFrame implements ActionListener, MouseListener{
 	private JPanel pnContent;
 	private JLabel lblTieuDe, lblNgay, lblMaCN, lblTenCD, lblMaSP, lblTenSP, lblMaCD, lblTenCN, lblChiTieu, lblSoLuongHT;
 	private Font BVNPro;
 	private DefaultTableModel modelCC, modelHT;
 	private JTable tableCC, tableHT;
+	private JDateChooser chooserNgay = new JDateChooser();
 	//private JLabel lblNgay;
 	private JButton btnLoc, btnLuu;
 	private JComboBox<String> cbLoc;
 	private JTextField txtLoc, txtMaCN, txtTenCN, txtMaSP, txtTenSP, txtMaCD, txtTenCD, txtChiTieu, txtSoLuongHT;
 	private JCheckBox ckDatCT;
-	public GUI_BangChamCong() {
+	private ChamCong_dao chamCong_dao = new ChamCong_dao();
+	private SanPham_dao sanPham_dao = new SanPham_dao();
+	private CongDoan_dao congDoan_dao = new CongDoan_dao();
+	private CongNhan_dao congNhan_dao = new CongNhan_dao();
+	public GUI_BangChamCong() throws SQLException{
+		ConnectDB.getInstance().connect();;
 		setTitle("Bảng chấm công");
 		setSize(1300, 700);
 		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -87,13 +109,13 @@ public class GUI_BangChamCong extends JFrame {
 		b1.add(lblNgay = new JLabel("Ngày:"));
 		b1.add(Box.createHorizontalStrut(20));
 		
-		JDateChooser chooserNgay = new JDateChooser();
         chooserNgay.getCalendarButton().setToolTipText("Chọn ngày");
         chooserNgay.getCalendarButton().setPreferredSize(new Dimension(30, 24));
         chooserNgay.getCalendarButton().setBackground(new Color(138, 255, 255));
         chooserNgay.setFont(new Font("Arial", Font.PLAIN, 16));
         chooserNgay.setDateFormatString("dd/MM/yyyy");
         chooserNgay.setBorder(new LineBorder(new Color(138, 255, 255), 1, true));
+        chooserNgay.setDate(new Date());
         
         b1.add(chooserNgay);
         b1.add(Box.createHorizontalStrut(100));
@@ -106,7 +128,7 @@ public class GUI_BangChamCong extends JFrame {
         b1.add(Box.createHorizontalStrut(10));
         b1.add(txtLoc = new JTextField(5));
         b1.add(Box.createHorizontalStrut(10));
-        b1.add(ckDatCT = new JCheckBox("Đặt chỉ tiêu"));
+        b1.add(ckDatCT = new JCheckBox("Đạt chỉ tiêu"));
         
         btnLoc.setBackground(new Color(0, 153, 204));
         btnLoc.setForeground(Color.WHITE);
@@ -209,15 +231,111 @@ public class GUI_BangChamCong extends JFrame {
 		//pbot
 		String col[] = {"Mã công nhân","Tên công nhân","Mã sản phẩm","Tên sản phẩm","Mã công đoạn"
 				,"Tên công đoạn","Chỉ tiêu","Hoàn thành"};
-		modelCC = new DefaultTableModel(col,0);
+		modelCC = new DefaultTableModel(col,0) {
+			
+			@Override
+			public boolean isCellEditable(int row, int column) {
+                return column == 7;
+            }
+		};
 		tableCC = new JTable(modelCC);
 		JScrollPane scroll = new JScrollPane(tableCC);
 		scroll.setPreferredSize(new Dimension(1000, 200));
 		pnBot.add(scroll);
-		
+		modelCC.addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				// TODO Auto-generated method stub
+				int row = e.getFirstRow();
+                int column = e.getColumn();
+                Object changedValue = "";
+                if (column != TableModelEvent.ALL_COLUMNS && row != TableModelEvent.HEADER_ROW) 
+                    // Lấy giá trị cụ thể từ ô vừa được thay đổi
+                    changedValue = modelCC.getValueAt(row, column);
+                txtSoLuongHT.setText(changedValue.toString());
+                nhapChiTieu();
+			}
+		});
+		loadBang();
+		tableCC.addMouseListener(this);
+		btnLuu.addActionListener(this);
 	}
-	public static void main(String[] args) {
+	
+	public static void main(String[] args) throws SQLException {
 		FlatLightLaf.setup();	
 		new GUI_BangChamCong().setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		if(o.equals(btnLuu)) {
+			modelCC.setValueAt(txtSoLuongHT.getText(), tableCC.getSelectedRow(), 7);
+		}
+	}
+	public void nhapChiTieu() {
+		if(txtSoLuongHT.getText().equals(""))
+			txtSoLuongHT.setText("0");
+		ChamCong chamCong = new ChamCong(txtMaCN.getText(),new java.sql.Date(chooserNgay.getDate().getTime()),
+				Integer.parseInt(txtSoLuongHT.getText()));
+		try {
+			chamCong_dao.chamCong(chamCong);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void loadBang() {
+		modelCC.setRowCount(0);
+		for (ChamCong chamCong : chamCong_dao.getDSChamCongTheoNgay(new java.sql.Date(chooserNgay.getDate().getTime()))) {
+			String macd = chamCong.getMaCD();
+			String[] row = {chamCong.getMaCN(), congNhan_dao.getCongNhanTheoMa(chamCong.getMaCN()).getHoTenCN(),
+					sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getMaSP(),
+					sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getTenSP(),macd,
+					congDoan_dao.getCongDoanTheoMa(macd).getTenCD(), chamCong.getChiTieu()+"", chamCong.getSoLuongHoanThanh()+""};
+			modelCC.addRow(row);
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int rowCCong = tableCC.getSelectedRow();
+		txtMaCN.setText(modelCC.getValueAt(rowCCong, 0).toString());
+		txtTenCN.setText(modelCC.getValueAt(rowCCong, 1).toString());
+		txtMaSP.setText(modelCC.getValueAt(rowCCong, 2).toString());
+		txtTenSP.setText(modelCC.getValueAt(rowCCong, 3).toString());
+		txtMaCD.setText(modelCC.getValueAt(rowCCong, 4).toString());
+		txtTenCD.setText(modelCC.getValueAt(rowCCong, 5).toString());
+		txtChiTieu.setText(modelCC.getValueAt(rowCCong, 6).toString());
+		txtSoLuongHT.setText(modelCC.getValueAt(rowCCong, 7).toString()+"");
+		if(rowCCong == -1)
+			btnLuu.setEnabled(false);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -10,7 +10,7 @@ public class ConnectDB {
 	public static ConnectDB getInstance() {
 		return instance;
 	}
-	public void connect() throws SQLException {
+	public static void connect() throws SQLException {
 		String url = "jdbc:sqlserver://localhost:1433;databasename=QLyLuong";
 		String user = "sa";
 		String password = "sapassword";
@@ -29,5 +29,8 @@ public class ConnectDB {
 	public static Connection getCon() {
 		return con;
 	}
-	
+	public static void main(String[] args) throws SQLException {
+		connect();
+		System.out.println(con);
+	}
 }

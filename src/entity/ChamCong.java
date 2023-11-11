@@ -36,6 +36,13 @@ public class ChamCong {
 	public void setSoLuongHoanThanh(int soLuongHoanThanh) {
 		this.soLuongHoanThanh = soLuongHoanThanh;
 	}
+	public ChamCong(String maCN, Date ngayCham, int soLuongHoanThanh) {
+		super();
+		this.maCN = maCN;
+		this.ngayCham = ngayCham;
+		this.soLuongHoanThanh = soLuongHoanThanh;
+	}
+	
 	public ChamCong(String maCN, String maCD, Date ngayCham, int chiTieu, int soLuongHoanThanh) {
 		super();
 		this.maCN = maCN;

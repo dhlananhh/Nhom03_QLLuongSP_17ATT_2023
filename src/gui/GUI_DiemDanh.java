@@ -13,6 +13,8 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -40,6 +42,7 @@ public class GUI_DiemDanh extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		FlatLightLaf.setup();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

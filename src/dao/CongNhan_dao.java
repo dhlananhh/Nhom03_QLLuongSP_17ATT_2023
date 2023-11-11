@@ -36,4 +36,20 @@ public class CongNhan_dao {
 		}
 		return ds;
 	}
+	public CongNhanSanXuat getCongNhanTheoMa(String ma) {
+		CongNhanSanXuat cn = new CongNhanSanXuat(ma);
+		try {
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getCon();
+			String sql = "Select * from CongNhanSanXuat where maCN = '"+ ma +"'";
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			while(rs.next()) {
+				cn.setHoTenCN(rs.getString(2));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return cn;
+	}
 }
