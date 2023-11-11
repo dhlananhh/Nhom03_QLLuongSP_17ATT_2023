@@ -15,6 +15,10 @@ import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
 
+import connection.ConnectDB;
+import dao.DAO_NhanVienHanhChinh;
+import entity.NhanVienHanhChinh;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -24,24 +28,52 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
+public class GUI_QuanLyNhanVien extends JFrame implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
+	private JPanel pnContent, pnNorth, pnCenter, pnSouth;
 	private JButton btnLoc, btnThietLapLuong;
+	private JLabel lblTieuDe, lblError;
+	private JLabel lblHoTenNV, lblGioiTinh, lblNgaySinh, lblDiaChi;
+	private JLabel lblCCCD, lblBHXH, lblNgayVao;
+	private JLabel lblPhongBan, lblChucDanh, lblTrangThai, lblBangCap;
+	private JLabel lblLuongCoBan, lblPhuCap, lblHeSoLuong;
+	private JTextField txtHoTenNV, txtDiaChi, txtCCCD, txtBHXH;
+	private JTextField txtLuongCoBan, txtPhuCap, txtHeSoLuong, txtLoc;
+	private JDateChooser dcNgaySinh, dcNgayVao;
+	private JComboBox cbGioiTinh, cbPhongBan, cbChucDanh;
+	private JComboBox cbTrangThai, cbBangCap, cbLoc;
+	private JPanel pnTable, pnTable1, pnTable2, pnTable3;
+	private JTable tableNV1, tableNV2;
+	private DefaultTableModel modelNV1, modelNV2;
+	private DAO_NhanVienHanhChinh DAO_NhanVien;
+	private Color bgColor;
+	private List<NhanVienHanhChinh> dsNhanVien = new ArrayList<NhanVienHanhChinh>();
 	
 	
-	public GUI_QuanLyNhanVien() {
+	public GUI_QuanLyNhanVien() throws Exception {
+		//get sql connection
+		ConnectDB.getInstance().connect();
+		
+		
+		//set properties
 		setSize(new Dimension(1300, 700));
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
+		
 		//load fonts
 		try {
-			String fileName = "fonts/BeVietnamPro-Black.ttf";
+			String fileName = "fonts/BeVietnamPro-Regular.ttf";
 			Font BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)));
@@ -49,134 +81,121 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 		
+		
 		//create new color
 		Color headerColor = new Color(0, 102, 204);
 		Color bgColor = new Color(245, 251, 255);
 		Color buttonColor = new Color(0, 153, 204);
 		Color panelColor = new Color(227, 243, 255);
 		
-		JPanel pnContent = new JPanel();
+		pnContent = new JPanel();
 		pnContent.setLayout(new BorderLayout());
 		
 		//pnNorth chứa label tiêu đề
-		JPanel pnNorth = new JPanel();
+		pnNorth = new JPanel();
 		pnContent.add(pnNorth, BorderLayout.NORTH);
 		pnNorth.setBackground(headerColor);
 		
-		JLabel lblTieuDe = new JLabel("QUẢN LÝ NHÂN VIÊN");
+		lblTieuDe = new JLabel("QUẢN LÝ NHÂN VIÊN");
 		pnNorth.add(lblTieuDe);
-		lblTieuDe.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 25));
+		lblTieuDe.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 25));
 		lblTieuDe.setForeground(Color.WHITE);
 		
-		JPanel pnCenter = new JPanel();
+		pnCenter = new JPanel();
 		pnContent.add(pnCenter, BorderLayout.CENTER);
 		pnCenter.setLayout(new BorderLayout());
 		pnCenter.setBackground(bgColor);
 		
-		JLabel lblHoTenNV = new JLabel("Họ tên nhân viên: ");
-		JTextField txtHoTenNV = new JTextField();
+		lblHoTenNV = new JLabel("Họ tên nhân viên: ");
+		txtHoTenNV = new JTextField();
 		
-		JLabel lblGioiTinh = new JLabel("Giới tính: ");
-				
-		JComboBox cbGioiTinh = new JComboBox();
+		lblGioiTinh = new JLabel("Giới tính: ");
+		cbGioiTinh = new JComboBox();
 		cbGioiTinh.addItem("---Chọn---");
 		cbGioiTinh.addItem("Nam");
 		cbGioiTinh.addItem("Nữ");
 		
-		JLabel lblNgaySinh = new JLabel("Ngày sinh: ");
-		JDateChooser dcNgaySinh = new JDateChooser();
+		lblNgaySinh = new JLabel("Ngày sinh: ");
+		dcNgaySinh = new JDateChooser();
 		dcNgaySinh.getJCalendar().setPreferredSize(new Dimension(300, 200));
 		
-		JLabel lblDiaChi = new JLabel("Địa chỉ: ");
-		JTextField txtDiaChi = new JTextField();
+		lblDiaChi = new JLabel("Địa chỉ: ");
+		txtDiaChi = new JTextField();
 		
-		JLabel lblCCCD = new JLabel("CMND/CCCD: ");
-		JTextField txtCCCD = new JTextField();
+		lblCCCD = new JLabel("CMND/CCCD: ");
+		txtCCCD = new JTextField();
 		
-		JLabel lblBHXH = new JLabel("BHXH: ");
-		JTextField txtBHXH = new JTextField();
+		lblBHXH = new JLabel("BHXH: ");
+		txtBHXH = new JTextField();	
 		
-		JLabel lblMST = new JLabel("MST: ");
-		JTextField txtMST = new JTextField();
-		
-		JLabel lblNgayVao = new JLabel("Ngày vào: ");
-		JDateChooser dcNgayVao = new JDateChooser();
+		lblNgayVao = new JLabel("Ngày vào: ");
+		dcNgayVao = new JDateChooser();
 		dcNgayVao.getJCalendar().setPreferredSize(new Dimension(300, 200));
 		
-		JLabel lblPhongBan = new JLabel("Phòng ban: ");
-		JComboBox cbPhongBan = new JComboBox();
+		lblPhongBan = new JLabel("Phòng ban: ");
+		cbPhongBan = new JComboBox();
 		cbPhongBan.addItem("---Chọn---");
 		cbPhongBan.addItem("Phòng Kế toán");
 		cbPhongBan.addItem("Phòng Kinh doanh");
 		cbPhongBan.addItem("Phòng Nhân sự");
 		cbPhongBan.addItem("Phòng Sản xuất");
 		
-		JLabel lblChucDanh = new JLabel("Chức danh: ");
-		JComboBox cbChucDanh = new JComboBox();
+		lblChucDanh = new JLabel("Chức danh: ");
+		cbChucDanh = new JComboBox();
 		cbChucDanh.addItem("---Chọn---");
 		cbChucDanh.addItem("Giám đốc");
 		cbChucDanh.addItem("Trưởng phòng");
 		cbChucDanh.addItem("Nhân viên");
 		cbChucDanh.addItem("Công nhân");
 		
-		JLabel lblTrangThai = new JLabel("Trạng thái: ");
-		JComboBox cbTrangThai = new JComboBox();
+		lblTrangThai = new JLabel("Trạng thái: ");
+		cbTrangThai = new JComboBox();
 		cbTrangThai.addItem("---Chọn---");
 		cbTrangThai.addItem("Đang làm");
 		cbTrangThai.addItem("Nghỉ việc");
 		
-		JLabel lblBangCap = new JLabel("Bằng cấp: ");
-		JComboBox cbBangCap = new JComboBox();
+		lblBangCap = new JLabel("Bằng cấp: ");
+		cbBangCap = new JComboBox();
 		cbBangCap.addItem("---Chọn---");
 		cbBangCap.addItem("Cử nhân");
 		cbBangCap.addItem("Thạc sỹ");
 		cbBangCap.addItem("Tiến sỹ");
 		
-		JLabel lblLuongCoBan = new JLabel("Lương cơ bản: ");
-		JTextField txtLuongCoBan = new JTextField();
-		JLabel lblPhuCap = new JLabel("Phụ cấp: ");
-		JTextField txtPhuCap = new JTextField();
-		JLabel lblGiamTru = new JLabel("Giảm trừ: ");
-		JTextField txtGiamTru = new JTextField();
-		JLabel lblTamUng = new JLabel("Tạm ứng: ");
-		JTextField txtTamUng = new JTextField();
-		JLabel lblHeSoLuong = new JLabel("Hệ số lương: ");
-		JTextField txtHeSoLuong = new JTextField();
+		lblLuongCoBan = new JLabel("Lương cơ bản: ");
+		txtLuongCoBan = new JTextField();
+		lblPhuCap = new JLabel("Phụ cấp: ");
+		txtPhuCap = new JTextField();
+		lblHeSoLuong = new JLabel("Hệ số lương: ");
+		txtHeSoLuong = new JTextField();
 		
-		lblHoTenNV.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtHoTenNV.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblNgaySinh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		dcNgaySinh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblDiaChi.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtDiaChi.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblCCCD.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtCCCD.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblBHXH.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtBHXH.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblMST.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtMST.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblGioiTinh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		cbGioiTinh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblNgayVao.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		dcNgayVao.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblPhongBan.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		cbPhongBan.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblChucDanh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		cbChucDanh.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblTrangThai.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		cbTrangThai.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));		
-		lblBangCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		cbBangCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblLuongCoBan.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtLuongCoBan.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblPhuCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtPhuCap.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblGiamTru.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtGiamTru.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblTamUng.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtTamUng.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		lblHeSoLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtHeSoLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		lblHoTenNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		txtHoTenNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblNgaySinh.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		dcNgaySinh.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblDiaChi.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		txtDiaChi.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblCCCD.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		txtCCCD.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblBHXH.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		txtBHXH.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblGioiTinh.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		cbGioiTinh.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblNgayVao.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		dcNgayVao.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblPhongBan.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		cbPhongBan.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblChucDanh.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		cbChucDanh.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblTrangThai.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		cbTrangThai.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));		
+		lblBangCap.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		cbBangCap.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblLuongCoBan.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		txtLuongCoBan.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblPhuCap.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		txtPhuCap.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblHeSoLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		txtHeSoLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		
 		JPanel pnThongTin = new JPanel();
 		pnCenter.add(pnThongTin, BorderLayout.NORTH);
@@ -231,14 +250,11 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		b1.add(lblCCCD);
 		b1.add(txtCCCD);
 		b2.add(lblBHXH);
-		b2.add(txtBHXH);
-		b3.add(lblMST);
-		b3.add(txtMST);
-		b4.add(lblNgayVao);
-		b4.add(dcNgayVao);
+		b2.add(txtBHXH);		
+		b3.add(lblNgayVao);
+		b3.add(dcNgayVao);
 		
 		lblBHXH.setPreferredSize(lblCCCD.getPreferredSize());
-		lblMST.setPreferredSize(lblCCCD.getPreferredSize());
 		lblNgayVao.setPreferredSize(lblCCCD.getPreferredSize());
 		
 		b.add(b1);
@@ -246,8 +262,8 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		b.add(b2);
 		b.add(Box.createVerticalStrut(10));
 		b.add(b3);
-		b.add(Box.createVerticalStrut(10));
-		b.add(b4);
+//		b.add(Box.createVerticalStrut(10));
+//		b.add(b4);
 		
 		//box c
 		Box c1 = Box.createHorizontalBox();
@@ -321,42 +337,34 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 		pnTacVu.add(txtLoc);
 		pnTacVu.add(btnLoc);
 		
-		cbLoc.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
-		txtLoc.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		cbLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		txtLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		
-		btnLoc.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 15));
+		btnLoc.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
 		btnLoc.setBackground(buttonColor);
 		btnLoc.setForeground(Color.WHITE);
 		
-		JPanel pnTable = new JPanel();
-		pnCenter.add(pnTable, BorderLayout.SOUTH);
+		//pnSouth chứa các table
+		pnSouth = new JPanel();
+		pnContent.add(pnSouth, BorderLayout.SOUTH);
+		pnSouth.setBackground(bgColor);
+		
+		pnTable = new JPanel();
+		pnSouth.add(pnTable, BorderLayout.NORTH);
 		pnTable.setBackground(bgColor);
+		pnTable.setLayout(new BorderLayout());
 		
-		DefaultTableModel model = new DefaultTableModel();
-		JTable table = new JTable(model);
-		table.setRowHeight(25);
+		//tạo bảng 1 chứa thông tin cá nhân của NV
+		createTable1();
 		
-		model.addColumn("STT");
-		model.addColumn("Họ tên");
-		model.addColumn("Giới tính");
-		model.addColumn("Ngày sinh");
-		model.addColumn("Địa chỉ");
-		model.addColumn("CCCD");
-		model.addColumn("BHXH");
-		model.addColumn("MST");
-		model.addColumn("Ngày vào");
-		model.addColumn("Phòng ban");
-		model.addColumn("Chức danh");
-		model.addColumn("Trạng thái");
-		model.addColumn("Bằng cấp");
-		model.addColumn("Lương CB");
-		model.addColumn("Phụ cấp");
-		model.addColumn("Hệ số lương");
+		//load dữ liệu vào bảng 1
+		loadBang1();
 		
-		JScrollPane sp = new 	JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		sp.setPreferredSize(new Dimension(1200, 400));
-		pnTable.add(sp);
+		//tạo bảng 2 chứa thông tin hành chính của NV
+		createTable2();
+		
+		//load dữ liệu vào bảng 2
+		loadBang2();
 		
 		Container container = getContentPane();
 		container.add(pnContent);
@@ -366,6 +374,92 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 	}
 	
 	
+	// tạo bảng 1
+	public void createTable1() {
+		pnTable1 = new JPanel();
+		pnTable.add(pnTable1, BorderLayout.WEST);
+		pnTable1.setBackground(bgColor);
+		
+		modelNV1 = new DefaultTableModel();
+		tableNV1 = new JTable(modelNV1);
+		tableNV1.setRowHeight(25);
+		
+		modelNV1.addColumn("Họ tên");
+		modelNV1.addColumn("Giới tính");
+		modelNV1.addColumn("Ngày sinh");
+		modelNV1.addColumn("Địa chỉ");
+		modelNV1.addColumn("CCCD");
+		modelNV1.addColumn("BHXH");
+		
+		JScrollPane sp1 = new 	JScrollPane(tableNV1, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		sp1.setPreferredSize(new Dimension(500, 250));
+		pnTable1.add(sp1);
+	}
+	
+	
+	// tạo bảng 2
+	public void createTable2() {
+		pnTable2 = new JPanel();
+		pnTable.add(pnTable2, BorderLayout.EAST);
+		pnTable2.setBackground(bgColor);
+		
+		modelNV2 = new DefaultTableModel();
+		tableNV2 = new JTable(modelNV2);
+		tableNV2.setRowHeight(25);
+		
+		modelNV2.addColumn("Ngày vào");
+		modelNV2.addColumn("Phòng ban");
+		modelNV2.addColumn("Chức danh");
+		modelNV2.addColumn("Trạng thái");
+		modelNV2.addColumn("Bằng cấp");
+		modelNV2.addColumn("Lương CB");
+		modelNV2.addColumn("Phụ cấp");
+		modelNV2.addColumn("Hệ số lương");
+		
+		JScrollPane sp2 = new 	JScrollPane(tableNV2, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		sp2.setPreferredSize(new Dimension(500, 250));
+		pnTable2.add(sp2);
+	}
+	
+	
+	// load dữ liệu vào bảng 1
+	public void loadBang1() {
+		DAO_NhanVien = new DAO_NhanVienHanhChinh();
+		try {
+			for (NhanVienHanhChinh nv : DAO_NhanVien.getDanhSachNhanVien()) {
+				Object[] row = {
+						nv.getMaNV(), nv.getHoTenNV(), nv.isGioiTinh(), nv.getNgaySinh(), 
+						nv.getDiaChi(), nv.getCCCD(), nv.getBHXH()
+				};
+				modelNV1.addRow(row);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	// load dữ liệu vào bảng 2
+	public void loadBang2() {
+		DAO_NhanVien = new DAO_NhanVienHanhChinh();
+		try {
+			for (NhanVienHanhChinh nv : DAO_NhanVien.getDanhSachNhanVien()) {
+				Object[] row = {
+						nv.getNgayVao(), nv.getMaPhongBan(), nv.getMaChucDanh(), 
+						nv.getTrangThai(), nv.getBangCap(), 
+						nv.getLuongCoBan(), nv.getPhuCap(), nv.getHeSoLuong()
+				};
+				modelNV2.addRow(row);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	//ActionEvent
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
@@ -374,10 +468,61 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener {
 			new ThietLapLuong().setVisible(true);
 		}
 	}
+	
+	
+	//MouseEvent
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	public void showMessage (String message, JTextField text) {
+		text.requestFocus();
+		lblError.setText(message);
+	}
+	
+	
+	public boolean validData() {
+//		String hoTen = txt
+		
+		return true;
+	}
 
 	
-	public static void main(String[] args) {
+	//hàm main
+	public static void main(String[] args) throws Exception {
 		FlatLightLaf.setup();
 		new GUI_QuanLyNhanVien().setVisible(true);
 	}
+
 }
