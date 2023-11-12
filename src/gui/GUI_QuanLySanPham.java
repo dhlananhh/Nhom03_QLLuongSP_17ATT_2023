@@ -522,19 +522,15 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 	}
 	public void timSPTheoMa() {
 		String maSP = txtLoc.getText();
-		List<SanPham> dssp = sp_dao.getalltbSanPhamTheoMa(maSP);
-		for (SanPham sp : dssp) {
-			modelSP.addRow(new Object[] {sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon()
-					,sp.getGiaThanh(), sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"});
-		}
+		SanPham sp = sp_dao.getSanPhamTheoMa(maSP);
+		modelSP.addRow(new Object[] {sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon()
+			,sp.getGiaThanh(), sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"});
 	}
 	public void timSPTheoTen() {
 		String tenSP = txtLoc.getText();
-		List<SanPham> dssp = sp_dao.getalltbSanPhamTheoTen(tenSP);
-		for (SanPham sp : dssp) {
-			modelSP.addRow(new Object[] {sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon()
-					,sp.getGiaThanh(), sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"});
-		}
+		SanPham sp = sp_dao.getSanPhamTheoTen(tenSP);
+		modelSP.addRow(new Object[] {sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon()
+			,sp.getGiaThanh(), sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"});
 	}
 	public void timSPTheoTrangThai() {
 		String tt = txtLoc.getText();
