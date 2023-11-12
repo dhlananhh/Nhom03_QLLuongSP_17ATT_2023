@@ -6,7 +6,7 @@ import java.util.Objects;
 
 
 public class ChucDanh implements Serializable {
-	private String ID;
+	private String maChucDanh;
 	private String tenChucDanh;
 	private String ghiChu;
 	
@@ -17,32 +17,32 @@ public class ChucDanh implements Serializable {
 	}
 	
 	
-	public ChucDanh (String ID) {
-		this.ID = ID;
+	public ChucDanh (String maChucDanh) {
+		this.maChucDanh = maChucDanh;
 	}
 	
 	
-	public ChucDanh (String ID, String tenChucDanh) {
-		this.ID = ID;
+	public ChucDanh (String maChucDanh, String tenChucDanh) {
+		this.maChucDanh = maChucDanh;
 		this.tenChucDanh = tenChucDanh;
 	}
 	
 	
-	public ChucDanh (String ID, String tenChucDanh, String ghiChu) {
-		this.ID = ID;
+	public ChucDanh (String maChucDanh, String tenChucDanh, String ghiChu) {
+		this.maChucDanh = maChucDanh;
 		this.tenChucDanh = tenChucDanh;
 		this.ghiChu = ghiChu;
 	}
 
 
 	//---getters/setters---
-	public String getID() {
-		return ID;
+	public String getMaChucDanh() {
+		return maChucDanh;
 	}
 
 
-	public void setID(String iD) {
-		ID = iD;
+	public void setMaChucDanh(String maChucDanh) {
+		this.maChucDanh = maChucDanh;
 	}
 
 
@@ -69,7 +69,7 @@ public class ChucDanh implements Serializable {
 	//---hashCode/equals---
 	@Override
 	public int hashCode() {
-		return Objects.hash(ID);
+		return Objects.hash(maChucDanh);
 	}
 
 
@@ -82,7 +82,7 @@ public class ChucDanh implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ChucDanh other = (ChucDanh) obj;
-		return Objects.equals(ID, other.ID);
+		return Objects.equals(maChucDanh, other.maChucDanh);
 	}
 	
 }

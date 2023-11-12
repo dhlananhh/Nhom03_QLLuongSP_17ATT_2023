@@ -2,25 +2,27 @@ package entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 public class NhanVienHanhChinh implements Serializable {
 	private String maNV;
 	private String hoTenNV;
-	private String gioiTinh;
-	private LocalDate ngaySinh;
+	private boolean gioiTinh;
+	private Date ngaySinh;
 	private String diaChi;
 	private String CCCD;
 	private String BHXH;
 	private String MST;
-	private LocalDate ngayVao;
+	private Date ngayVao;
 	private PhongBan phongBan;
 	private ChucDanh chucDanh;
-	private String trangThai;
+	private boolean trangThai;
 	private String bangCap;
-	private double luongCoBan;
-	private double phuCap;
+	private float luongCoBan;
+	private float phuCap;
 	private float heSoLuong;
+	private TaiKhoan tenTaiKhoan;
 	
 	
 	//---constructors---
@@ -35,9 +37,11 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 
 
-	public NhanVienHanhChinh(String maNV, String hoTenNV, String gioiTinh, LocalDate ngaySinh, String diaChi,
-			String CCCD, String BHXH, String MST, LocalDate ngayVao, PhongBan phongBan, ChucDanh chucDanh,
-			String trangThai, String bangCap, double luongCoBan, double phuCap, float heSoLuong) {
+	public NhanVienHanhChinh(String maNV, String hoTenNV, boolean gioiTinh, 
+			Date ngaySinh, String diaChi, String CCCD, String BHXH, String MST, 
+			Date ngayVao, PhongBan phongBan, ChucDanh chucDanh,
+			boolean trangThai, String bangCap, 
+			float luongCoBan, float phuCap, float heSoLuong, TaiKhoan tenTaiKhoan) {
 		this.maNV = maNV;
 		this.hoTenNV = hoTenNV;
 		this.gioiTinh = gioiTinh;
@@ -54,10 +58,11 @@ public class NhanVienHanhChinh implements Serializable {
 		this.luongCoBan = luongCoBan;
 		this.phuCap = phuCap;
 		this.heSoLuong = heSoLuong;
+		this.tenTaiKhoan = tenTaiKhoan;
 	}
 
 
-	//---getters/setters---
+	//---getters/setters
 	public String getMaNV() {
 		return maNV;
 	}
@@ -78,22 +83,22 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 
 
-	public String getGioiTinh() {
+	public boolean isGioiTinh() {
 		return gioiTinh;
 	}
 
 
-	public void setGioiTinh(String gioiTinh) {
+	public void setGioiTinh(boolean gioiTinh) {
 		this.gioiTinh = gioiTinh;
 	}
 
 
-	public LocalDate getNgaySinh() {
+	public Date getNgaySinh() {
 		return ngaySinh;
 	}
 
 
-	public void setNgaySinh(LocalDate ngaySinh) {
+	public void setNgaySinh(Date ngaySinh) {
 		this.ngaySinh = ngaySinh;
 	}
 
@@ -138,12 +143,12 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 
 
-	public LocalDate getNgayVao() {
+	public Date getNgayVao() {
 		return ngayVao;
 	}
 
 
-	public void setNgayVao(LocalDate ngayVao) {
+	public void setNgayVao(Date ngayVao) {
 		this.ngayVao = ngayVao;
 	}
 
@@ -168,12 +173,12 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 
 
-	public String getTrangThai() {
+	public boolean isTrangThai() {
 		return trangThai;
 	}
 
 
-	public void setTrangThai(String trangThai) {
+	public void setTrangThai(boolean trangThai) {
 		this.trangThai = trangThai;
 	}
 
@@ -187,23 +192,23 @@ public class NhanVienHanhChinh implements Serializable {
 		this.bangCap = bangCap;
 	}
 
-	
-	public double getLuongCoBan() {
+
+	public float getLuongCoBan() {
 		return luongCoBan;
 	}
 
 
-	public void setLuongCoBan(double luongCoBan) {
+	public void setLuongCoBan(float luongCoBan) {
 		this.luongCoBan = luongCoBan;
 	}
 
 
-	public double getPhuCap() {
+	public float getPhuCap() {
 		return phuCap;
 	}
 
 
-	public void setPhuCap(double phuCap) {
+	public void setPhuCap(float phuCap) {
 		this.phuCap = phuCap;
 	}
 
@@ -218,7 +223,17 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 
 
-	//---hashCode/equals---
+	public TaiKhoan getTenTaiKhoan() {
+		return tenTaiKhoan;
+	}
+
+
+	public void setTenTaiKhoan(TaiKhoan tenTaiKhoan) {
+		this.tenTaiKhoan = tenTaiKhoan;
+	}
+
+
+	//---hashCode/equals
 	@Override
 	public int hashCode() {
 		return Objects.hash(maNV);
@@ -236,5 +251,17 @@ public class NhanVienHanhChinh implements Serializable {
 		NhanVienHanhChinh other = (NhanVienHanhChinh) obj;
 		return Objects.equals(maNV, other.maNV);
 	}
+
+
+	//---toString---
+	@Override
+	public String toString() {
+		return "NhanVienHanhChinh [maNV=" + maNV + ", hoTenNV=" + hoTenNV + ", gioiTinh=" + gioiTinh + ", ngaySinh="
+				+ ngaySinh + ", diaChi=" + diaChi + ", CCCD=" + CCCD + ", BHXH=" + BHXH + ", MST=" + MST + ", ngayVao="
+				+ ngayVao + ", phongBan=" + phongBan + ", chucDanh=" + chucDanh + ", trangThai=" + trangThai
+				+ ", bangCap=" + bangCap + ", luongCoBan=" + luongCoBan + ", phuCap=" + phuCap + ", heSoLuong="
+				+ heSoLuong + ", tenTaiKhoan=" + tenTaiKhoan + "]";
+	}
+
 
 }

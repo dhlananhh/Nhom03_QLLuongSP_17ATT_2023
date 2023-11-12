@@ -4,13 +4,16 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class LuongNhanVienHanhChinh implements Serializable {
-	private String maLuong;
-	private int thang;
+	private String maBangLuongHC;
 	private int nam;
+	private int thang;
+	private boolean trangThai;
 	private NhanVienHanhChinh nhanVien;
-	private double luongThucLanh;
-	private double giamTru;
-	private double tamUng;
+	private float heSoLuong;
+	private float luongCoBan;
+	private float phuCap;
+	private float giamTru;
+	private float tamUng;
 	
 	
 	//---constructors---
@@ -18,42 +21,44 @@ public class LuongNhanVienHanhChinh implements Serializable {
 		
 	}
 
-	
-	public LuongNhanVienHanhChinh(String maLuong) {
-		this.maLuong = maLuong;
+
+	public LuongNhanVienHanhChinh (String maBangLuongHC) {
+		this.maBangLuongHC = maBangLuongHC;
 	}
 
 
-	public LuongNhanVienHanhChinh(String maLuong, int thang, int nam, NhanVienHanhChinh nhanVien, 
-			double luongThucLanh, double giamTru, double tamUng) {
-		this.maLuong = maLuong;
-		this.thang = thang;
+	public LuongNhanVienHanhChinh (String maBangLuongHC, int nam, int thang) {
+		this.maBangLuongHC = maBangLuongHC;
 		this.nam = nam;
+		this.thang = thang;
+	}
+
+
+	public LuongNhanVienHanhChinh (String maBangLuongHC, int nam, int thang, 
+			boolean trangThai, NhanVienHanhChinh nhanVien, 
+			float heSoLuong, float luongCoBan, float phuCap,
+			float giamTru, float tamUng) {
+		this.maBangLuongHC = maBangLuongHC;
+		this.nam = nam;
+		this.thang = thang;
+		this.trangThai = trangThai;
 		this.nhanVien = nhanVien;
-		this.luongThucLanh = luongThucLanh;
+		this.heSoLuong = heSoLuong;
+		this.luongCoBan = luongCoBan;
+		this.phuCap = phuCap;
 		this.giamTru = giamTru;
 		this.tamUng = tamUng;
 	}
 
 
 	//---getters/setters---
-	public String getMaLuong() {
-		return maLuong;
+	public String getMaBangLuongHC() {
+		return maBangLuongHC;
 	}
 
 
-	public void setMaLuong(String maLuong) {
-		this.maLuong = maLuong;
-	}
-
-
-	public int getThang() {
-		return thang;
-	}
-
-
-	public void setThang(int thang) {
-		this.thang = thang;
+	public void setMaBangLuongHC(String maBangLuongHC) {
+		this.maBangLuongHC = maBangLuongHC;
 	}
 
 
@@ -67,6 +72,26 @@ public class LuongNhanVienHanhChinh implements Serializable {
 	}
 
 
+	public int getThang() {
+		return thang;
+	}
+
+
+	public void setThang(int thang) {
+		this.thang = thang;
+	}
+
+
+	public boolean isTrangThai() {
+		return trangThai;
+	}
+
+
+	public void setTrangThai(boolean trangThai) {
+		this.trangThai = trangThai;
+	}
+
+
 	public NhanVienHanhChinh getNhanVien() {
 		return nhanVien;
 	}
@@ -77,32 +102,52 @@ public class LuongNhanVienHanhChinh implements Serializable {
 	}
 
 
-	public double getLuongThucLanh() {
-		return luongThucLanh;
+	public float getHeSoLuong() {
+		return heSoLuong;
 	}
 
 
-	public void setLuongThucLanh(double luongThucLanh) {
-		this.luongThucLanh = luongThucLanh;
+	public void setHeSoLuong(float heSoLuong) {
+		this.heSoLuong = heSoLuong;
 	}
 
 
-	public double getGiamTru() {
+	public float getLuongCoBan() {
+		return luongCoBan;
+	}
+
+
+	public void setLuongCoBan(float luongCoBan) {
+		this.luongCoBan = luongCoBan;
+	}
+
+
+	public float getPhuCap() {
+		return phuCap;
+	}
+
+
+	public void setPhuCap(float phuCap) {
+		this.phuCap = phuCap;
+	}
+
+	
+	public float getGiamTru() {
 		return giamTru;
 	}
 
 
-	public void setGiamTru(double giamTru) {
+	public void setGiamTru(float giamTru) {
 		this.giamTru = giamTru;
 	}
 
 
-	public double getTamUng() {
+	public float getTamUng() {
 		return tamUng;
 	}
 
 
-	public void setTamUng(double tamUng) {
+	public void setTamUng(float tamUng) {
 		this.tamUng = tamUng;
 	}
 
@@ -110,7 +155,7 @@ public class LuongNhanVienHanhChinh implements Serializable {
 	//---hashCode/equals---
 	@Override
 	public int hashCode() {
-		return Objects.hash(maLuong);
+		return Objects.hash(maBangLuongHC);
 	}
 
 
@@ -123,7 +168,16 @@ public class LuongNhanVienHanhChinh implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		LuongNhanVienHanhChinh other = (LuongNhanVienHanhChinh) obj;
-		return Objects.equals(maLuong, other.maLuong);
+		return Objects.equals(maBangLuongHC, other.maBangLuongHC);
+	}
+
+
+	//---toString---
+	@Override
+	public String toString() {
+		return "LuongNhanVienHanhChinh [maBangLuongHC=" + maBangLuongHC + ", nam=" + nam + ", thang=" + thang
+				+ ", trangThai=" + trangThai + ", nhanVien=" + nhanVien + ", heSoLuong=" + heSoLuong
+				+ ", luongCoBan=" + luongCoBan + ", phuCap=" + phuCap + "]";
 	}
 	
 }
