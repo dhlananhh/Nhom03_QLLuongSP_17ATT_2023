@@ -38,7 +38,7 @@ import com.toedter.calendar.JDateChooser;
 
 import connection.ConnectDB;
 import dao.ChamCong_dao;
-import dao.CongDoan_dao;
+import dao.DAO_CongDoan;
 import dao.CongNhan_dao;
 import dao.SanPham_dao;
 import entity.ChamCong;
@@ -57,7 +57,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 	private JCheckBox ckDatCT;
 	private ChamCong_dao chamCong_dao = new ChamCong_dao();
 	private SanPham_dao sanPham_dao = new SanPham_dao();
-	private CongDoan_dao congDoan_dao = new CongDoan_dao();
+	private DAO_CongDoan congDoan_dao = new DAO_CongDoan();
 	private CongNhan_dao congNhan_dao = new CongNhan_dao();
 	public GUI_BangChamCong() throws SQLException{
 		ConnectDB.getInstance().connect();;
