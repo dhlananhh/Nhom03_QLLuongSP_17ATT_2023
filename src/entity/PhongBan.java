@@ -6,7 +6,7 @@ import java.util.Objects;
 
 
 public class PhongBan implements Serializable {
-	private String ID;
+	private String maPhongBan;
 	private String tenPhongBan;
 	private String ghiChu;
 	
@@ -17,32 +17,32 @@ public class PhongBan implements Serializable {
 	}
 
 	
-	public PhongBan(String ID) {
-		this.ID = ID;
+	public PhongBan(String maPhongBan) {
+		this.maPhongBan = maPhongBan;
 	}
 
 	
-	public PhongBan(String ID, String tenPhongBan) {
-		this.ID = ID;
+	public PhongBan(String maPhongBan, String tenPhongBan) {
+		this.maPhongBan = maPhongBan;
 		this.tenPhongBan = tenPhongBan;
 	}
 
 
-	public PhongBan(String ID, String tenPhongBan, String ghiChu) {
-		this.ID = ID;
+	public PhongBan(String maPhongBan, String tenPhongBan, String ghiChu) {
+		this.maPhongBan = maPhongBan;
 		this.tenPhongBan = tenPhongBan;
 		this.ghiChu = ghiChu;
 	}
 
 
 	//---getters/setters---
-	public String getID() {
-		return ID;
+	public String getMaPhongBan() {
+		return maPhongBan;
 	}
 
 
-	public void setID(String iD) {
-		ID = iD;
+	public void setMaPhongBan(String maPhongBan) {
+		this.maPhongBan = maPhongBan;
 	}
 
 
@@ -69,7 +69,7 @@ public class PhongBan implements Serializable {
 	//---hashCode/equals---
 	@Override
 	public int hashCode() {
-		return Objects.hash(ID);
+		return Objects.hash(maPhongBan);
 	}
 
 
@@ -82,7 +82,7 @@ public class PhongBan implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		PhongBan other = (PhongBan) obj;
-		return Objects.equals(ID, other.ID);
+		return Objects.equals(maPhongBan, other.maPhongBan);
 	}
 	
 }
