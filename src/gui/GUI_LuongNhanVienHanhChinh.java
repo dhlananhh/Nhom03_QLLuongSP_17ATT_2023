@@ -1,6 +1,6 @@
 package gui;
 
-
+import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -8,46 +8,72 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
+import connection.ConnectDB;
+import dao.DAO_LuongCongNhanSanXuat;
+import dao.DAO_LuongNhanVienHanhChinh;
+import dao.DAO_NhanVienHanhChinh;
+import entity.LuongNhanVienHanhChinh;
 
-public class GUI_TinhLuong extends JFrame implements ActionListener, MouseListener {
+
+
+public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel pnContent, pnNorth, pnCenter;
-	private JPanel pnTable, pnTableNV, pnTableCN;
-	private JLabel lblTieuDe, lblNam, lblThang, lblLoaiBangLuong, lblError;
-	private JButton btnLoc, btnXoa, btnLuu;
-	private JComboBox cbNam, cbThang, cbLoaiBangLuong;
+	private JPanel pnTable;
+	private JLabel lblTieuDe, lblNam, lblThang, lblError;
+	private JButton btnThem, btnLoc, btnTimKiem, btnXoa, btnLuu, btnXuatExcel;
+	private JComboBox cbNam, cbThang;
 	private Font BVNPro;
+	private JLabel lblTimKiem;
+	private JTextField txtTimKiem;
 	private JTable tableNV, tableCN;
 	private DefaultTableModel modelNV, modelCN;
+	private DAO_LuongNhanVienHanhChinh dao_luongNV;
+	private DAO_NhanVienHanhChinh dao_nv;
+	private List<LuongNhanVienHanhChinh> listLuongNV = new ArrayList<LuongNhanVienHanhChinh>();
 	
-
-	public GUI_TinhLuong() {
+	
+	public GUI_LuongNhanVienHanhChinh() {
+		//get sql connection
+		try {
+			ConnectDB.getInstance().connect();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		dao_luongNV = new DAO_LuongNhanVienHanhChinh();
+		dao_nv = new DAO_NhanVienHanhChinh();
+		
 		//set JFrame properties
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setSize(screenSize.width, screenSize.height);
+//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//		setSize(screenSize.width, screenSize.height);
+		setSize(1300, 700);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
@@ -73,7 +99,7 @@ public class GUI_TinhLuong extends JFrame implements ActionListener, MouseListen
 		pnContent.add(pnNorth, BorderLayout.NORTH);
 		pnNorth.setBackground(headerColor);
 		
-		lblTieuDe = new JLabel("TÍNH LƯƠNG");
+		lblTieuDe = new JLabel("LƯƠNG NHÂN VIÊN HÀNH CHÍNH");
 		pnNorth.add(lblTieuDe);
 		lblTieuDe.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 25));
 		lblTieuDe.setForeground(Color.WHITE);
@@ -107,17 +133,11 @@ public class GUI_TinhLuong extends JFrame implements ActionListener, MouseListen
 		cbThang = new JComboBox<>(months);
 		cbThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		
-		lblLoaiBangLuong = new JLabel("Loại bảng lương: ");
-		lblLoaiBangLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		cbLoaiBangLuong = new JComboBox();
-		cbLoaiBangLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		cbLoaiBangLuong.addItem("---Chọn---");
-		cbLoaiBangLuong.addItem("Lương hành chính");
-		cbLoaiBangLuong.addItem("Lương sản phẩm");
-		
 		btnLoc = new JButton("Lọc");
 		btnXoa = new JButton("Xóa");
 		btnLuu = new JButton("Lưu");
+		btnThem = new JButton("Thêm");
+		btnXuatExcel = new JButton("Xuất Excel");
 		
 		btnLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		btnLoc.setBackground(buttonColor);
@@ -128,6 +148,12 @@ public class GUI_TinhLuong extends JFrame implements ActionListener, MouseListen
 		btnLuu.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		btnLuu.setBackground(buttonColor);
 		btnLuu.setForeground(Color.WHITE);
+		btnThem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnThem.setBackground(buttonColor);
+		btnThem.setForeground(Color.WHITE);
+		btnXuatExcel.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnXuatExcel.setBackground(buttonColor);
+		btnXuatExcel.setForeground(Color.WHITE);
 		
 		b1.add(lblNam);
 		b1.add(Box.createHorizontalStrut(10));
@@ -136,127 +162,113 @@ public class GUI_TinhLuong extends JFrame implements ActionListener, MouseListen
 		b1.add(lblThang);
 		b1.add(Box.createHorizontalStrut(10));
 		b1.add(cbThang);
-		b1.add(Box.createHorizontalStrut(50));
-		b1.add(lblLoaiBangLuong);
-		b1.add(Box.createHorizontalStrut(10));
-		b1.add(cbLoaiBangLuong);
-		b1.add(Box.createHorizontalStrut(50));
+		b1.add(Box.createHorizontalStrut(20));
 		b1.add(btnLoc);
+		b1.add(Box.createHorizontalStrut(10));
+		b1.add(btnThem);
 		b1.add(Box.createHorizontalStrut(10));
 		b1.add(btnXoa);
 		b1.add(Box.createHorizontalStrut(10));
 		b1.add(btnLuu);
+		b1.add(Box.createHorizontalStrut(10));
+		b1.add(btnXuatExcel);
 		
 		b.add(b1);
 		pnThongTin.add(b);
-		
+
+		//pnTable chứa bảng lương NV 
 		pnTable = new JPanel();
 		pnTable.setBackground(bgColor);
 		pnCenter.add(pnTable, BorderLayout.CENTER);
+		pnTable.setLayout(new BorderLayout());
 		
-		//tạo bảng chứa thông tin của NV
+		JPanel pnTieuDeBang = new JPanel();
+		pnTable.add(pnTieuDeBang, BorderLayout.NORTH);
+		pnTieuDeBang.setBackground(bgColor);
+		
+		JLabel lblTieuDeBang = new JLabel("Bảng lương nhân viên hành chính");
+		pnTieuDeBang.add(lblTieuDeBang);
+		lblTieuDeBang.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		
+		lblTimKiem = new JLabel(" | Tìm kiếm theo tên nhân viên: ");
+		lblTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		txtTimKiem = new JTextField();
+		
+		btnTimKiem = new JButton("Tìm kiếm");
+		btnTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnTimKiem.setBackground(buttonColor);
+		btnTimKiem.setForeground(Color.WHITE);
+		
+		pnTieuDeBang.add(lblTimKiem);
+		pnTieuDeBang.add(txtTimKiem);
+		pnTieuDeBang.add(btnTimKiem);
+		
+		// tạo bảng chứa thông tin của NV
 		createTableNV();
 		
+		// load bảng NV
+		loadBangNV();
 		
-		
-		//tạo bảng chứa thông tin của CN
-		createTableCN();
-		
-		
-		pnTableNV.setVisible(false);
-		pnTableCN.setVisible(false);
+//		pnTableNV.setVisible(false);
 		
 		Container container = getContentPane();
 		container.add(pnContent);
 		
+		btnThem.addActionListener(this);
 		btnLoc.addActionListener(this);
 		btnXoa.addActionListener(this);
 		btnLuu.addActionListener(this);
 	}
 	
 	
-	//tạo bảng chứa thông tin của NV
 	public void createTableNV() {
-		pnTableNV = new JPanel();
-		pnTable.add(pnTableNV);
-		
 		modelNV = new DefaultTableModel();
 		tableNV = new JTable(modelNV);
 		tableNV.setRowHeight(25);
 		
 		modelNV.addColumn("STT");
+		modelNV.addColumn("Năm");
+		modelNV.addColumn("Tháng");
 		modelNV.addColumn("Mã NV");
 		modelNV.addColumn("Họ tên");
-		modelNV.addColumn("CCCD");
-		modelNV.addColumn("Phòng ban");
-		modelNV.addColumn("Chức danh");
 		modelNV.addColumn("Lương cơ bản");
-		modelNV.addColumn("Lương phụ cấp");
+		modelNV.addColumn("Phụ cấp");
 		modelNV.addColumn("Giảm trừ");
 		modelNV.addColumn("Tạm ứng");
 		modelNV.addColumn("Thực lãnh");
 		
 		JScrollPane scrollPaneNV = new 	JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 											JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPaneNV.setPreferredSize(new Dimension(800, 350));
-		pnTableNV.add(scrollPaneNV);
+		scrollPaneNV.setPreferredSize(new Dimension(1000, 300));
+		pnTable.add(scrollPaneNV, BorderLayout.CENTER);
 	}
 	
 	
-	//tạo bảng chứa thông tin của CN
-	public void createTableCN() {
-		pnTableCN = new JPanel();
-		pnTable.add(pnTableCN);
-		
-		modelCN = new DefaultTableModel();
-		tableCN = new JTable(modelCN);
-		tableCN.setRowHeight(25);
-		
-		modelCN.addColumn("STT");
-		modelCN.addColumn("Mã CN");
-		modelCN.addColumn("Họ tên");
-		modelCN.addColumn("Lương sản phẩm");
-		modelCN.addColumn("Lương phụ cấp");
-		modelCN.addColumn("Giảm trừ");
-		modelCN.addColumn("Tạm ứng");
-		modelCN.addColumn("Thực lãnh");
-		
-		JScrollPane scrollPaneCN = new 	JScrollPane(tableCN, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-											JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPaneCN.setPreferredSize(new Dimension(800, 350));
-		pnTableCN.add(scrollPaneCN);
-	}
-	
-	
-	//ActionEvent
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		Object o = e.getSource();
-		
-		
-		if (o.equals(btnLoc)) {
-			String str = (String) cbLoaiBangLuong.getSelectedItem();
-			if (str.contains("Lương hành chính")) {
-				pnTableNV.setVisible(true);
-				pnTableCN.setVisible(false);
-			} else if (str.contains("Lương sản phẩm")) {
-				pnTableCN.setVisible(true);
-				pnTableNV.setVisible(false);
-			} else {
-				pnTableNV.setVisible(false);
-				pnTableCN.setVisible(false);
+	public void loadBangNV() {
+		dao_luongNV = new DAO_LuongNhanVienHanhChinh();
+		listLuongNV = dao_luongNV.docDuLieu();
+		try {
+			for (LuongNhanVienHanhChinh luongNV : listLuongNV) {
+				Object[] row = {
+						luongNV.getMaBangLuongHC(), luongNV.getNam(), luongNV.getThang(), 
+						luongNV.getNhanVien().getMaNV(), luongNV.getNhanVien().getHoTenNV(),
+						luongNV.getLuongCoBan(), luongNV.getPhuCap(),
+						luongNV.getGiamTru(), luongNV.getTamUng()
+						
+				};
+				modelNV.addRow(row);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
 	
-	//MouseEvent
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -264,13 +276,11 @@ public class GUI_TinhLuong extends JFrame implements ActionListener, MouseListen
 		
 	}
 
-
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
@@ -278,17 +288,24 @@ public class GUI_TinhLuong extends JFrame implements ActionListener, MouseListen
 		
 	}
 
-
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		
+		if (o.equals(btnLoc)) {
+			
+		}
+	}
+
 	
-	
-	//hàm main
 	public static void main(String[] args) {
 		FlatLightLaf.setup();
-		new GUI_TinhLuong().setVisible(true);
+		new GUI_LuongNhanVienHanhChinh().setVisible(true);
 	}
 }
