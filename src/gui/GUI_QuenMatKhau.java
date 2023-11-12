@@ -28,7 +28,7 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import connection.ConnectDB;
-import dao.TaiKhoan_dao;
+import dao.DAO_TaiKhoan;
 import entity.TaiKhoan;
 
 
@@ -40,13 +40,13 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 	private JPasswordField txtMatKhauMoi, txtNhapLaiMKMoi;
 	private JButton btnXacNhan, btnHuy;
 	private JCheckBox chkShowPwd;
-	private TaiKhoan_dao tk_dao;
+	private DAO_TaiKhoan tk_dao;
 	
 	
 	public GUI_QuenMatKhau() {
 		setTitle("Quên mật khẩu");
 		setSize(500, 400);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		//connect
 		try {
@@ -54,7 +54,7 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		tk_dao = new TaiKhoan_dao();
+		tk_dao = new DAO_TaiKhoan();
 		//panel
 		JPanel pnContent = new JPanel();
 		pnContent.setLayout(new BorderLayout());
