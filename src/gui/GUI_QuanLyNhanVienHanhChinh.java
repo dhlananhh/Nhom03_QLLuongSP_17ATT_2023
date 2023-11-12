@@ -16,8 +16,12 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
 
 import connection.ConnectDB;
+import dao.DAO_ChucDanh;
 import dao.DAO_NhanVienHanhChinh;
+import dao.DAO_PhongBan;
+import entity.ChucDanh;
 import entity.NhanVienHanhChinh;
+import entity.PhongBan;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -37,10 +41,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GUI_QuanLyNhanVien extends JFrame implements ActionListener, MouseListener {
+public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel pnContent, pnNorth, pnCenter, pnSouth;
-	private JButton btnLoc, btnThietLapLuong;
+	private JButton btnLoc;
 	private JLabel lblTieuDe, lblError;
 	private JLabel lblHoTenNV, lblGioiTinh, lblNgaySinh, lblDiaChi;
 	private JLabel lblCCCD, lblBHXH, lblNgayVao;
@@ -51,18 +55,34 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener, MouseL
 	private JDateChooser dcNgaySinh, dcNgayVao;
 	private JComboBox cbGioiTinh, cbPhongBan, cbChucDanh;
 	private JComboBox cbTrangThai, cbBangCap, cbLoc;
-	private JPanel pnTable, pnTable1, pnTable2, pnTable3;
-	private JTable tableNV1, tableNV2;
-	private DefaultTableModel modelNV1, modelNV2;
-	private DAO_NhanVienHanhChinh DAO_NhanVien;
+	private JButton btnThem, btnSua, btnXoa, btnXoaTrang, btnLuu;
 	private Color bgColor;
-	private List<NhanVienHanhChinh> dsNhanVien = new ArrayList<NhanVienHanhChinh>();
+	
+	private JPanel pnTable;
+	private JTable tableNV;
+	private DefaultTableModel modelNV;
+	
+	private DAO_NhanVienHanhChinh dao_nv;
+	private List<NhanVienHanhChinh> listNhanVien = new ArrayList<NhanVienHanhChinh>();
+	
+	private DAO_PhongBan dao_pb;
+	private List<PhongBan> listPhongBan = new ArrayList<PhongBan>();
+	
+	private DAO_ChucDanh dao_cd;
+	private List<ChucDanh> listChucDanh = new ArrayList<ChucDanh>();
 	
 	
-	public GUI_QuanLyNhanVien() throws Exception {
+	public GUI_QuanLyNhanVienHanhChinh() {
 		//get sql connection
-		ConnectDB.getInstance().connect();
+		try {
+			ConnectDB.getInstance().connect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		dao_nv = new DAO_NhanVienHanhChinh();
+		dao_pb = new DAO_PhongBan();
+		dao_cd = new DAO_ChucDanh();
 		
 		//set properties
 		setSize(new Dimension(1300, 700));
@@ -323,6 +343,11 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener, MouseL
 		JPanel pnTacVu = new JPanel();
 		pnCenter.add(pnTacVu, BorderLayout.CENTER);
 		pnTacVu.setBackground(bgColor);
+		pnTacVu.setLayout(new BorderLayout());
+		
+		JPanel pnLoc = new JPanel();
+		pnTacVu.add(pnLoc, BorderLayout.NORTH);
+		pnLoc.setBackground(bgColor);
 		
 		JComboBox cbLoc = new JComboBox();
 		cbLoc.addItem("---Chọn---");
@@ -333,9 +358,9 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener, MouseL
 		JTextField txtLoc = new JTextField();
 		btnLoc = new JButton("Lọc");
 		
-		pnTacVu.add(cbLoc);
-		pnTacVu.add(txtLoc);
-		pnTacVu.add(btnLoc);
+		pnLoc.add(cbLoc);
+		pnLoc.add(txtLoc);
+		pnLoc.add(btnLoc);
 		
 		cbLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		txtLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
@@ -343,6 +368,46 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener, MouseL
 		btnLoc.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
 		btnLoc.setBackground(buttonColor);
 		btnLoc.setForeground(Color.WHITE);
+		
+		JPanel pnChucNang = new JPanel();
+		pnTacVu.add(pnChucNang, BorderLayout.CENTER);
+		pnChucNang.setBackground(bgColor);
+		
+		btnThem = new JButton("Thêm");
+		btnThem.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		btnThem.setBackground(buttonColor);
+		btnThem.setForeground(Color.WHITE);
+		
+		btnSua = new JButton("Sửa");
+		btnSua.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		btnSua.setBackground(buttonColor);
+		btnSua.setForeground(Color.WHITE);
+		
+		btnXoa = new JButton("Xóa");
+		btnXoa.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		btnXoa.setBackground(buttonColor);
+		btnXoa.setForeground(Color.WHITE);
+		
+		btnXoaTrang = new JButton("Xóa trắng");
+		btnXoaTrang.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		btnXoaTrang.setBackground(buttonColor);
+		btnXoaTrang.setForeground(Color.WHITE);
+		
+		btnLuu = new JButton("Lưu");
+		btnLuu.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		btnLuu.setBackground(buttonColor);
+		btnLuu.setForeground(Color.WHITE);
+		
+		// add các button vào pnChucNang
+		pnChucNang.add(btnThem);
+		pnChucNang.add(btnSua);
+		pnChucNang.add(btnXoa);
+		pnChucNang.add(btnXoaTrang);
+		pnChucNang.add(btnLuu);
+		
+		JPanel pnRegex = new JPanel();
+		pnTacVu.add(pnRegex, BorderLayout.SOUTH);
+		pnRegex.setBackground(bgColor);
 		
 		//pnSouth chứa các table
 		pnSouth = new JPanel();
@@ -352,19 +417,14 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener, MouseL
 		pnTable = new JPanel();
 		pnSouth.add(pnTable, BorderLayout.NORTH);
 		pnTable.setBackground(bgColor);
-		pnTable.setLayout(new BorderLayout());
 		
-		//tạo bảng 1 chứa thông tin cá nhân của NV
-		createTable1();
+		//tạo bảng chứa thông tin cá nhân của NV
+		createTable();
 		
 		//load dữ liệu vào bảng 1
-		loadBang1();
+		loadData();
 		
-		//tạo bảng 2 chứa thông tin hành chính của NV
-		createTable2();
-		
-		//load dữ liệu vào bảng 2
-		loadBang2();
+	
 		
 		Container container = getContentPane();
 		container.add(pnContent);
@@ -375,83 +435,49 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener, MouseL
 	
 	
 	// tạo bảng 1
-	public void createTable1() {
-		pnTable1 = new JPanel();
-		pnTable.add(pnTable1, BorderLayout.WEST);
-		pnTable1.setBackground(bgColor);
+	public void createTable() {
+		modelNV = new DefaultTableModel();
+		tableNV = new JTable(modelNV);
+		tableNV.setRowHeight(25);
 		
-		modelNV1 = new DefaultTableModel();
-		tableNV1 = new JTable(modelNV1);
-		tableNV1.setRowHeight(25);
+		modelNV.addColumn("Mã NV");
+		modelNV.addColumn("Họ tên");
+		modelNV.addColumn("Giới tính");
+		modelNV.addColumn("Ngày sinh");
+		modelNV.addColumn("Địa chỉ");
+		modelNV.addColumn("CCCD");
+		modelNV.addColumn("BHXH");
+		modelNV.addColumn("Ngày vào");
+		modelNV.addColumn("Phòng ban");
+		modelNV.addColumn("Chức danh");
+		modelNV.addColumn("Trạng thái");
+		modelNV.addColumn("Bằng cấp");
+		modelNV.addColumn("Lương CB");
+		modelNV.addColumn("Phụ cấp");
+		modelNV.addColumn("Hệ số lương");
 		
-		modelNV1.addColumn("Họ tên");
-		modelNV1.addColumn("Giới tính");
-		modelNV1.addColumn("Ngày sinh");
-		modelNV1.addColumn("Địa chỉ");
-		modelNV1.addColumn("CCCD");
-		modelNV1.addColumn("BHXH");
-		
-		JScrollPane sp1 = new 	JScrollPane(tableNV1, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		JScrollPane sp = new 	JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		sp1.setPreferredSize(new Dimension(500, 250));
-		pnTable1.add(sp1);
+		sp.setPreferredSize(new Dimension(1200, 300));
+		pnTable.add(sp);
 	}
 	
 	
-	// tạo bảng 2
-	public void createTable2() {
-		pnTable2 = new JPanel();
-		pnTable.add(pnTable2, BorderLayout.EAST);
-		pnTable2.setBackground(bgColor);
-		
-		modelNV2 = new DefaultTableModel();
-		tableNV2 = new JTable(modelNV2);
-		tableNV2.setRowHeight(25);
-		
-		modelNV2.addColumn("Ngày vào");
-		modelNV2.addColumn("Phòng ban");
-		modelNV2.addColumn("Chức danh");
-		modelNV2.addColumn("Trạng thái");
-		modelNV2.addColumn("Bằng cấp");
-		modelNV2.addColumn("Lương CB");
-		modelNV2.addColumn("Phụ cấp");
-		modelNV2.addColumn("Hệ số lương");
-		
-		JScrollPane sp2 = new 	JScrollPane(tableNV2, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		sp2.setPreferredSize(new Dimension(500, 250));
-		pnTable2.add(sp2);
-	}
-	
-	
-	// load dữ liệu vào bảng 1
-	public void loadBang1() {
-		DAO_NhanVien = new DAO_NhanVienHanhChinh();
+	// load dữ liệu vào bảng nhân viên
+	public void loadData() {
+		dao_nv = new DAO_NhanVienHanhChinh();
+		listNhanVien = dao_nv.getDanhSachNhanVien();
 		try {
-			for (NhanVienHanhChinh nv : DAO_NhanVien.getDanhSachNhanVien()) {
+			for (NhanVienHanhChinh nv : listNhanVien) {
 				Object[] row = {
-						nv.getMaNV(), nv.getHoTenNV(), nv.isGioiTinh(), nv.getNgaySinh(), 
-						nv.getDiaChi(), nv.getCCCD(), nv.getBHXH()
+						nv.getMaNV(), nv.getHoTenNV(), 
+						nv.isGioiTinh() == true ? "Nam" : "Nữ",
+						nv.getNgaySinh(), nv.getDiaChi(), nv.getCCCD(), nv.getBHXH(), nv.getNgayVao(), 
+						nv.getPhongBan().getMaPhongBan(), nv.getChucDanh().getMaChucDanh(), 
+						nv.isTrangThai() == true ? "Đang làm việc" : "Nghỉ việc", 
+						nv.getBangCap(), nv.getLuongCoBan(), nv.getPhuCap(), nv.getHeSoLuong()
 				};
-				modelNV1.addRow(row);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	// load dữ liệu vào bảng 2
-	public void loadBang2() {
-		DAO_NhanVien = new DAO_NhanVienHanhChinh();
-		try {
-			for (NhanVienHanhChinh nv : DAO_NhanVien.getDanhSachNhanVien()) {
-				Object[] row = {
-						nv.getNgayVao(), nv.getMaPhongBan(), nv.getMaChucDanh(), 
-						nv.getTrangThai(), nv.getBangCap(), 
-						nv.getLuongCoBan(), nv.getPhuCap(), nv.getHeSoLuong()
-				};
-				modelNV2.addRow(row);
+				modelNV.addRow(row);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -464,8 +490,10 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener, MouseL
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		
-		if (o.equals(btnThietLapLuong)) {
-			new ThietLapLuong().setVisible(true);
+		if (o.equals(btnThem)) {
+			if (validData() == true) {
+				
+			}
 		}
 	}
 	
@@ -513,16 +541,41 @@ public class GUI_QuanLyNhanVien extends JFrame implements ActionListener, MouseL
 	
 	
 	public boolean validData() {
-//		String hoTen = txt
+		String hoTen = txtHoTenNV.getText().trim();
+		String diaChi = txtDiaChi.getText().trim();
+		String CCCD = txtCCCD.getText().trim();
+		String BHXH = txtBHXH.getText().trim();
+		
+		if (!(hoTen.length() > 0) || hoTen.matches("^[A-Za-z ]+$")) {
+			showMessage("Lỗi: Họ tên phải là ký tự", txtHoTenNV);
+			return false;
+		}
+		
+		
+		if (!(diaChi.length() > 0) || diaChi.matches("^[A-Za-z ]+$")) {
+			showMessage("Lỗi: Địa chỉ phải là ký tự", txtDiaChi);
+			return false;
+		}
+		
+		if (!(CCCD.length() > 0) || CCCD.matches("^[0-9]{12}$")) {
+			showMessage("Lỗi: CCCD phải có 12 chữ số", txtCCCD);
+			return false;
+		}
+		
+		if (!(BHXH.length() > 0) || BHXH.matches("^[0-9]{12}$")) {
+			showMessage("Lỗi: BHXH phải có 12 chữ số", txtBHXH);
+			return false;
+		}
+		
 		
 		return true;
 	}
 
 	
 	//hàm main
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		FlatLightLaf.setup();
-		new GUI_QuanLyNhanVien().setVisible(true);
+		new GUI_QuanLyNhanVienHanhChinh().setVisible(true);
 	}
 
 }
