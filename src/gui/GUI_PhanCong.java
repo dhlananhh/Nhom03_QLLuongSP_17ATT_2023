@@ -4,9 +4,11 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
 
@@ -32,6 +34,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,7 +94,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 	 * @throws SQLException 
 	 */
 	public GUI_PhanCong() throws SQLException {
-		ConnectDB.getInstance().connect();;
+		ConnectDB.getInstance().connect();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setBounds(100, 100, 1600, 900);
 		setSize(1300, 700);
@@ -120,7 +124,17 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		chooserNgay.setDate(new Date());
 		horizontalBox.add(chooserNgay);
 		horizontalBox.add(Box.createHorizontalStrut(200));
-		
+		chooserNgay.addPropertyChangeListener("date", new PropertyChangeListener() {
+			
+			@Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("date".equals(evt.getPropertyName())) {
+                    loadBangCN();
+                    loadBangPhanCong();
+                    clear();
+                }
+            }
+		});
 		Component verticalStrut = Box.createVerticalStrut(20);
 		pnCongNhan.add(verticalStrut);
 		
@@ -139,6 +153,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		spTableCN.setPreferredSize(new Dimension(500, 250));
 		pnCongNhan.add(spTableCN);
 		spTableCN.setViewportView(tableCongNhan);
+		spTableCN.setBorder(BorderFactory.createTitledBorder("Công nhân chưa phân công"));
 		pnCongNhan.add(Box.createVerticalStrut(50));
 		
 		loadBangCN();
@@ -250,12 +265,15 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		pnInput.add(b5);
 		
 		btnLuu = new JButton("Lưu");
+		btnLuu.setBackground(new Color(0, 153, 204));
+		btnLuu.setForeground(Color.WHITE);
 		b5.add(btnLuu);
 		
 		Component horizontalStrut = Box.createHorizontalStrut(100);
 		b5.add(horizontalStrut);
 		
 		btnXoa = new JButton("Xóa");
+		btnXoa.setBackground(Color.red);
 		btnXoa.setEnabled(false);
 		b5.add(btnXoa);
 		pnInput.add(Box.createVerticalStrut(100));
@@ -276,6 +294,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		spTablePC.setPreferredSize(new Dimension(1500, 300));
 		contentPane.add(spTablePC, BorderLayout.SOUTH);
 		spTablePC.setViewportView(tablePhanCong);
+		spTablePC.setBorder(BorderFactory.createTitledBorder("Bảng phân công"));
 		loadBangPhanCong();
 		tableCongNhan.addMouseListener(this);
 		tablePhanCong.addMouseListener(this);

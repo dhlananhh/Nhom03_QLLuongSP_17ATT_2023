@@ -16,7 +16,7 @@ public class CongNhan_dao {
 		ArrayList<CongNhanSanXuat> ds = new ArrayList<>();
 		try {
 			ConnectDB.getInstance();
-			Connection con = ConnectDB.getCon();
+			Connection con = ConnectDB.getConnection();
 			String sql = "Select * from CongNhanSanXuat";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
@@ -40,7 +40,7 @@ public class CongNhan_dao {
 		CongNhanSanXuat cn = new CongNhanSanXuat(ma);
 		try {
 			ConnectDB.getInstance();
-			Connection con = ConnectDB.getCon();
+			Connection con = ConnectDB.getConnection();
 			String sql = "Select * from CongNhanSanXuat where maCN = '"+ ma +"'";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);

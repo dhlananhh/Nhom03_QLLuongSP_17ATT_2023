@@ -17,7 +17,7 @@ public class ChamCong_dao {
 	
 	public boolean themBangPhanCong(ChamCong phanCong) throws SQLException {
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		try {
 
 			PreparedStatement ps = con.prepareStatement("insert into ChamCong values (?, ?, ?, ?, null)");
@@ -37,7 +37,7 @@ public class ChamCong_dao {
 	}
 	public boolean chamCong(ChamCong o) throws SQLException {
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement(
 					"update ChamCong set soLuongHoanThanh = ? where maCN = ? and ngayCham = ?");
@@ -54,7 +54,7 @@ public class ChamCong_dao {
 	}
 	public boolean xoaPhanCong(String macn, Date date) throws SQLException {
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("delete ChamCong where maCN = ? and ngayCham = ?");
 			ps.setString(1, macn);
@@ -69,7 +69,7 @@ public class ChamCong_dao {
 	}
 	public List<ChamCong> getDSChamCongTheoNgay(Date ngay){
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		List<ChamCong> dsChamCong = new ArrayList<ChamCong>();
 		try {
 			PreparedStatement ps = con.prepareStatement("select * from ChamCong where ngayCham= '"+ ngay +"' ");

@@ -3,25 +3,39 @@ package gui;
 import java.awt.EventQueue;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
+import connection.ConnectDB;
+import dao.DAO_NhanVienHanhChinh;
+import entity.NhanVienHanhChinh;
+
 import java.awt.BorderLayout;
+import java.awt.Color;
+
 import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+
 import java.awt.Component;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
 
@@ -36,7 +50,7 @@ public class GUI_DiemDanh extends JFrame {
 	private int month;
 	List<String> columnsDD = new ArrayList<>();
 	private JTextField txtKhongPhep;
-
+	private DAO_NhanVienHanhChinh dao_NVHC = new DAO_NhanVienHanhChinh();
 
 	/**
 	 * Launch the application.
@@ -57,8 +71,10 @@ public class GUI_DiemDanh extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
-	public GUI_DiemDanh() {
+	public GUI_DiemDanh() throws SQLException {
+		ConnectDB.getInstance().connect();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1300, 700);
 		setResizable(false);
@@ -107,7 +123,7 @@ public class GUI_DiemDanh extends JFrame {
 		
 		cbMaNV = new JComboBox();
 		b3.add(cbMaNV);
-		cbMaNV.setPreferredSize(new Dimension(200, 5));
+		cbMaNV.setPreferredSize(new Dimension(200, 30));
 		b1.add(b3);
 		b1.add(Box.createVerticalStrut(30));
 
@@ -138,10 +154,10 @@ public class GUI_DiemDanh extends JFrame {
 		txtTenNV.setColumns(10);
 		
 		b1.add(b5);
-		b1.add(Box.createVerticalStrut(70));
+		b1.add(Box.createVerticalStrut(90));
 		Box b6 = Box.createHorizontalBox();
 		b2.add(b6);
-		b2.add(Box.createVerticalStrut(60));
+		b2.add(Box.createVerticalStrut(90));
 		b6.add(Box.createHorizontalStrut(300));
 		JLabel lblKhongPhep = new JLabel("Số ngày nghỉ không phép:   ");
 		b6.add(lblKhongPhep);
@@ -150,6 +166,16 @@ public class GUI_DiemDanh extends JFrame {
 		b6.add(Box.createHorizontalStrut(200));
 		
 		JPanel pnTable = new JPanel(new BorderLayout());
+		Box b7 = Box.createHorizontalBox();
+		pnTable.add(b7, BorderLayout.NORTH);
+		b7.add(Box.createHorizontalStrut(50));
+		b7.add(new JLabel("P: vắng có phép"));
+		b7.add(Box.createHorizontalStrut(50));
+		b7.add(new JLabel("K: vắng không phép"));
+		
+		Box b8 = Box.createVerticalBox();
+		b8.add(Box.createVerticalStrut(10));
+		pnTable.add(b8, BorderLayout.CENTER);
 		modelDiemDanh = new DefaultTableModel(columnsDD.toArray(), 0);
 		tableDiemDanh = new JTable(modelDiemDanh);
 		taoCotTheoThang();
@@ -158,21 +184,55 @@ public class GUI_DiemDanh extends JFrame {
 		spTableDD.setPreferredSize(new Dimension(1200,400));
 		contentPane.add(pnTable, BorderLayout.SOUTH);
 		tableDiemDanh.setFillsViewportHeight(true);
-		pnTable.add(spTableDD, BorderLayout.CENTER);
+		pnTable.add(spTableDD, BorderLayout.SOUTH);
+	
 		
 		cbThang.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				taoCotTheoThang();
+				loadBang();
 			}
 		});
+		loadBang();
+
 	}
 	private void taoCotTheoThang() {
 		columnsDD.removeAll(columnsDD);
 		columnsDD.add("Mã nhân viên");
 		columnsDD.add("Họ tên");
+		DefaultTableCellRenderer cellRender = new DefaultTableCellRenderer() {
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+				Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				// Đặt border cho ô
+				Border border = BorderFactory.createLineBorder(Color.lightGray);
+				((JComponent) component).setBorder(border);
+				
+				return component;
+				}
+		};
 		for(int i=1; i<=30; i++)
 			columnsDD.add(i+"/"+cbThang.getSelectedItem());
 		modelDiemDanh.setColumnIdentifiers(columnsDD.toArray());
+		tableDiemDanh.getColumnModel().getColumn(0).setPreferredWidth(100);
+		tableDiemDanh.getColumnModel().getColumn(0).setCellRenderer(cellRender);
+		tableDiemDanh.getColumnModel().getColumn(1).setPreferredWidth(200);
+		tableDiemDanh.getColumnModel().getColumn(1).setCellRenderer(cellRender);
+		JComboBox<String> cbPhep = new JComboBox<String>(new String[] {"","P","K"});
+		for(int i=1; i<=30; i++) {
+			tableDiemDanh.getColumnModel().getColumn(i+1).setPreferredWidth(50);
+			tableDiemDanh.getColumnModel().getColumn(i+1).setCellEditor(new DefaultCellEditor(cbPhep));
+			tableDiemDanh.getColumnModel().getColumn(i+1).setCellRenderer(cellRender);
+		}
+		tableDiemDanh.getTableHeader().setResizingAllowed(false);
+        tableDiemDanh.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	}
+	private void loadBang() {
+		modelDiemDanh.setRowCount(0);
+		for (NhanVienHanhChinh nv : dao_NVHC.getDanhSachNhanVien()) {
+			String[] row = {nv.getMaNV(), nv.getHoTenNV()};
+			modelDiemDanh.addRow(row);
+		}
 	}
 }

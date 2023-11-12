@@ -16,7 +16,7 @@ public class CongDoan_dao {
 		ArrayList<CongDoan> dsCongDoan = new ArrayList<CongDoan>();
 		try {
 			ConnectDB.getInstance();
-			Connection con = ConnectDB.getCon();
+			Connection con = ConnectDB.getConnection();
 			String sql = "Select * from CongDoan";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
@@ -37,7 +37,7 @@ public class CongDoan_dao {
 	}
 	public boolean themCD(CongDoan cd) {
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		int n = 0;
 		try {
@@ -63,7 +63,7 @@ public class CongDoan_dao {
 	public ArrayList<CongDoan> getAllCongDoanTheoSP(String maSP){
 		ArrayList<CongDoan> dsCD = new ArrayList<CongDoan>();
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		try {
 			String sql = "Select * from CongDoan where maSP = ?";
@@ -87,7 +87,7 @@ public class CongDoan_dao {
 	public CongDoan getCongDoanTheoMa(String maCD){
 		CongDoan cd = new CongDoan(maCD);
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		try {
 			String sql = "Select * from CongDoan where maCD = ?";
@@ -107,7 +107,7 @@ public class CongDoan_dao {
 	}
 	public boolean capNhatCD(CongDoan cd) {
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		int n = 0;
 		try {
