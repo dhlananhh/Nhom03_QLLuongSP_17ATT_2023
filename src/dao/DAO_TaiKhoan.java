@@ -69,4 +69,21 @@ public class DAO_TaiKhoan {
 			}		
 		return tk;	
 	}
+	public TaiKhoan layTKTheoMatKhau(String mk) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		TaiKhoan tk = new TaiKhoan();
+		try {
+			Statement stm = con.createStatement();
+			ResultSet rs = stm.executeQuery("select * from TaiKhoan where matKhau = '"+ mk +"'");
+			while(rs.next()) {
+				tk.setTenTK(rs.getString("tenTK"));
+				tk.setMatKhau(rs.getString("matKhau"));
+			}
+		}
+		catch (SQLException e) {
+				e.printStackTrace();
+			}		
+		return tk;	
+	}
 }
