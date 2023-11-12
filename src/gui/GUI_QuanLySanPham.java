@@ -428,9 +428,11 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		return true;
 	}
 	public boolean kiemTraRangBuocCD() {
+		String maSP = txtMSP.getText();
 		String tenCD = txtTenCD.getText();
 		String thuTu = txtThuTu.getText();
 		String luongSP = txtLuongSP.getText();
+		
 		if(!tenCD.matches("[a-zA-Z' ]+")) {
 			JOptionPane.showMessageDialog(this,	"Tên công đoạn phải là ký tự");
 			return false;
@@ -448,13 +450,17 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 			}
 		}
 		if(thuTu.length()>0) {
-			
 			try {
 				int tt = Integer.parseInt(thuTu);
-				if(tt < 0 || tt > 5) {
-					JOptionPane.showMessageDialog(this,	"Thứ từ của công đoạn phải từ 1-5");
-					return false;
-				}
+				ArrayList<CongDoan> dsCD= cd_dao.getAllCongDoanTheoSP(maSP);
+				if(dsCD.size() > 0) {
+					for(int i = 0; i < dsCD.size();i++) {
+						if(tt == dsCD.get(i).getThuTu()) {
+							JOptionPane.showMessageDialog(this,	"Thứ tự của công đoạn không trùng nhau");
+							return false;
+						}
+					}
+				}				
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(this,	"Thứ tự phải là số");
 				return false;
