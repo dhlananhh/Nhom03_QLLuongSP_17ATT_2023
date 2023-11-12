@@ -37,8 +37,8 @@ import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import connection.ConnectDB;
-import dao.CongDoan_dao;
-import dao.SanPham_dao;
+import dao.DAO_CongDoan;
+import dao.DAO_SanPham;
 import entity.CongDoan;
 import entity.SanPham;
 
@@ -51,8 +51,8 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 	private JButton btnLoc, btnThem, btnSua, btnXoa, btnXoaTrang, btnLuu;
 	private JComboBox<String> cbLoc, cbTrangThai;
 	private JTextField txtLoc, txtMSP, txtMCD, txtTenSP, txtTenCD, txtLuongSP, txtSoLuong, txtGiaThanh, txtThuTu;
-	private CongDoan_dao cd_dao;
-	private SanPham_dao sp_dao;
+	private DAO_CongDoan cd_dao;
+	private DAO_SanPham sp_dao;
 	private int soLuongSP;
 	private int soLuongCD;
 	private Map<String, Boolean> daNhap = new HashMap<>();
@@ -61,7 +61,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		setTitle("Quản lý sản phẩm");
 		setSize(1300, 700);
 		setResizable(false);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		//font
 		try {
@@ -78,8 +78,8 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		cd_dao = new CongDoan_dao();
-		sp_dao = new SanPham_dao();
+		cd_dao = new DAO_CongDoan();
+		sp_dao = new DAO_SanPham();
 		
 		//panel
 		pnContent = new JPanel();
