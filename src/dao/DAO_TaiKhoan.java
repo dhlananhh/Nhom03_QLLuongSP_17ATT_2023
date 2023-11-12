@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import connection.ConnectDB;
 import entity.TaiKhoan;
 
-public class TaiKhoan_dao {
+public class DAO_TaiKhoan {
 	public ArrayList<TaiKhoan> layDuLieuTK(){
 		ArrayList<TaiKhoan> dsTaiKhoan = new ArrayList<TaiKhoan>();
 		try {
 			ConnectDB.getInstance();
-			Connection con = ConnectDB.getCon();
+			Connection con = ConnectDB.getConnection();
 			String sql = "Select * from TaiKhoan";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
@@ -32,7 +32,7 @@ public class TaiKhoan_dao {
 	}
 	public boolean doiMatKhau(TaiKhoan tk, String mkMoi) {
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		int n = 0;
 		try {
@@ -54,7 +54,7 @@ public class TaiKhoan_dao {
 	}
 	public TaiKhoan layTKTheoTen(String tenTK) {
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		TaiKhoan tk = new TaiKhoan();
 		try {
 			Statement stm = con.createStatement();
