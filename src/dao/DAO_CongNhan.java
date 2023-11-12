@@ -11,7 +11,7 @@ import connection.ConnectDB;
 import entity.CongNhanSanXuat;
 import entity.SanPham;
 
-public class CongNhan_dao {
+public class DAO_CongNhan {
 	public List<CongNhanSanXuat> getDSCongNhan(){
 		ArrayList<CongNhanSanXuat> ds = new ArrayList<>();
 		try {

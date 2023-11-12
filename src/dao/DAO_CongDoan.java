@@ -11,7 +11,7 @@ import connection.ConnectDB;
 import entity.CongDoan;
 import entity.SanPham;
 
-public class CongDoan_dao {
+public class DAO_CongDoan {
 	public ArrayList<CongDoan> getalltbCongDoan(){
 		ArrayList<CongDoan> dsCongDoan = new ArrayList<CongDoan>();
 		try {

@@ -13,7 +13,7 @@ import entity.ChamCong;
 import entity.CongDoan;
 import entity.NhanVien;
 
-public class ChamCong_dao {
+public class DAO_ChamCong {
 	
 	public boolean themBangPhanCong(ChamCong phanCong) throws SQLException {
 		ConnectDB.getInstance();

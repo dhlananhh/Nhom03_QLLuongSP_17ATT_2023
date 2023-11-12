@@ -60,41 +60,46 @@ public class DAO_SanPham {
 		return n > 0;
 	}
 	public SanPham getSanPhamTheoMa(String masp){
-        SanPham sp = new SanPham(masp);
-        try {
-            ConnectDB.getInstance();
-            Connection con = ConnectDB.getConnection();
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery("select * from SanPham where maSP = '" + masp + "'");
-            while(rs.next()) {
-                sp.setTenSP(rs.getString("tenSP"));
-                sp.setSoLuongTon(rs.getInt("soLuongTon"));
-                sp.setGiaThanh(rs.getDouble("giaThanh"));
-                sp.setTrangThai(rs.getBoolean("trangThai"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return sp;
-	}
-	public SanPham getSanPhamTheoTen(String tensp){
-		SanPham sp = new SanPham();
+		SanPham sp = new SanPham(masp);
 		try {
 			ConnectDB.getInstance();
-            Connection con = ConnectDB.getConnection();
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery("select * from SanPham where tenSP = '" + tensp + "'");
+			Connection con = ConnectDB.getConnection();
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery("select * from SanPham where maSP = '" + masp + "'");
 			while(rs.next()) {
-				sp.setMaSP(rs.getString("maSP"));
-				sp.setTenSP(rs.getString("tenSP"));
-                sp.setSoLuongTon(rs.getInt("soLuongTon"));
-                sp.setGiaThanh(rs.getDouble("giaThanh"));
-                sp.setTrangThai(rs.getBoolean("trangThai"));
+				sp.setTenSP(rs.getString(2));
+				sp.setSoLuongTon(rs.getInt(3));
+				sp.setGiaThanh(rs.getDouble(4));
+				sp.setTrangThai(rs.getBoolean(5));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return sp;
+	}
+	public ArrayList<SanPham> getalltbSanPhamTheoTen(String tensp){
+		ArrayList<SanPham> dsSanPham = new ArrayList<SanPham>();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement statement = null;
+		try {
+			String sql = "Select * from SanPham where tenSP = ?";
+			statement = con.prepareStatement(sql);
+			statement.setString(1, tensp);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				String maSP = rs.getString("maSP");
+				String tenSP = rs.getString("tenSP");
+				int soLuongTon = rs.getInt("soLuongTon");
+				double giaThanh = rs.getDouble("giaThanh");
+				boolean trangThai = rs.getBoolean("trangThai");
+				SanPham sp = new SanPham(maSP, tenSP, soLuongTon, giaThanh, trangThai);
+				dsSanPham.add(sp);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return sp;
+		return dsSanPham;
 	}
 	public ArrayList<SanPham> getalltbSanPhamTheoTrangThai(boolean tt){
 		ArrayList<SanPham> dsSanPham = new ArrayList<SanPham>();

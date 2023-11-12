@@ -16,10 +16,10 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
 
 import connection.ConnectDB;
-import dao.ChamCong_dao;
+import dao.DAO_ChamCong;
 import dao.DAO_CongDoan;
-import dao.CongNhan_dao;
-import dao.SanPham_dao;
+import dao.DAO_CongNhan;
+import dao.DAO_SanPham;
 import entity.ChamCong;
 import entity.CongDoan;
 import entity.CongNhanSanXuat;
@@ -68,10 +68,10 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 	private JButton btnLuu, btnXoa;
 	private DefaultTableModel modelCongNhan, modelPhanCong;
 	private JTable tableCongNhan, tablePhanCong;
-	private ChamCong_dao chamCong_dao = new ChamCong_dao();
-	private SanPham_dao sanPham_dao = new SanPham_dao();
+	private DAO_ChamCong chamCong_dao = new DAO_ChamCong();
+	private DAO_SanPham sanPham_dao = new DAO_SanPham();
 	private DAO_CongDoan congDoan_dao = new DAO_CongDoan();
-	private CongNhan_dao congNhan_dao = new CongNhan_dao();
+	private DAO_CongNhan congNhan_dao = new DAO_CongNhan();
 	/**
 	 * Launch the application.
 	 */
