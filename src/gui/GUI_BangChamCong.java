@@ -132,7 +132,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
         
         btnLoc.setBackground(new Color(0, 153, 204));
         btnLoc.setForeground(Color.WHITE);
-        //Box 2
+        //Box 2 
         //Box 2 trái
         JPanel pnChamCong = new JPanel();
         pnChamCong.setBackground(new Color(130, 199, 250));
