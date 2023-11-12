@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -26,6 +27,10 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
+import connection.ConnectDB;
+import dao.TaiKhoan_dao;
+import entity.TaiKhoan;
+
 
 public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
@@ -35,16 +40,21 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 	private JPasswordField txtMatKhauMoi, txtNhapLaiMKMoi;
 	private JButton btnXacNhan, btnHuy;
 	private JCheckBox chkShowPwd;
+	private TaiKhoan_dao tk_dao;
 	
 	
 	public GUI_QuenMatKhau() {
 		setTitle("Quên mật khẩu");
-		setSize(500, 350);
-		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		//setSize(screenSize.width, screenSize.height);
+		setSize(500, 400);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-	
+		//connect
+		try {
+			ConnectDB.getInstance().connect();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		tk_dao = new TaiKhoan_dao();
 		//panel
 		JPanel pnContent = new JPanel();
 		pnContent.setLayout(new BorderLayout());
@@ -67,14 +77,12 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		pnContent.add(pnBot, BorderLayout.SOUTH);
 		pnBot.setBackground(new Color(245, 251, 255));
 		//Box
-		Box b, b1, b2, b3;
+		Box b, b1, b2, b3, b4;
 		b = Box.createVerticalBox();
 		b1 = Box.createVerticalBox();
 		b2 = Box.createVerticalBox();
 		b3 = Box.createVerticalBox();
-		Box b4 = Box.createHorizontalBox();
-		Box b5 = Box.createHorizontalBox();
-		Box b6 = Box.createHorizontalBox();
+		b4 = Box.createHorizontalBox();	
 		//b1
 		b1.add(lblTaiKhoan = new JLabel("Tài khoản: "));
 		b1.add(Box.createVerticalStrut(10));
@@ -87,11 +95,12 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		b3.add(lblNhapLaiMKMoi = new JLabel("Nhập lại mật khẩu mới: "));
 		b3.add(Box.createVerticalStrut(10));
 		b3.add(txtNhapLaiMKMoi = new JPasswordField(20));
+		//b4
+		chkShowPwd = new JCheckBox("Hiển thị mật khẩu");
+		b4.add(chkShowPwd);
 		//preference
 		lblTaiKhoan.setPreferredSize(lblNhapLaiMKMoi.getPreferredSize());
 		lblMatKhauMoi.setPreferredSize(lblNhapLaiMKMoi.getPreferredSize());
-		//chkShowPwd = new JCheckBox("Show password");
-		//b4.add(chkShowPwd);
 		//font
 		lblTaiKhoan.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		lblMatKhauMoi.setFont(new Font("Times New Roman", Font.BOLD, 15));
@@ -103,6 +112,8 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		b.add(b2);
 		b.add(Box.createRigidArea(new Dimension(0, 20)));
 		b.add(b3);
+		b.add(Box.createRigidArea(new Dimension(0, 20)));
+		b.add(b4);
 		pnCenter.add(b);
 		//btn
 		pnBot.add(btnXacNhan = new JButton("Xác nhận"));
@@ -118,26 +129,43 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		btnXacNhan.addActionListener(this);
 		btnHuy.addActionListener(this);
 		btnHuy.setPreferredSize(btnXacNhan.getPreferredSize());
-		//chkShowPwd.addActionListener(this);
+		chkShowPwd.addActionListener(this);
 		
 	}
-
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
 		if (o.equals(btnXacNhan)) {
-			String userText;
-            String pwdText;
-            userText = txtTaiKhoan.getText();
-            pwdText = txtMatKhauMoi.getText();
-            if (userText.equalsIgnoreCase("admin") && pwdText.equalsIgnoreCase("123456")) {
-                JOptionPane.showMessageDialog(this, "Login Successful");
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid Username or Password");
+			String tenTK = txtTaiKhoan.getText();
+            String matKhauMoi = txtMatKhauMoi.getText();
+			String nhapLaiMK = txtNhapLaiMKMoi.getText();
+            TaiKhoan tk = tk_dao.layTKTheoTen(tenTK);
+            if(tk.getTenTK() == null) {
+    			JOptionPane.showMessageDialog(null, "Tài khoản không đúng!");
+    			txtTaiKhoan.setText("");
+    			txtTaiKhoan.requestFocus();
+    			return;
+    		}
+            if(matKhauMoi.equals("")) {
+            	JOptionPane.showMessageDialog(this, "Mật khẩu không được rỗng");
+            	txtMatKhauMoi.setText("");
+            	txtMatKhauMoi.requestFocus();
+            	return;
             }
-		} 
+            if(!nhapLaiMK.equals(matKhauMoi)) {
+            	JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại không đúng");
+            	txtNhapLaiMKMoi.setText("");
+            	txtNhapLaiMKMoi.requestFocus();
+            	return;
+            }
+            else  {
+            	tk_dao.doiMatKhau(tk, matKhauMoi);
+                JOptionPane.showMessageDialog(this, "Thay đổi thành công");
+                this.setVisible(false);
+            }
+		}
 		else if (o.equals(btnHuy)) {
 			int choice = JOptionPane.showConfirmDialog(this, "Bạn có muốn thoát chương trình không?", "Thoát chương trình",
                     JOptionPane.YES_NO_OPTION);
@@ -145,7 +173,7 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
                 System.exit(0); 
             }
 		} 
-		/*else if (o.equals(chkShowPwd)) {
+		else if (o.equals(chkShowPwd)) {
 			if (chkShowPwd.isSelected()) {
 				txtMatKhauMoi.setEchoChar((char) 0);
 				txtNhapLaiMKMoi.setEchoChar((char) 0);
@@ -153,11 +181,10 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
             	txtMatKhauMoi.setEchoChar('*');
             	txtNhapLaiMKMoi.setEchoChar('*');
             }
-		}*/
+		}
 		
 		
 	}
-	
 	
 	public static void main(String[] args) throws Exception {
 		FlatLightLaf.setup();	
