@@ -12,6 +12,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -30,11 +32,11 @@ import javax.swing.table.TableColumnModel;
 import com.formdev.flatlaf.FlatLightLaf;
 
 
-public class GUI_TinhLuong extends JFrame implements ActionListener {
+public class GUI_TinhLuong extends JFrame implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel pnContent, pnNorth, pnCenter;
 	private JPanel pnTable, pnTableNV, pnTableCN;
-	private JLabel lblTieuDe, lblNam, lblThang, lblLoaiBangLuong;
+	private JLabel lblTieuDe, lblNam, lblThang, lblLoaiBangLuong, lblError;
 	private JButton btnLoc, btnXoa, btnLuu;
 	private JComboBox cbNam, cbThang, cbLoaiBangLuong;
 	private Font BVNPro;
@@ -51,7 +53,7 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 		
 		//load fonts
 		try {
-			String fileName = "src/fonts/BeVietnamPro-Black.ttf";
+			String fileName = "fonts/BeVietnamPro-Regular.ttf";
 			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)));
@@ -73,7 +75,7 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 		
 		lblTieuDe = new JLabel("TÍNH LƯƠNG");
 		pnNorth.add(lblTieuDe);
-		lblTieuDe.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 25));
+		lblTieuDe.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 25));
 		lblTieuDe.setForeground(Color.WHITE);
 		
 		pnCenter = new JPanel();
@@ -89,41 +91,41 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 		Box b1 = Box.createHorizontalBox();
 		
 		lblNam = new JLabel("Năm: ");
-		lblNam.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		lblNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		String[] years = {"---Chọn---",
 	            "2020", "2021", "2022", "2023", "2024"
 	        };
 		cbNam = new JComboBox<>(years);
-		cbNam.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		cbNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		
 		lblThang = new JLabel("Tháng: ");
-		lblThang.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		lblThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		String[] months = {"---Chọn---",
 	            "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
 	            "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
 	        };
 		cbThang = new JComboBox<>(months);
-		cbThang.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		cbThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		
 		lblLoaiBangLuong = new JLabel("Loại bảng lương: ");
-		lblLoaiBangLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		lblLoaiBangLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		cbLoaiBangLuong = new JComboBox();
-		cbLoaiBangLuong.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		cbLoaiBangLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		cbLoaiBangLuong.addItem("---Chọn---");
-		cbLoaiBangLuong.addItem("Lương tháng");
+		cbLoaiBangLuong.addItem("Lương hành chính");
 		cbLoaiBangLuong.addItem("Lương sản phẩm");
 		
 		btnLoc = new JButton("Lọc");
 		btnXoa = new JButton("Xóa");
 		btnLuu = new JButton("Lưu");
 		
-		btnLoc.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		btnLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		btnLoc.setBackground(buttonColor);
 		btnLoc.setForeground(Color.WHITE);
-		btnXoa.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		btnXoa.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		btnXoa.setBackground(buttonColor);
 		btnXoa.setForeground(Color.WHITE);
-		btnLuu.setFont(new Font("BeVietnamPro-Black", Font.PLAIN, 15));
+		btnLuu.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		btnLuu.setBackground(buttonColor);
 		btnLuu.setForeground(Color.WHITE);
 		
@@ -152,6 +154,29 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 		pnTable.setBackground(bgColor);
 		pnCenter.add(pnTable, BorderLayout.CENTER);
 		
+		//tạo bảng chứa thông tin của NV
+		createTableNV();
+		
+		
+		
+		//tạo bảng chứa thông tin của CN
+		createTableCN();
+		
+		
+		pnTableNV.setVisible(false);
+		pnTableCN.setVisible(false);
+		
+		Container container = getContentPane();
+		container.add(pnContent);
+		
+		btnLoc.addActionListener(this);
+		btnXoa.addActionListener(this);
+		btnLuu.addActionListener(this);
+	}
+	
+	
+	//tạo bảng chứa thông tin của NV
+	public void createTableNV() {
 		pnTableNV = new JPanel();
 		pnTable.add(pnTableNV);
 		
@@ -162,6 +187,9 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 		modelNV.addColumn("STT");
 		modelNV.addColumn("Mã NV");
 		modelNV.addColumn("Họ tên");
+		modelNV.addColumn("CCCD");
+		modelNV.addColumn("Phòng ban");
+		modelNV.addColumn("Chức danh");
 		modelNV.addColumn("Lương cơ bản");
 		modelNV.addColumn("Lương phụ cấp");
 		modelNV.addColumn("Giảm trừ");
@@ -172,7 +200,11 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 											JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPaneNV.setPreferredSize(new Dimension(800, 350));
 		pnTableNV.add(scrollPaneNV);
-		
+	}
+	
+	
+	//tạo bảng chứa thông tin của CN
+	public void createTableCN() {
 		pnTableCN = new JPanel();
 		pnTable.add(pnTableCN);
 		
@@ -193,19 +225,10 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 											JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPaneCN.setPreferredSize(new Dimension(800, 350));
 		pnTableCN.add(scrollPaneCN);
-		
-		pnTableNV.setVisible(false);
-		pnTableCN.setVisible(false);
-		
-		Container container = getContentPane();
-		container.add(pnContent);
-		
-		btnLoc.addActionListener(this);
-		btnXoa.addActionListener(this);
-		btnLuu.addActionListener(this);
 	}
 	
 	
+	//ActionEvent
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
@@ -213,17 +236,57 @@ public class GUI_TinhLuong extends JFrame implements ActionListener {
 		
 		if (o.equals(btnLoc)) {
 			String str = (String) cbLoaiBangLuong.getSelectedItem();
-			if (str.contains("Lương tháng")) {
+			if (str.contains("Lương hành chính")) {
 				pnTableNV.setVisible(true);
 				pnTableCN.setVisible(false);
-			} else {
+			} else if (str.contains("Lương sản phẩm")) {
 				pnTableCN.setVisible(true);
 				pnTableNV.setVisible(false);
+			} else {
+				pnTableNV.setVisible(false);
+				pnTableCN.setVisible(false);
 			}
 		}
 	}
 	
 	
+	//MouseEvent
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	//hàm main
 	public static void main(String[] args) {
 		FlatLightLaf.setup();
 		new GUI_TinhLuong().setVisible(true);
