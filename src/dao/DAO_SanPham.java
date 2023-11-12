@@ -11,12 +11,12 @@ import connection.ConnectDB;
 import entity.CongDoan;
 import entity.SanPham;
 
-public class SanPham_dao {
+public class DAO_SanPham {
 	public ArrayList<SanPham> getalltbSanPham(){
 		ArrayList<SanPham> dsSanPham = new ArrayList<SanPham>();
 		try {
 			ConnectDB.getInstance();
-			Connection con = ConnectDB.getCon();
+			Connection con = ConnectDB.getConnection();
 			String sql = "Select * from SanPham";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
@@ -36,7 +36,7 @@ public class SanPham_dao {
 	}
 	public boolean themSP(SanPham sp) {
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		int n = 0;
 		try {
@@ -62,7 +62,7 @@ public class SanPham_dao {
 	public ArrayList<SanPham> getalltbSanPhamTheoMa(String masp){
 		ArrayList<SanPham> dsSanPham = new ArrayList<SanPham>();
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		try {
 			String sql = "Select * from SanPham where maSP = ?";
@@ -86,7 +86,7 @@ public class SanPham_dao {
 	public ArrayList<SanPham> getalltbSanPhamTheoTen(String tensp){
 		ArrayList<SanPham> dsSanPham = new ArrayList<SanPham>();
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		try {
 			String sql = "Select * from SanPham where tenSP = ?";
@@ -110,7 +110,7 @@ public class SanPham_dao {
 	public ArrayList<SanPham> getalltbSanPhamTheoTrangThai(boolean tt){
 		ArrayList<SanPham> dsSanPham = new ArrayList<SanPham>();
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		try {
 			String sql = "Select * from SanPham where trangThai = ?";
@@ -133,7 +133,7 @@ public class SanPham_dao {
 	}
 	public boolean capNhatSP(SanPham sp) {
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		int n = 0;
 		try {
@@ -152,7 +152,7 @@ public class SanPham_dao {
 	public ArrayList<SanPham> getalltbSanPhamTheoMaCD(String macd){
 		ArrayList<SanPham> dsSanPham = new ArrayList<SanPham>();
 		ConnectDB.getInstance();
-		Connection con = ConnectDB.getCon();
+		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		try {
 			String maCD = macd.substring(0, 4);
