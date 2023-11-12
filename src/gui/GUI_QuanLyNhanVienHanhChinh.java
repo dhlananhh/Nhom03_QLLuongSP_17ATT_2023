@@ -38,7 +38,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListener, MouseListener {
@@ -46,11 +48,11 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 	private JPanel pnContent, pnNorth, pnCenter, pnSouth;
 	private JButton btnLoc;
 	private JLabel lblTieuDe, lblError;
-	private JLabel lblHoTenNV, lblGioiTinh, lblNgaySinh, lblDiaChi;
+	private JLabel lblMaNV, lblHoTenNV, lblGioiTinh, lblNgaySinh, lblDiaChi;
 	private JLabel lblCCCD, lblBHXH, lblNgayVao;
 	private JLabel lblPhongBan, lblChucDanh, lblTrangThai, lblBangCap;
 	private JLabel lblLuongCoBan, lblPhuCap, lblHeSoLuong;
-	private JTextField txtHoTenNV, txtDiaChi, txtCCCD, txtBHXH;
+	private JTextField txtMaNV, txtHoTenNV, txtDiaChi, txtCCCD, txtBHXH;
 	private JTextField txtLuongCoBan, txtPhuCap, txtHeSoLuong, txtLoc;
 	private JDateChooser dcNgaySinh, dcNgayVao;
 	private JComboBox cbGioiTinh, cbPhongBan, cbChucDanh;
@@ -70,6 +72,8 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 	
 	private DAO_ChucDanh dao_cd;
 	private List<ChucDanh> listChucDanh = new ArrayList<ChucDanh>();
+	
+	private Map<String, Boolean> daNhap = new HashMap<>();
 	
 	
 	public GUI_QuanLyNhanVienHanhChinh() {
@@ -125,6 +129,9 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		pnContent.add(pnCenter, BorderLayout.CENTER);
 		pnCenter.setLayout(new BorderLayout());
 		pnCenter.setBackground(bgColor);
+		
+		lblMaNV = new JLabel("Mã nhân viên: ");
+		txtMaNV = new JTextField();
 		
 		lblHoTenNV = new JLabel("Họ tên nhân viên: ");
 		txtHoTenNV = new JTextField();
@@ -188,6 +195,8 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		lblHeSoLuong = new JLabel("Hệ số lương: ");
 		txtHeSoLuong = new JTextField();
 		
+		lblMaNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		txtMaNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		lblHoTenNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		txtHoTenNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		lblNgaySinh.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
@@ -239,19 +248,20 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		Box a2 = Box.createHorizontalBox();
 		Box a3 = Box.createHorizontalBox();
 		Box a4 = Box.createHorizontalBox();
-				
-		a1.add(lblHoTenNV);
-		a1.add(txtHoTenNV);
-		a2.add(lblGioiTinh);
-		a2.add(cbGioiTinh);
-		a3.add(lblNgaySinh);
-		a3.add(dcNgaySinh);
-		a4.add(lblDiaChi);
-		a4.add(txtDiaChi);
+			
+		a1.add(lblMaNV);
+		a1.add(txtMaNV);
+		a2.add(lblHoTenNV);
+		a2.add(txtHoTenNV);
+		a3.add(lblGioiTinh);
+		a3.add(cbGioiTinh);
+		a4.add(lblNgaySinh);
+		a4.add(dcNgaySinh);
 		
+		
+		lblMaNV.setPreferredSize(lblHoTenNV.getPreferredSize());
 		lblGioiTinh.setPreferredSize(lblHoTenNV.getPreferredSize());
 		lblNgaySinh.setPreferredSize(lblHoTenNV.getPreferredSize());
-		lblDiaChi.setPreferredSize(lblHoTenNV.getPreferredSize());
 		
 		a.add(a1);
 		a.add(Box.createVerticalStrut(10));
@@ -267,13 +277,16 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		Box b3 = Box.createHorizontalBox();
 		Box b4 = Box.createHorizontalBox();
 		
-		b1.add(lblCCCD);
-		b1.add(txtCCCD);
-		b2.add(lblBHXH);
-		b2.add(txtBHXH);		
-		b3.add(lblNgayVao);
-		b3.add(dcNgayVao);
+		b1.add(lblDiaChi);
+		b1.add(txtDiaChi);
+		b2.add(lblCCCD);
+		b2.add(txtCCCD);
+		b3.add(lblBHXH);
+		b3.add(txtBHXH);		
+		b4.add(lblNgayVao);
+		b4.add(dcNgayVao);
 		
+		lblDiaChi.setPreferredSize(lblCCCD.getPreferredSize());
 		lblBHXH.setPreferredSize(lblCCCD.getPreferredSize());
 		lblNgayVao.setPreferredSize(lblCCCD.getPreferredSize());
 		
@@ -282,8 +295,8 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		b.add(b2);
 		b.add(Box.createVerticalStrut(10));
 		b.add(b3);
-//		b.add(Box.createVerticalStrut(10));
-//		b.add(b4);
+		b.add(Box.createVerticalStrut(10));
+		b.add(b4);
 		
 		//box c
 		Box c1 = Box.createHorizontalBox();
@@ -466,7 +479,7 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 	// load dữ liệu vào bảng nhân viên
 	public void loadData() {
 		dao_nv = new DAO_NhanVienHanhChinh();
-		listNhanVien = dao_nv.getDanhSachNhanVien();
+		listNhanVien = dao_nv.docDuLieu();
 		try {
 			for (NhanVienHanhChinh nv : listNhanVien) {
 				Object[] row = {
@@ -502,7 +515,16 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
+		Object o = e.getSource();
 		
+		if (o.equals(tableNV)) {
+			int rowNV = tableNV.getSelectedRow();
+				txtMaNV.setText(modelNV.getValueAt(rowNV, 0).toString());
+				txtHoTenNV.setText(modelNV.getValueAt(rowNV, 1).toString());
+				cbGioiTinh.setSelectedItem(modelNV.getValueAt(rowNV, 2).toString());
+				
+			
+		}
 	}
 
 
