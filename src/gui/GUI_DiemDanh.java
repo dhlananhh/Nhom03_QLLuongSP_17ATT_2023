@@ -4,9 +4,14 @@ import java.awt.EventQueue;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.sql.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,12 +19,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
 import connection.ConnectDB;
+import dao.DAO_DiemDanh;
 import dao.DAO_NhanVienHanhChinh;
 import entity.NhanVienHanhChinh;
 
@@ -27,6 +35,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -43,15 +52,17 @@ public class GUI_DiemDanh extends JFrame {
 
 	private JPanel contentPane;
 	private JComboBox<Integer> cbThang, cbNam, cbMaNV;
+	private LocalDate ngayHT = LocalDate.now();
+	private JComboBox<String> cbPhep = new JComboBox<String>(new String[] {"","P","K"});
 	private JTextField txtNghiPhep;
 	private JTextField txtTenNV;
 	private DefaultTableModel modelDiemDanh;
 	private JTable tableDiemDanh;
-	private int month;
-	List<String> columnsDD = new ArrayList<>();
+	private List<String> columnsDD = new ArrayList<>();
 	private JTextField txtKhongPhep;
 	private DAO_NhanVienHanhChinh dao_NVHC = new DAO_NhanVienHanhChinh();
-
+	private DAO_DiemDanh dao_DiemDanh = new DAO_DiemDanh();
+	private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	/**
 	 * Launch the application.
 	 */
@@ -94,16 +105,18 @@ public class GUI_DiemDanh extends JFrame {
 		pnNorth.add(lblNam);
 		
 		cbNam = new JComboBox();
+		for(int i=2023; i<=2030; i++)
+			cbNam.addItem(i);
+		cbNam.setSelectedItem(ngayHT.getYear());
 		pnNorth.add(cbNam);
 		
 		JLabel lblThang = new JLabel("Tháng");
 		pnNorth.add(lblThang);
-		
 		cbThang = new JComboBox();
 		pnNorth.add(cbThang);
 		for(int i=1; i<=12; i++) 
 			cbThang.addItem(i);
-			
+		cbThang.setSelectedItem(ngayHT.getMonthValue());
 		Component horizontalStrut = Box.createHorizontalStrut(1000);
 		pnNorth.add(horizontalStrut);
 			
@@ -176,7 +189,14 @@ public class GUI_DiemDanh extends JFrame {
 		Box b8 = Box.createVerticalBox();
 		b8.add(Box.createVerticalStrut(10));
 		pnTable.add(b8, BorderLayout.CENTER);
-		modelDiemDanh = new DefaultTableModel(columnsDD.toArray(), 0);
+		modelDiemDanh = new DefaultTableModel(columnsDD.toArray(), 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				if((Integer)cbThang.getSelectedItem()== ngayHT.getMonthValue())
+					return column == ngayHT.getDayOfMonth()+1;
+				return false;
+            }
+		};
 		tableDiemDanh = new JTable(modelDiemDanh);
 		taoCotTheoThang();
 		JScrollPane spTableDD = new JScrollPane(tableDiemDanh, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -184,19 +204,49 @@ public class GUI_DiemDanh extends JFrame {
 		spTableDD.setPreferredSize(new Dimension(1200,400));
 		contentPane.add(pnTable, BorderLayout.SOUTH);
 		tableDiemDanh.setFillsViewportHeight(true);
+//		modelDiemDanh.addTableModelListener(new TableModelListener() {
+//			
+//			@Override
+//			public void tableChanged(TableModelEvent e) {
+//				// TODO Auto-generated method stub
+//				int row = e.getFirstRow();
+//                int column = e.getColumn();
+//                Object changedValue = "";
+//                if (column != TableModelEvent.ALL_COLUMNS && row != TableModelEvent.HEADER_ROW) 
+//                    // Lấy giá trị cụ thể từ ô vừa được thay đổi
+//                    changedValue = modelDiemDanh.getValueAt(row, column);
+//                
+//			}
+//		});
 		pnTable.add(spTableDD, BorderLayout.SOUTH);
-	
 		
+		cbNam.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				loadBang();
+				if((Integer)cbNam.getSelectedItem()!= ngayHT.getYear())
+					tableDiemDanh.setEnabled(false);
+				else
+					tableDiemDanh.setEnabled(true);
+			}
+		});
 		cbThang.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				taoCotTheoThang();
 				loadBang();
+				if((Integer)cbThang.getSelectedItem()!= ngayHT.getMonthValue())
+					tableDiemDanh.setEnabled(false);
+				else
+					tableDiemDanh.setEnabled(true);
 			}
 		});
 		loadBang();
 
 	}
+	
 	private void taoCotTheoThang() {
 		columnsDD.removeAll(columnsDD);
 		columnsDD.add("Mã nhân viên");
@@ -219,7 +269,7 @@ public class GUI_DiemDanh extends JFrame {
 		tableDiemDanh.getColumnModel().getColumn(0).setCellRenderer(cellRender);
 		tableDiemDanh.getColumnModel().getColumn(1).setPreferredWidth(200);
 		tableDiemDanh.getColumnModel().getColumn(1).setCellRenderer(cellRender);
-		JComboBox<String> cbPhep = new JComboBox<String>(new String[] {"","P","K"});
+		
 		for(int i=1; i<=30; i++) {
 			tableDiemDanh.getColumnModel().getColumn(i+1).setPreferredWidth(50);
 			tableDiemDanh.getColumnModel().getColumn(i+1).setCellEditor(new DefaultCellEditor(cbPhep));
@@ -227,12 +277,31 @@ public class GUI_DiemDanh extends JFrame {
 		}
 		tableDiemDanh.getTableHeader().setResizingAllowed(false);
         tableDiemDanh.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        
 	}
 	private void loadBang() {
 		modelDiemDanh.setRowCount(0);
+		int dem = 0;
 		for (NhanVienHanhChinh nv : dao_NVHC.getDanhSachNhanVien()) {
-			String[] row = {nv.getMaNV(), nv.getHoTenNV()};
-			modelDiemDanh.addRow(row);
+			List<Object> row = new ArrayList<>();
+			row.add(nv.getMaNV());
+			row.add(nv.getHoTenNV());
+			
+			modelDiemDanh.addRow(row.toArray());
+			for(int i=1; i<=30; i++) {
+				String strDate = cbNam.getSelectedItem().toString()+"-"+cbThang.getSelectedItem().toString()+"-"+i;
+				Date date;
+				try {
+					date = new java.sql.Date(df.parse(strDate).getTime());
+					String value= dao_DiemDanh.getNgayPhep(nv.getMaNV(), date);
+					tableDiemDanh.setValueAt(value, dem, i+1);
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			dem++;
 		}
 	}
 }
