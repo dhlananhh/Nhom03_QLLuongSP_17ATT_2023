@@ -3,11 +3,14 @@ package gui;
 import java.awt.EventQueue;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +32,8 @@ import com.formdev.flatlaf.FlatLightLaf;
 import connection.ConnectDB;
 import dao.DAO_DiemDanh;
 import dao.DAO_NhanVienHanhChinh;
+import entity.CongNhanSanXuat;
+import entity.DiemDanh;
 import entity.NhanVienHanhChinh;
 
 import java.awt.BorderLayout;
@@ -48,10 +53,11 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
 
-public class GUI_DiemDanh extends JFrame {
+public class GUI_DiemDanh extends JFrame implements MouseListener{
 
 	private JPanel contentPane;
-	private JComboBox<Integer> cbThang, cbNam, cbMaNV;
+	private JComboBox<Integer> cbThang, cbNam;
+	private JComboBox<String> cbMaNV;
 	private LocalDate ngayHT = LocalDate.now();
 	private JComboBox<String> cbPhep = new JComboBox<String>(new String[] {"","P","K"});
 	private JTextField txtNghiPhep;
@@ -135,6 +141,9 @@ public class GUI_DiemDanh extends JFrame {
 		b3.add(lblMaNV);
 		
 		cbMaNV = new JComboBox();
+		for (NhanVienHanhChinh nv : dao_NVHC.getDanhSachNhanVien()) {
+			cbMaNV.addItem(nv.getMaNV());
+		}
 		b3.add(cbMaNV);
 		cbMaNV.setPreferredSize(new Dimension(200, 30));
 		b1.add(b3);
@@ -219,7 +228,26 @@ public class GUI_DiemDanh extends JFrame {
 //			}
 //		});
 		pnTable.add(spTableDD, BorderLayout.SOUTH);
-		
+		loadBang();
+		modelDiemDanh.addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				// TODO Auto-generated method stub
+				int row = e.getFirstRow();
+                int column = e.getColumn();
+                String changedValue = "";
+                if (column != TableModelEvent.ALL_COLUMNS && row != TableModelEvent.HEADER_ROW) 
+                    // Lấy giá trị cụ thể từ ô vừa được thay đổi
+                    changedValue = modelDiemDanh.getValueAt(row, column).toString();
+                try {
+                	dao_DiemDanh.capNhatDiemDanh(new DiemDanh(modelDiemDanh.getValueAt(row, 0).toString(),Date.valueOf(ngayHT) , changedValue.toString()));
+	               } catch (SQLException e1) {
+	            	   // TODO Auto-generated catch block
+	            	   e1.printStackTrace();
+	               }
+			}
+		});
 		cbNam.addItemListener(new ItemListener() {
 			
 			@Override
@@ -243,10 +271,12 @@ public class GUI_DiemDanh extends JFrame {
 					tableDiemDanh.setEnabled(true);
 			}
 		});
-		loadBang();
-
+		tableDiemDanh.addMouseListener(this);
+		
+		
+		
 	}
-	
+
 	private void taoCotTheoThang() {
 		columnsDD.removeAll(columnsDD);
 		columnsDD.add("Mã nhân viên");
@@ -303,5 +333,39 @@ public class GUI_DiemDanh extends JFrame {
 			}
 			dem++;
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int row = tableDiemDanh.getSelectedRow();
+		cbMaNV.setSelectedItem(modelDiemDanh.getValueAt(row, 0).toString());
+		txtTenNV.setText(modelDiemDanh.getValueAt(row, 1).toString());
+		txtNghiPhep.setText(dao_DiemDanh.tongNgayPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
+		txtKhongPhep.setText(dao_DiemDanh.tongNgayKhongPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

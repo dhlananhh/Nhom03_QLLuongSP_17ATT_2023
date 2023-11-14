@@ -5,7 +5,8 @@ import java.sql.Date;
 public class DiemDanh {
 	private String maNV;
 	private Date ngayCham;
-	private boolean phep;
+	private String trangThai;
+
 	public String getMaNV() {
 		return maNV;
 	}
@@ -18,17 +19,17 @@ public class DiemDanh {
 	public void setNgayCham(Date ngayCham) {
 		this.ngayCham = ngayCham;
 	}
-	public boolean isPhep() {
-		return phep;
+	public String getTrangThai() {
+		return trangThai;
 	}
-	public void setPhep(boolean phep) {
-		this.phep = phep;
+	public void setTrangThai(String trangThai) {
+		this.trangThai = trangThai;
 	}
-	public DiemDanh(String maNV, Date ngayCham, boolean phep) {
+	public DiemDanh(String maNV, Date ngayCham, String trangThai) {
 		super();
 		this.maNV = maNV;
 		this.ngayCham = ngayCham;
-		this.phep = phep;
+		this.trangThai = trangThai;
 	}
 	public DiemDanh() {
 		super();
