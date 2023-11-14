@@ -1,217 +1,230 @@
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.LayoutStyle;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
-import java.awt.Color;
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
-import java.io.File;
-import java.io.IOException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.UIManager;
-import com.formdev.*;
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.intellijthemes.FlatCyanLightIJTheme;
-import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
 
+import connection.ConnectDB;
+import dao.DAO_TaiKhoan;
+import entity.TaiKhoan;
+
+import javax.swing.GroupLayout.Alignment;
 
 public class GUI_DangNhap extends JFrame implements ActionListener {
-	private static final long serialVersionUID = 1L;
-	private JPanel pnContent, pnNorth, pnCenter, pnSouth;
-	private JLabel lblTieuDe, lblTaiKhoan, lblMatKhau;
-	private JTextField txtTaiKhoan;
-	private JPasswordField txtMatKhau;
-	private JButton btnDangNhap, btnThoat, btnQuenMatKhau;
-	private JCheckBox chkShowPwd;
+	private JPanel pLeft;
+	private JPanel pRight;
+	private JButton btnLogin;
+	private JButton btnQuenMatKhau;
+	private JLabel lblTitle;
+	private JLabel lblMaNV;
+	private JLabel lblMatKhau;
+	private JTextField txtMaNV;
+	private JPasswordField txtPassword;
+	private JLabel lblQuenMatKhau;
 	private Font BVNPro;
-	
-	
+	private JCheckBox chkHienMatKhau;
+	private DAO_TaiKhoan tk_dao;
+
 	public GUI_DangNhap() {
-		buildGUI();
-	}
-	
-	
-	public void buildGUI() {
-		setTitle("Đăng nhập");
-		setSize(500, 300);
+		setTitle("ĐĂNG NHẬP");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setResizable(true);
+		setResizable(false);
+		setSize(1220, 540);
 		setLocationRelativeTo(null);
-		
-		createAndDisplayGUI();
-	}
-	
-	
-	public void createAndDisplayGUI() {
-		//load fonts
+		try {
+			ConnectDB.getInstance().connect();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		tk_dao = new DAO_TaiKhoan();
 		try {
 			String fileName = "fonts/BeVietnamPro-Regular.ttf";
-			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
+			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(15f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(BVNPro);
 		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 		}
-		
-		//set color
-		Color bgColor = new Color(0, 153, 204);
-		
-		//main panel
-		pnContent = new JPanel();
-		pnContent.setLayout(new BorderLayout());
-		
-		//pnNorth chứa tiêu đề
-		pnNorth = new JPanel();
-		pnContent.add(pnNorth, BorderLayout.NORTH);
-		pnNorth.setBackground(bgColor);
-		
-		lblTieuDe = new JLabel("ĐĂNG NHẬP");
-		lblTieuDe.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 20));
-		lblTieuDe.setForeground(Color.WHITE);
-		pnNorth.add(lblTieuDe);
-		
-		
-		//pnCenter chứa các box, label & textfield username, password
-		pnCenter = new JPanel();
-		pnContent.add(pnCenter, BorderLayout.CENTER);
-		
-		Box b = Box.createVerticalBox();
-		Box b1 = Box.createHorizontalBox();
-		Box b2 = Box.createHorizontalBox();
-		Box b3 = Box.createHorizontalBox();
-		Box b4 = Box.createHorizontalBox();
-		Box b5 = Box.createHorizontalBox();
-		Box b6 = Box.createHorizontalBox();
-		
-		lblTaiKhoan = new JLabel("Tài khoản: ");
-		lblMatKhau = new JLabel("Mật khẩu: ");
-		txtTaiKhoan = new JTextField(20);
-		txtMatKhau = new JPasswordField(20);
-		chkShowPwd = new JCheckBox("Show password");
-		
-		lblTaiKhoan.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
-		lblMatKhau.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
-		
-		b1.add(lblTaiKhoan);
-		b1.add(txtTaiKhoan);
-		b2.add(lblMatKhau);
-		b2.add(txtMatKhau);
-		b3.add(chkShowPwd);
-		
-		btnDangNhap = new JButton("Đăng nhập");
+
+		pLeft = new JPanel();
+		pLeft.setBackground(new Color(255, 255, 255));
+		pLeft.setMinimumSize(new java.awt.Dimension(400, 500));
+
+		lblTitle = new JLabel("ĐĂNG NHẬP");
+		lblTitle.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 30));
+		lblTitle.setForeground(new java.awt.Color(0, 102, 102));
+
+		lblMaNV = new JLabel("Mã Nhân Viên");
+		lblMaNV.setFont(BVNPro);
+
+		txtMaNV = new JTextField();
+		txtMaNV.setFont(BVNPro);
+
+		lblMatKhau = new JLabel("Mật khẩu");
+		lblMatKhau.setFont(BVNPro);
+
+		txtPassword = new JPasswordField();
+		txtPassword.setFont(BVNPro);
+
+		btnLogin = new JButton("Đăng nhập");
+		btnLogin.setBackground(new java.awt.Color(0, 102, 102));
+		btnLogin.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		btnLogin.setForeground(new java.awt.Color(255, 255, 255));
+
+		lblQuenMatKhau = new JLabel("Bạn đã quên mật khẩu ?");
+		lblQuenMatKhau.setFont(BVNPro);
+
 		btnQuenMatKhau = new JButton("Quên mật khẩu");
-		btnThoat = new JButton("Thoát");
-		
-		btnDangNhap.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
-		btnQuenMatKhau.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
-		btnThoat.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
-		
-		btnDangNhap.setBackground(bgColor);
-		btnDangNhap.setForeground(Color.WHITE);
-		btnQuenMatKhau.setBackground(bgColor);
-		btnQuenMatKhau.setForeground(Color.WHITE);
-		btnThoat.setBackground(bgColor);
-		btnThoat.setForeground(Color.WHITE);
-		
-		b4.add(btnDangNhap);
-		b4.add(Box.createHorizontalStrut(10));
-		b4.add(btnQuenMatKhau);
-		b4.add(Box.createHorizontalStrut(10));
-		b4.add(btnThoat);
-		
-		lblMatKhau.setPreferredSize(lblTaiKhoan.getPreferredSize());
-		
-		//thêm các box con (b1,b2...) vào box lớn b
-		b.add(Box.createRigidArea(new Dimension(0, 20)));
-		b.add(b1);
-		b.add(Box.createRigidArea(new Dimension(0, 20)));
-		b.add(b2);
-		b.add(Box.createRigidArea(new Dimension(0, 10)));
-		b.add(b3);
-		b.add(Box.createRigidArea(new Dimension(0, 20)));
-		b.add(b4);
-		b.add(Box.createRigidArea(new Dimension(0, 20)));
-		
-		//thêm box b vào pnCenter
-		pnCenter.add(b);
-		
-		addActionEvent();
-		
-		Container container = getContentPane();
-		container.add(pnContent);
-	}
-	
-	
-	//đăng ký sự kiện cho các button
-	public void addActionEvent() {
-		btnDangNhap.addActionListener(this);
+		btnQuenMatKhau.setFont(BVNPro);
+		btnQuenMatKhau.setForeground(new java.awt.Color(255, 51, 51));
+		chkHienMatKhau = new JCheckBox("Hiển thị mật khẩu");
+		chkHienMatKhau.setFont(BVNPro);
+		GroupLayout gl_pLeft = new GroupLayout(pLeft);
+		gl_pLeft.setHorizontalGroup(gl_pLeft.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_pLeft.createSequentialGroup().addContainerGap(101, Short.MAX_VALUE)
+						.addComponent(lblTitle, GroupLayout.PREFERRED_SIZE, 202, GroupLayout.PREFERRED_SIZE).addGap(97))
+				.addGroup(Alignment.LEADING, gl_pLeft.createSequentialGroup().addGap(30)
+						.addGroup(gl_pLeft.createParallelGroup(Alignment.LEADING).addComponent(chkHienMatKhau)
+								.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_pLeft.createParallelGroup(Alignment.LEADING, false).addComponent(lblMaNV)
+										.addComponent(txtMaNV).addComponent(lblMatKhau)
+										.addComponent(txtPassword, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
+								.addGroup(gl_pLeft.createSequentialGroup().addComponent(lblQuenMatKhau)
+										.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnQuenMatKhau)))
+						.addContainerGap(27, Short.MAX_VALUE)));
+		gl_pLeft.setVerticalGroup(gl_pLeft.createParallelGroup(Alignment.LEADING).addGroup(gl_pLeft
+				.createSequentialGroup().addGap(46)
+				.addComponent(lblTitle, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(ComponentPlacement.RELATED).addComponent(lblMaNV)
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addComponent(txtMaNV, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE).addGap(18)
+				.addComponent(lblMatKhau).addPreferredGap(ComponentPlacement.UNRELATED)
+				.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE).addGap(14)
+				.addComponent(chkHienMatKhau).addPreferredGap(ComponentPlacement.UNRELATED)
+				.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(ComponentPlacement.UNRELATED).addGroup(gl_pLeft.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblQuenMatKhau).addComponent(btnQuenMatKhau))
+				.addContainerGap(130, Short.MAX_VALUE)));
+		pLeft.setLayout(gl_pLeft);
+
+		pRight = new JPanel() {
+			private Image backgroundImage;
+
+			{
+				try {
+					backgroundImage = ImageIO.read(new File("icons/loginLogo.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				if (backgroundImage != null) {
+					g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+				}
+			}
+		};
+
+		pRight.setPreferredSize(new Dimension(800, 500));
+
+		JLabel logoLabel = new JLabel(new ImageIcon("icons/logo.png"));
+
+		GroupLayout gl_pRight = new GroupLayout(pRight);
+		gl_pRight.setHorizontalGroup(gl_pRight.createParallelGroup(Alignment.LEADING).addGroup(gl_pRight
+				.createSequentialGroup().addGap(141).addComponent(logoLabel).addContainerGap(144, Short.MAX_VALUE)));
+		gl_pRight.setVerticalGroup(gl_pRight.createParallelGroup(Alignment.LEADING).addGroup(gl_pRight
+				.createSequentialGroup().addGap(19).addComponent(logoLabel).addContainerGap(317, Short.MAX_VALUE)));
+		pRight.setLayout(gl_pRight);
+
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(pLeft, BorderLayout.WEST);
+		getContentPane().add(pRight, BorderLayout.EAST);
+		btnLogin.addActionListener(this);
 		btnQuenMatKhau.addActionListener(this);
-		btnThoat.addActionListener(this);
-		chkShowPwd.addActionListener(this);
-	}
-		
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		Object o = e.getSource();
-		
-		if (o.equals(btnDangNhap)) {
-			String userText;
-            String pwdText;
-            userText = txtTaiKhoan.getText();
-            pwdText = txtMatKhau.getText();
-            if (userText.equalsIgnoreCase("admin") && pwdText.equalsIgnoreCase("123456")) {
-                JOptionPane.showMessageDialog(this, "Login Successful");
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid Username or Password");
-            }
-		} 
-		else if (o.equals(btnThoat)) {
-			int choice = JOptionPane.showConfirmDialog(this, "Bạn có muốn thoát chương trình không?", "Thoát chương trình",
-                    JOptionPane.YES_NO_OPTION);
-			if (choice == JOptionPane.YES_OPTION) {
-                System.exit(0); 
-            }
-		} 
-		else if (o.equals(chkShowPwd)) {
-			if (chkShowPwd.isSelected()) {
-				txtMatKhau.setEchoChar((char) 0);
-            } else {
-            	txtMatKhau.setEchoChar('*');
-            }
-		}
-//		else if (o.equals(btnQuenMatKhau)) {
-//			try {
-//				new GUI_QuenMatKhau().setVisible(true);
-//			} catch (Exception e1) {
-//				e1.printStackTrace();
-//			}
-//		}
+		chkHienMatKhau.addActionListener(this);
+		txtPassword.setEchoChar('*');
+
 	}
 
-	
 	public static void main(String[] args) {
-		FlatLightLaf.setup();
-		
+		FlatIntelliJLaf.setup();
 		new GUI_DangNhap().setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if (o.equals(btnLogin)) {
+			String tk = txtMaNV.getText();
+			String pw = txtPassword.getText();
+			if (!(tk.trim().equals("") && pw.trim().equals(""))) {
+
+				if (kiemTraTaiKhoan()) {
+					try {
+						new GUI_TrangChu().setVisible(true);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!");
+				}
+			} else {
+				JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không được để trống!");
+
+			}
+		} 	else if (o.equals(chkHienMatKhau)) {
+			if (chkHienMatKhau.isSelected()) {
+				txtPassword.setEchoChar((char) 0);
+            } else {
+            	txtPassword.setEchoChar('*');
+            }
+		}
+
+	}
+
+	public boolean kiemTraTaiKhoan() {
+		String tk = txtMaNV.getText();
+		String pw = txtPassword.getText();
+		if (tk_dao.layTKTheoTen(tk).getTenTK() == null) {
+			return false;
+		}
+		if (tk_dao.layTKTheoMatKhau(pw).getMatKhau() == null) {
+			return false;
+		}
+		return true;
+
 	}
 }
