@@ -24,7 +24,7 @@ public class GUI_TrangChu extends javax.swing.JFrame {
 				GUI_DiemDanh = new GUI_DiemDanh().getContentPane(),
 				GUI_ChamCong = new GUI_BangChamCong().getContentPane(),
 				GUI_QuanLySanPham = new GUI_QuanLySanPham().getContentPane(),
-				GUI_TinhLuong = new GUI_TinhLuong().getContentPane(),
+				//GUI_TinhLuong = new GUI_TinhLuong().getContentPane(),
 				GUI_ThayDoiMatKhau = new GUI_ThayDoiMatKhau().getContentPane(),
 				GUI_BangChamCong = new GUI_BangChamCong().getContentPane(),
 				GUI_PhanCong = new GUI_PhanCong().getContentPane(),
@@ -37,7 +37,7 @@ public class GUI_TrangChu extends javax.swing.JFrame {
 			@Override
 			public void selected(int index, int subIndex) {
 				if (index == 0) {
-					showForm(new GUI_Background().getContentPane());
+					//showForm(new GUI_Background().getContentPane());
 				} else if (index == 1) {
 					switch (subIndex) {
 					case 1:
@@ -67,7 +67,7 @@ public class GUI_TrangChu extends javax.swing.JFrame {
 						showForm(GUI_QuanLySanPham);
 						break;			
 					case 6:
-						showForm(GUI_TinhLuong);
+						//showForm(GUI_TinhLuong);
 						break;	
 					default:
 						break;
@@ -119,8 +119,8 @@ public class GUI_TrangChu extends javax.swing.JFrame {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setUndecorated(true);
 		//setExtendedState(MAXIMIZED_BOTH);
-		setSize((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() -100,
-				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() -50);
+		setSize((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() -50,
+				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() -200);
 		jPanel1.setBackground(new java.awt.Color(245, 245, 245));
 		jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(163, 163, 163)));
 
