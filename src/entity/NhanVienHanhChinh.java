@@ -12,17 +12,16 @@ public class NhanVienHanhChinh implements Serializable {
 	private Date ngaySinh;
 	private String diaChi;
 	private String CCCD;
-	private String BHXH;
-	private String MST;
+	private String SDT;
 	private Date ngayVao;
 	private PhongBan phongBan;
-	private ChucDanh chucDanh;
 	private boolean trangThai;
 	private String bangCap;
 	private float luongCoBan;
 	private float phuCap;
 	private float heSoLuong;
-	private TaiKhoan tenTaiKhoan;
+	private TaiKhoan taiKhoan;
+	private String email;
 	
 	
 	//---constructors---
@@ -39,26 +38,25 @@ public class NhanVienHanhChinh implements Serializable {
 
 	public NhanVienHanhChinh(String maNV, String hoTenNV, boolean gioiTinh, 
 			Date ngaySinh, String diaChi, String CCCD, String BHXH, String MST, 
-			Date ngayVao, PhongBan phongBan, ChucDanh chucDanh,
-			boolean trangThai, String bangCap, 
-			float luongCoBan, float phuCap, float heSoLuong, TaiKhoan tenTaiKhoan) {
+			Date ngayVao, PhongBan phongBan, String SDT, boolean trangThai, String bangCap, 
+			float luongCoBan, float phuCap, float heSoLuong, 
+			TaiKhoan tenTaiKhoan, String email) {
 		this.maNV = maNV;
 		this.hoTenNV = hoTenNV;
 		this.gioiTinh = gioiTinh;
 		this.ngaySinh = ngaySinh;
 		this.diaChi = diaChi;
 		this.CCCD = CCCD;
-		this.BHXH = BHXH;
-		this.MST = MST;
+		this.SDT = SDT;
 		this.ngayVao = ngayVao;
 		this.phongBan = phongBan;
-		this.chucDanh = chucDanh;
 		this.trangThai = trangThai;
 		this.bangCap = bangCap;
 		this.luongCoBan = luongCoBan;
 		this.phuCap = phuCap;
 		this.heSoLuong = heSoLuong;
-		this.tenTaiKhoan = tenTaiKhoan;
+		this.taiKhoan = tenTaiKhoan;
+		this.email = email;
 	}
 
 
@@ -122,24 +120,14 @@ public class NhanVienHanhChinh implements Serializable {
 		CCCD = cCCD;
 	}
 
-
-	public String getBHXH() {
-		return BHXH;
+	
+	public String getSDT() {
+		return SDT;
 	}
 
 
-	public void setBHXH(String bHXH) {
-		BHXH = bHXH;
-	}
-
-
-	public String getMST() {
-		return MST;
-	}
-
-
-	public void setMST(String mST) {
-		MST = mST;
+	public void setSDT(String sDT) {
+		SDT = sDT;
 	}
 
 
@@ -160,16 +148,6 @@ public class NhanVienHanhChinh implements Serializable {
 
 	public void setPhongBan(PhongBan phongBan) {
 		this.phongBan = phongBan;
-	}
-
-
-	public ChucDanh getChucDanh() {
-		return chucDanh;
-	}
-
-
-	public void setChucDanh(ChucDanh chucDanh) {
-		this.chucDanh = chucDanh;
 	}
 
 
@@ -223,13 +201,23 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 
 
-	public TaiKhoan getTenTaiKhoan() {
-		return tenTaiKhoan;
+	public TaiKhoan getTaiKhoan() {
+		return taiKhoan;
 	}
 
 
-	public void setTenTaiKhoan(TaiKhoan tenTaiKhoan) {
-		this.tenTaiKhoan = tenTaiKhoan;
+	public void setTaiKhoan(TaiKhoan taiKhoan) {
+		this.taiKhoan = taiKhoan;
+	}
+
+	
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 
@@ -257,11 +245,10 @@ public class NhanVienHanhChinh implements Serializable {
 	@Override
 	public String toString() {
 		return "NhanVienHanhChinh [maNV=" + maNV + ", hoTenNV=" + hoTenNV + ", gioiTinh=" + gioiTinh + ", ngaySinh="
-				+ ngaySinh + ", diaChi=" + diaChi + ", CCCD=" + CCCD + ", BHXH=" + BHXH + ", MST=" + MST + ", ngayVao="
-				+ ngayVao + ", phongBan=" + phongBan + ", chucDanh=" + chucDanh + ", trangThai=" + trangThai
-				+ ", bangCap=" + bangCap + ", luongCoBan=" + luongCoBan + ", phuCap=" + phuCap + ", heSoLuong="
-				+ heSoLuong + ", tenTaiKhoan=" + tenTaiKhoan + "]";
+				+ ngaySinh + ", diaChi=" + diaChi + ", CCCD=" + CCCD + ", SDT=" + SDT + ", ngayVao=" + ngayVao
+				+ ", phongBan=" + phongBan + ", trangThai=" + trangThai + ", bangCap=" + bangCap + ", luongCoBan="
+				+ luongCoBan + ", phuCap=" + phuCap + ", heSoLuong=" + heSoLuong + ", taiKhoan=" + taiKhoan + ", email="
+				+ email + "]";
 	}
-
 
 }

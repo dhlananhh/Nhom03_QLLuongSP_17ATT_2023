@@ -14,6 +14,7 @@ public class LuongNhanVienHanhChinh implements Serializable {
 	private float phuCap;
 	private float giamTru;
 	private float tamUng;
+	private float luongThucLanh;
 	
 	
 	//---constructors---
@@ -171,6 +172,16 @@ public class LuongNhanVienHanhChinh implements Serializable {
 		return Objects.equals(maBangLuongHC, other.maBangLuongHC);
 	}
 
+	
+	// hàm tính lương thực lãnh cho nhân viên hành chính
+	public float tinhLuongThucLanh() {
+		float luongThucLanh = 0;
+		
+		luongThucLanh = (luongCoBan * heSoLuong) + phuCap / 26 * 26 - giamTru - tamUng;
+		
+		return luongThucLanh;
+	}
+	
 
 	//---toString---
 	@Override
