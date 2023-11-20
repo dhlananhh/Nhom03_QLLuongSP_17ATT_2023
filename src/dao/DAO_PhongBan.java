@@ -17,20 +17,22 @@ import entity.PhongBan;
 
 
 public class DAO_PhongBan {
-	public List<PhongBan> docDuLieu() {
+	public List<PhongBan> getDanhSachPhongBan() {
 		List<PhongBan> dsPhongBan = new ArrayList<PhongBan>();
 		
 		try {
 			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = "SELECT maPhongBan, tenPhongBan FROM PhongBan";
+			String sql = "select * from PhongBan";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
 			
 			while (rs.next()) {
 				String maPhongBan = rs.getString(1);
 				String tenPhongBan = rs.getString(2);
+				int soLuongNV = rs.getInt(3);
+				String moTa = rs.getString(4);
 				
-				PhongBan pb = new PhongBan(maPhongBan, tenPhongBan);
+				PhongBan pb = new PhongBan(maPhongBan, tenPhongBan, soLuongNV, moTa);
 				dsPhongBan.add(pb);
 			}
 		} catch (Exception e) {
@@ -47,11 +49,13 @@ public class DAO_PhongBan {
 			Connection con = ConnectDB.getInstance().getConnection();
 			String sql = "select * from PhongBan where tenPhongBan = '" + tenPhongBan + "'";
 			PreparedStatement preparedStatement = con.prepareStatement(sql);
-			ResultSet resultSet = preparedStatement.executeQuery();
+			ResultSet rs = preparedStatement.executeQuery();
 			
-			while (resultSet.next()) {
-				phongBan.setMaPhongBan(resultSet.getString(1));
-				phongBan.setTenPhongBan(resultSet.getString(2));
+			while (rs.next()) {
+				phongBan.setMaPhongBan(rs.getString(1));
+				phongBan.setTenPhongBan(rs.getString(2));
+				phongBan.setSoLuongNV(rs.getInt(3));
+				phongBan.setMoTa(rs.getString(4));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -66,11 +70,13 @@ public class DAO_PhongBan {
 			Connection con = ConnectDB.getInstance().getConnection();
 			String sql = "select * from PhongBan where maPhongBan = '" + maPhongBan + "'";
 			PreparedStatement preparedStatement = con.prepareStatement(sql);
-			ResultSet resultSet = preparedStatement.executeQuery();
+			ResultSet rs = preparedStatement.executeQuery();
 			
-			while (resultSet.next()) {
-				phongBan.setMaPhongBan(resultSet.getString(1));
-				phongBan.setTenPhongBan(resultSet.getString(2));
+			while (rs.next()) {
+				phongBan.setMaPhongBan(rs.getString(1));
+				phongBan.setTenPhongBan(rs.getString(2));
+				phongBan.setSoLuongNV(rs.getInt(3));
+				phongBan.setMoTa(rs.getString(4));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -78,27 +84,4 @@ public class DAO_PhongBan {
 		return phongBan;
 	}
 	
-	
-	public List<PhongBan> getDanhSachPhongBan() {
-		List<PhongBan> dsPhongBan = new ArrayList<PhongBan>();
-		
-		try {
-			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = "select * from PhongBan";
-			Statement statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(sql);
-			
-			while (rs.next()) {
-				String maPhongBan = rs.getString(1);
-				String tenPhongBan = rs.getString(2);
-				
-				PhongBan pb = new PhongBan(maPhongBan, tenPhongBan);
-				dsPhongBan.add(pb);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return dsPhongBan;
-	}
 }

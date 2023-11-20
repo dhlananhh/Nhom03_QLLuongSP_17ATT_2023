@@ -1,7 +1,10 @@
 package entity;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
 
@@ -238,6 +241,63 @@ public class NhanVienHanhChinh implements Serializable {
 			return false;
 		NhanVienHanhChinh other = (NhanVienHanhChinh) obj;
 		return Objects.equals(maNV, other.maNV);
+	}
+	
+	
+	// tính hệ số lương
+	public float tinhHeSoLuong (Date ngayVaoLam, String bangCap) {
+		Instant instantNgayVaoLam = new java.util.Date(ngayVaoLam.getTime()).toInstant();
+		LocalDate localDateNgayVaoLam = instantNgayVaoLam.atZone(ZoneId.systemDefault()).toLocalDate();
+		
+		LocalDate ngayHienTai = LocalDate.now();
+		Period khoangThoiGian = Period.between(localDateNgayVaoLam, ngayHienTai);
+		int soNamLamViec = khoangThoiGian.getYears();
+		int soBacTangLuong = soNamLamViec / 3;
+		
+		float heSoTienTrienCaoDang = 0.31f;
+		float heSoTienTrienDaiHoc = 0.20f;
+		
+		float heSoLuong = 0.0f;
+		
+		if ("Cao đẳng".equalsIgnoreCase(bangCap))
+			heSoLuong = 2.1f;
+		else if ("Đại học".equalsIgnoreCase(bangCap))
+			heSoLuong = 2.34f;
+		
+		if ("Cao đẳng".equalsIgnoreCase(bangCap))
+			heSoLuong += soBacTangLuong * heSoTienTrienCaoDang;
+		else if ("Đại học".equalsIgnoreCase(bangCap))
+			heSoLuong += soBacTangLuong * heSoTienTrienDaiHoc;
+		
+		return heSoLuong;
+	}
+	
+	
+	public float tinhHeSoLuong() {
+		Instant instantNgayVaoLam = new java.util.Date(getNgayVao().getTime()).toInstant();
+		LocalDate localDateNgayVaoLam = instantNgayVaoLam.atZone(ZoneId.systemDefault()).toLocalDate();
+		
+		LocalDate ngayHienTai = LocalDate.now();
+		Period khoangThoiGian = Period.between(localDateNgayVaoLam, ngayHienTai);
+		int soNamLamViec = khoangThoiGian.getYears();
+		int soBacTangLuong = soNamLamViec / 3;
+		
+		float heSoTienTrienCaoDang = 0.31f;
+		float heSoTienTrienDaiHoc = 0.20f;
+		
+		float heSoLuong = 0.0f;
+		
+		if ("Cao đẳng".equalsIgnoreCase(bangCap))
+			heSoLuong = 2.1f;
+		else if ("Đại học".equalsIgnoreCase(bangCap))
+			heSoLuong = 2.34f;
+		
+		if ("Cao đẳng".equalsIgnoreCase(bangCap))
+			heSoLuong += soBacTangLuong * heSoTienTrienCaoDang;
+		else if ("Đại học".equalsIgnoreCase(bangCap))
+			heSoLuong += soBacTangLuong * heSoTienTrienDaiHoc;
+		
+		return heSoLuong;
 	}
 
 

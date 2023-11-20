@@ -8,7 +8,8 @@ import java.util.Objects;
 public class PhongBan implements Serializable {
 	private String maPhongBan;
 	private String tenPhongBan;
-	private String ghiChu;
+	private int soLuongNV;
+	private String moTa;
 	
 	
 	//---constructors---
@@ -17,21 +18,22 @@ public class PhongBan implements Serializable {
 	}
 
 	
-	public PhongBan(String maPhongBan) {
-		this.maPhongBan = maPhongBan;
+	public PhongBan(String tenPhongBan) {
+		this.tenPhongBan = tenPhongBan;
 	}
 
-	
+
 	public PhongBan(String maPhongBan, String tenPhongBan) {
 		this.maPhongBan = maPhongBan;
 		this.tenPhongBan = tenPhongBan;
 	}
 
 
-	public PhongBan(String maPhongBan, String tenPhongBan, String ghiChu) {
+	public PhongBan(String maPhongBan, String tenPhongBan, int soLuongNV, String moTa) {
 		this.maPhongBan = maPhongBan;
 		this.tenPhongBan = tenPhongBan;
-		this.ghiChu = ghiChu;
+		this.soLuongNV = soLuongNV;
+		this.moTa = moTa;
 	}
 
 
@@ -55,14 +57,24 @@ public class PhongBan implements Serializable {
 		this.tenPhongBan = tenPhongBan;
 	}
 
-
-	public String getGhiChu() {
-		return ghiChu;
+	
+	public int getSoLuongNV() {
+		return soLuongNV;
 	}
 
 
-	public void setGhiChu(String ghiChu) {
-		this.ghiChu = ghiChu;
+	public void setSoLuongNV(int soLuongNV) {
+		this.soLuongNV = soLuongNV;
+	}
+
+
+	public String getMoTa() {
+		return moTa;
+	}
+
+
+	public void setMoTa(String moTa) {
+		this.moTa = moTa;
 	}
 
 
@@ -83,6 +95,14 @@ public class PhongBan implements Serializable {
 			return false;
 		PhongBan other = (PhongBan) obj;
 		return Objects.equals(maPhongBan, other.maPhongBan);
+	}
+
+
+	//---toString---
+	@Override
+	public String toString() {
+		return "PhongBan [maPhongBan=" + maPhongBan + ", tenPhongBan=" + tenPhongBan + ", soLuongNV=" + soLuongNV
+				+ ", moTa=" + moTa + "]";
 	}
 	
 }
