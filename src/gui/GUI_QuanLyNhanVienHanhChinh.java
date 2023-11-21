@@ -144,6 +144,7 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		
 		lblMaNV = new JLabel("Mã nhân viên: ");
 		txtMaNV = new JTextField();
+		txtMaNV.setEditable(false);
 		
 		lblHoTenNV = new JLabel("Họ tên nhân viên: ");
 		txtHoTenNV = new JTextField();
@@ -486,6 +487,7 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		tableNV.addMouseListener(this);
 		dcNgaySinh.getDateEditor().addPropertyChangeListener(this);
 		dcNgayVao.getDateEditor().addPropertyChangeListener(this);
+		
 	}
 	
 	
@@ -555,6 +557,50 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	
+	// khóa text field
+	public void lockTextField() {
+		txtHoTenNV.setEditable(false);
+		txtDiaChi.setEditable(false);
+		txtCCCD.setEditable(false);
+		txtSDT.setEditable(false);
+		txtEmail.setEditable(false);
+		txtLuongCoBan.setEditable(false);
+		txtPhuCap.setEditable(false);
+		txtHeSoLuong.setEditable(false);
+		txtTaiKhoan.setEditable(false);
+		
+		cbGioiTinh.setSelectedIndex(0);
+		cbPhongBan.setSelectedIndex(0);
+		cbTrangThai.setSelectedIndex(0);
+		cbBangCap.setSelectedIndex(0);
+		
+		dcNgayVao.setDate(new Date());
+	}
+	
+	
+	// mở khóa text field
+	public void unlockTextField() {
+		if (btnThem.getText().equals("Hủy")) {
+			txtHoTenNV.setEditable(true);
+			txtDiaChi.setEditable(true);
+			txtCCCD.setEditable(true);
+			txtSDT.setEditable(true);
+			txtEmail.setEditable(true);
+			txtLuongCoBan.setEditable(true);
+			txtPhuCap.setEditable(true);
+			txtHeSoLuong.setEditable(true);
+			txtTaiKhoan.setEditable(true);
+			
+			cbGioiTinh.setSelectedIndex(0);
+			cbPhongBan.setSelectedIndex(0);
+			cbTrangThai.setSelectedIndex(0);
+			cbBangCap.setSelectedIndex(0);
+			
+			dcNgayVao.setDate(new Date());
 		}
 	}
 	
@@ -777,29 +823,26 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 	}
 	
 	
-/*	
-	public boolean luuDuLieuNV() {
-		int r = tableNV.getSelectedRow();
-		NhanVienHanhChinh nv = convertNhanVienNhanVien();
+	public boolean xoaDuLieuNV() {
+		int tableRow = tableNV.getSelectedRow();
 		
-		if (dao_nv.themMoiNhanVien(nv)) {
-			Object[] row = {
-					nv.getMaNV(), nv.getHoTenNV(), 
-					nv.isGioiTinh() == true ? "Nam" : "Nữ",
-					nv.getNgaySinh(), nv.getDiaChi(), nv.getCCCD(), nv.getSDT(), nv.getNgayVao(), 
-					nv.getPhongBan().getMaPhongBan(), 
-					nv.isTrangThai() == true ? "Đang làm việc" : "Nghỉ việc", 
-					nv.getBangCap(), nv.getLuongCoBan(), nv.getPhuCap(), nv.getHeSoLuong(),
-					nv.getTaiKhoan().getTenTK(), nv.getEmail()
-			};
-			modelNV.addRow(row);
-			JOptionPane.showMessageDialog(this, "Lưu thành công!");
-			xoaRong();
+		if (tableRow != -1) {
+			int tb = 	JOptionPane.showConfirmDialog(null, "Bạn có chắc là muốn xóa dòng này không?", 
+						"Delete", JOptionPane.YES_NO_OPTION);
+			if (tb == JOptionPane.YES_OPTION) {
+				String maNV = txtMaNV.getText().trim();
+				if (dao_nv.xoaNhanVien(maNV)) {
+					modelNV.removeRow(tableRow);
+					xoaRong();
+					JOptionPane.showMessageDialog(null, "Xóa thành công!");
+				} else {
+					JOptionPane.showMessageDialog(null, "Bạn chưa chọn dòng muốn xóa!");
+				}
+			}
 		}
 		
 		return true;
 	}
-*/
 	
 	
  	 public void autoGenerateMaNV() {
@@ -843,6 +886,7 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		txtHeSoLuong.setText("");
 		txtTaiKhoan.setText("");
 		txtEmail.setText("");
+		lblError.setText("");
 		autoGenerateMaNV();
 	}
 	
@@ -856,6 +900,7 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 			xoaRong();
 		}
 		else if (o.equals(btnThem)) {
+			xoaRong();
 			if (checkRegex() == true) {
 				try {
 					themDuLieuNV();
@@ -863,11 +908,15 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 					e1.printStackTrace();
 				}
 			}
+			
 		}
 		else if (o.equals(btnSua)) {
+			xoaRong();
 			suaDuLieuNV();
 		}
-		
+		else if (o.equals(btnXoa)) {
+			xoaDuLieuNV();
+		}
 	}
 	
 	

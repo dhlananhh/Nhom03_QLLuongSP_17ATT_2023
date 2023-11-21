@@ -277,6 +277,31 @@ public class DAO_NhanVienHanhChinh {
 	}
 	
 	
+	public boolean xoaNhanVien (String maNhanVien) {
+		Connection con = ConnectDB.getInstance().getConnection();
+		
+		if (con == null)
+			return false;
+		
+		PreparedStatement stmt = null;
+		int n = 0;
+		
+		try {
+			String sql = "DELETE FROM NhanVienHanhChinh WHERE maNV = ?";
+			stmt = con.prepareStatement(sql);
+			
+			stmt.setString(1, maNhanVien);
+			
+			n = stmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return n > 0;
+	}
+	
+	
 	public void close (PreparedStatement stmt) {
 		if (stmt != null) {
 			try {
