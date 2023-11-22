@@ -13,53 +13,6 @@ import entity.LuongNhanVienHanhChinh;
 import entity.NhanVienHanhChinh;
 
 public class DAO_LuongNhanVienHanhChinh {
-	private static DAO_NhanVienHanhChinh instance = new DAO_NhanVienHanhChinh();
-	
-	
-	public static DAO_NhanVienHanhChinh getInstance() {
-		if (instance == null)
-			instance = new DAO_NhanVienHanhChinh();
-		return instance;
-	}
-	
-	
-	public List<LuongNhanVienHanhChinh> docDuLieu() {
-		List<LuongNhanVienHanhChinh> dsLuongNhanVien = new ArrayList<LuongNhanVienHanhChinh>();
-		
-		try {
-			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = 	"SELECT * FROM LuongNhanVienHanhChinh \r\n" +
-							"INNER JOIN NhanVienHanhChinh ON LuongNhanVienHanhChinh.maNV = NhanVienHanhChinh.maNV \r\n";
-			Statement statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(sql);
-			
-			while (rs.next()) {
-				LuongNhanVienHanhChinh luongNV = new LuongNhanVienHanhChinh();
-				luongNV.setMaBangLuongHC(rs.getString(1));
-				luongNV.setNam(rs.getInt(2));
-				luongNV.setThang(rs.getInt(3));
-				luongNV.setTrangThai(rs.getBoolean(4));
-				
-				DAO_NhanVienHanhChinh dao_nv = new DAO_NhanVienHanhChinh();
-				NhanVienHanhChinh nhanVien = dao_nv.getNhanVienTheoMa(rs.getString(5));
-				luongNV.setNhanVien(nhanVien);
-				
-				luongNV.setHeSoLuong(rs.getFloat(6));
-				luongNV.setLuongCoBan(rs.getFloat(7));
-				luongNV.setPhuCap(rs.getFloat(8));
-				luongNV.setGiamTru(rs.getFloat(9));
-				luongNV.setTamUng(rs.getFloat(10));
-				
-				dsLuongNhanVien.add(luongNV);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return dsLuongNhanVien;
-	}
-	
-	
 	public List<LuongNhanVienHanhChinh> getDanhSachLuongNhanVien() {
 		List<LuongNhanVienHanhChinh> dsLuongNhanVien = new ArrayList<LuongNhanVienHanhChinh>();
 		
@@ -84,8 +37,7 @@ public class DAO_LuongNhanVienHanhChinh {
 				luongNV.setHeSoLuong(rs.getFloat(6));
 				luongNV.setLuongCoBan(rs.getFloat(7));
 				luongNV.setPhuCap(rs.getFloat(8));
-				luongNV.setGiamTru(rs.getFloat(9));
-				luongNV.setTamUng(rs.getFloat(10));
+				luongNV.setLuongThucLanh(rs.getFloat(9));
 				
 				dsLuongNhanVien.add(luongNV);
 			}
@@ -107,8 +59,8 @@ public class DAO_LuongNhanVienHanhChinh {
 		int n = 0;
 		
 		try {
-			String sql = 	"INSERT INTO LuongNhanVienHanhChinh (maBangLuongHC, nam, thang, trangThai, maNV, heSoLuong, luongCoBan, phuCap, giamTru, tamUng)" +
-							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String sql = 	"INSERT INTO LuongNhanVienHanhChinh (maBangLuongHC, nam, thang, trangThai, maNV, heSoLuong, luongCoBan, phuCap, luongThucLanh)" +
+							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			stmt = con.prepareStatement(sql);
 		
 			stmt.setString(1, luongNV.getMaBangLuongHC());
@@ -119,8 +71,7 @@ public class DAO_LuongNhanVienHanhChinh {
 			stmt.setFloat(6, luongNV.getHeSoLuong());
 			stmt.setFloat(7, luongNV.getLuongCoBan());
 			stmt.setFloat(8, luongNV.getPhuCap());
-			stmt.setFloat(9, luongNV.getGiamTru());
-			stmt.setFloat(10, luongNV.getTamUng());
+			stmt.setFloat(9, luongNV.getLuongThucLanh());
 			
 			n = stmt.executeUpdate();
 		} catch (Exception e) {
@@ -157,8 +108,7 @@ public class DAO_LuongNhanVienHanhChinh {
 				luongNV.setHeSoLuong(rs.getFloat(6));
 				luongNV.setLuongCoBan(rs.getFloat(7));
 				luongNV.setPhuCap(rs.getFloat(8));
-				luongNV.setGiamTru(rs.getFloat(9));
-				luongNV.setTamUng(rs.getFloat(10));
+				luongNV.setLuongThucLanh(rs.getFloat(9));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -193,8 +143,7 @@ public class DAO_LuongNhanVienHanhChinh {
 				luongNV.setHeSoLuong(rs.getFloat(6));
 				luongNV.setLuongCoBan(rs.getFloat(7));
 				luongNV.setPhuCap(rs.getFloat(8));
-				luongNV.setGiamTru(rs.getFloat(9));
-				luongNV.setTamUng(rs.getFloat(10));
+				luongNV.setLuongThucLanh(rs.getFloat(9));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -229,8 +178,7 @@ public class DAO_LuongNhanVienHanhChinh {
 				luongNV.setHeSoLuong(rs.getFloat(6));
 				luongNV.setLuongCoBan(rs.getFloat(7));
 				luongNV.setPhuCap(rs.getFloat(8));
-				luongNV.setGiamTru(rs.getFloat(9));
-				luongNV.setTamUng(rs.getFloat(10));
+				luongNV.setLuongThucLanh(rs.getFloat(9));
 				
 				dsLuongNV.add(luongNV);
 			}

@@ -24,7 +24,7 @@ public class DAO_NhanVienHanhChinh {
 			Connection con = ConnectDB.getInstance().getConnection();
 			String sql = 	"SELECT * FROM NhanVienHanhChinh \r\n" + 
 							"INNER JOIN PhongBan ON PhongBan.maPhongBan = NhanVienHanhChinh.maPhongBan \r\n" +
-							"INNER JOIN TaiKhoan ON TaiKhoan.tenTK = NhanVienHanhChinh.tenTK";
+							"INNER JOIN TaiKhoan ON TaiKhoan.tenTK = NhanVienHanhChinh.tenTK \r\n";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
 			
@@ -145,10 +145,10 @@ public class DAO_NhanVienHanhChinh {
 				"UPDATE NhanVienHanhChinh \r\n" +
 					"SET hoTenNV = ?, gioiTinh = ?, ngaySinh = ?, diaChi = ?, CCCD = ?, " +
 					"SDT = ?, ngayVao = ?, trangThai = ?, bangCap = ?, " +
-					"luongCoBan = ?, phuCap = ?, heSoLuong = ?, email = ?" +
-				"WHERE maNV = ?" +
-				"UPDATE PhongBan SET tenPhongBan = ?, soLuongNV = ?, moTa = ? WHERE maPhongBan = ?" +
-				"UPDATE TaiKhoan SET matKhau = ? WHERE tenTK = ?";
+					"luongCoBan = ?, phuCap = ?, heSoLuong = ?, email = ? \r\n" +
+				"WHERE maNV = ? \r\n" +
+				"UPDATE PhongBan SET tenPhongBan = ?, soLuongNV = ?, moTa = ? WHERE maPhongBan = ? \r\n" +
+				"UPDATE TaiKhoan SET matKhau = ? WHERE tenTK = ? \r\n";
 			stmt = con.prepareStatement(sql);
 			
 			stmt.setString(1, nv.getHoTenNV());
@@ -192,7 +192,7 @@ public class DAO_NhanVienHanhChinh {
 			Connection con = ConnectDB.getInstance().getConnection();
 			String sql = 	"SELECT * FROM NhanVienHanhChinh \r\n" + 
 							"INNER JOIN PhongBan ON PhongBan.maPhongBan = NhanVienHanhChinh.maPhongBan \r\n" +
-							"INNER JOIN TaiKhoan ON TaiKhoan.tenTK = NhanVienHanhChinh.tenTK" +
+							"INNER JOIN TaiKhoan ON TaiKhoan.tenTK = NhanVienHanhChinh.tenTK \r\n" +
 							"WHERE maNV = '" + maNhanVien + "'";
 			Statement statement = con.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
@@ -238,7 +238,7 @@ public class DAO_NhanVienHanhChinh {
 			Connection con = ConnectDB.getInstance().getConnection();
 			String sql = 	"SELECT * FROM NhanVienHanhChinh \r\n" + 
 							"INNER JOIN PhongBan ON PhongBan.maPhongBan = NhanVienHanhChinh.maPhongBan \r\n" +
-							"INNER JOIN TaiKhoan ON TaiKhoan.tenTK = NhanVienHanhChinh.tenTK" +
+							"INNER JOIN TaiKhoan ON TaiKhoan.tenTK = NhanVienHanhChinh.tenTK \r\n" +
 							"WHERE hoTenNV = '" + tenNhanVien + "'";
 			Statement statement = con.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
