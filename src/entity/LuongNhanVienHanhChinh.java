@@ -12,8 +12,6 @@ public class LuongNhanVienHanhChinh implements Serializable {
 	private float heSoLuong;
 	private float luongCoBan;
 	private float phuCap;
-	private float giamTru;
-	private float tamUng;
 	private float luongThucLanh;
 	
 	
@@ -34,11 +32,10 @@ public class LuongNhanVienHanhChinh implements Serializable {
 		this.thang = thang;
 	}
 
-
+	
 	public LuongNhanVienHanhChinh (String maBangLuongHC, int nam, int thang, 
 			boolean trangThai, NhanVienHanhChinh nhanVien, 
-			float heSoLuong, float luongCoBan, float phuCap,
-			float giamTru, float tamUng) {
+			float heSoLuong, float luongCoBan, float phuCap) {
 		this.maBangLuongHC = maBangLuongHC;
 		this.nam = nam;
 		this.thang = thang;
@@ -47,8 +44,6 @@ public class LuongNhanVienHanhChinh implements Serializable {
 		this.heSoLuong = heSoLuong;
 		this.luongCoBan = luongCoBan;
 		this.phuCap = phuCap;
-		this.giamTru = giamTru;
-		this.tamUng = tamUng;
 	}
 
 
@@ -133,23 +128,13 @@ public class LuongNhanVienHanhChinh implements Serializable {
 	}
 
 	
-	public float getGiamTru() {
-		return giamTru;
+	public float getLuongThucLanh() {
+		return luongThucLanh;
 	}
 
 
-	public void setGiamTru(float giamTru) {
-		this.giamTru = giamTru;
-	}
-
-
-	public float getTamUng() {
-		return tamUng;
-	}
-
-
-	public void setTamUng(float tamUng) {
-		this.tamUng = tamUng;
+	public void setLuongThucLanh(float luongThucLanh) {
+		this.luongThucLanh = luongThucLanh;
 	}
 
 
@@ -177,18 +162,18 @@ public class LuongNhanVienHanhChinh implements Serializable {
 	public float tinhLuongThucLanh() {
 		float luongThucLanh = 0;
 		
-		luongThucLanh = (luongCoBan * heSoLuong) + phuCap / 26 * 26 - giamTru - tamUng;
+		luongThucLanh = (luongCoBan * heSoLuong) + phuCap / 26 * 26;
 		
 		return luongThucLanh;
 	}
-	
+
 
 	//---toString---
 	@Override
 	public String toString() {
 		return "LuongNhanVienHanhChinh [maBangLuongHC=" + maBangLuongHC + ", nam=" + nam + ", thang=" + thang
-				+ ", trangThai=" + trangThai + ", nhanVien=" + nhanVien + ", heSoLuong=" + heSoLuong
-				+ ", luongCoBan=" + luongCoBan + ", phuCap=" + phuCap + "]";
+				+ ", trangThai=" + trangThai + ", nhanVien=" + nhanVien + ", heSoLuong=" + heSoLuong + ", luongCoBan="
+				+ luongCoBan + ", phuCap=" + phuCap + ", luongThucLanh=" + luongThucLanh + "]";
 	}
 	
 }

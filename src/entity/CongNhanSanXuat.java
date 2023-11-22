@@ -1,25 +1,25 @@
 package entity;
 
-import java.time.LocalDate;
+
 import java.util.Objects;
+import java.util.Date;
+
 
 public class CongNhanSanXuat {
 	private String maCN;
 	private String hoTenCN;
-	private String gioiTinh;
-	private LocalDate ngaySinh;
+	private boolean gioiTinh;
+	private Date ngaySinh;
 	private String diaChi;
 	private String CCCD;
-	private String BHXH;
-	private String MST;
-	private LocalDate ngayVao;
-	private PhongBan phongBan;
-	private int toSanXuat;
-	private String trangThai;
+	private String SDT;
+	private Date ngayVao;
+	private ToSanXuat toSanXuat;
+	private boolean trangThai;
 	private String bangCap;
 	private int tayNghe;
-	private double luongSanPham;
-	private double phuCap;
+	private float luongSanPham;
+	private float phuCap;
 	
 	
 	//---constructors---
@@ -28,24 +28,23 @@ public class CongNhanSanXuat {
 	}
 
 
-	public CongNhanSanXuat(String maCN) {
+	public CongNhanSanXuat(String maCN, String hoTenCN) {
 		this.maCN = maCN;
+		this.hoTenCN = hoTenCN;
 	}
 
 	
-	public CongNhanSanXuat(String maCN, String hoTenCN, String gioiTinh, LocalDate ngaySinh, String diaChi, 
-			String CCCD, String BHXH, String MST, LocalDate ngayVao, PhongBan phongBan, 
-			int toSanXuat, String trangThai, String bangCap, int tayNghe, double luongSanPham, double phuCap) {
+	public CongNhanSanXuat(String maCN, String hoTenCN, boolean gioiTinh, Date ngaySinh, 
+			String diaChi, String CCCD, String SDT, Date ngayVao, ToSanXuat toSanXuat, 
+			boolean trangThai, String bangCap, int tayNghe, float luongSanPham, float phuCap) {
 		this.maCN = maCN;
 		this.hoTenCN = hoTenCN;
 		this.gioiTinh = gioiTinh;
 		this.ngaySinh = ngaySinh;
 		this.diaChi = diaChi;
 		this.CCCD = CCCD;
-		this.BHXH = BHXH;
-		this.MST = MST;
+		this.SDT = SDT;
 		this.ngayVao = ngayVao;
-		this.phongBan = phongBan;
 		this.toSanXuat = toSanXuat;
 		this.trangThai = trangThai;
 		this.bangCap = bangCap;
@@ -74,24 +73,24 @@ public class CongNhanSanXuat {
 	public void setHoTenCN(String hoTenCN) {
 		this.hoTenCN = hoTenCN;
 	}
-
-
-	public String getGioiTinh() {
+	
+	
+	public boolean isGioiTinh() {
 		return gioiTinh;
 	}
 
 
-	public void setGioiTinh(String gioiTinh) {
+	public void setGioiTinh(boolean gioiTinh) {
 		this.gioiTinh = gioiTinh;
 	}
 
 
-	public LocalDate getNgaySinh() {
+	public Date getNgaySinh() {
 		return ngaySinh;
 	}
 
 
-	public void setNgaySinh(LocalDate ngaySinh) {
+	public void setNgaySinh(Date ngaySinh) {
 		this.ngaySinh = ngaySinh;
 	}
 
@@ -111,37 +110,27 @@ public class CongNhanSanXuat {
 	}
 
 
-	public void setCCCD(String cCCD) {
-		CCCD = cCCD;
+	public void setCCCD(String CCCD) {
+		this.CCCD = CCCD;
+	}
+
+	
+	public String getSDT() {
+		return SDT;
 	}
 
 
-	public String getBHXH() {
-		return BHXH;
+	public void setSDT(String sDT) {
+		SDT = sDT;
 	}
 
 
-	public void setBHXH(String bHXH) {
-		BHXH = bHXH;
-	}
-
-
-	public String getMST() {
-		return MST;
-	}
-
-
-	public void setMST(String mST) {
-		MST = mST;
-	}
-
-
-	public LocalDate getNgayVao() {
+	public Date getNgayVao() {
 		return ngayVao;
 	}
 
 
-	public void setNgayVao(LocalDate ngayVao) {
+	public void setNgayVao(Date ngayVao) {
 		this.ngayVao = ngayVao;
 	}
 
@@ -156,22 +145,22 @@ public class CongNhanSanXuat {
 	}
 
 
-	public int getToSanXuat() {
+	public ToSanXuat getToSanXuat() {
 		return toSanXuat;
 	}
 
 
-	public void setToSanXuat(int toSanXuat) {
+	public void setToSanXuat(ToSanXuat toSanXuat) {
 		this.toSanXuat = toSanXuat;
 	}
 
-
-	public String getTrangThai() {
+	
+	public boolean isTrangThai() {
 		return trangThai;
 	}
 
 
-	public void setTrangThai(String trangThai) {
+	public void setTrangThai(boolean trangThai) {
 		this.trangThai = trangThai;
 	}
 
@@ -184,34 +173,24 @@ public class CongNhanSanXuat {
 	public void setBangCap(String bangCap) {
 		this.bangCap = bangCap;
 	}
-
 	
-	public PhongBan getPhongBan() {
-		return phongBan;
-	}
 
-
-	public void setPhongBan(PhongBan phongBan) {
-		this.phongBan = phongBan;
-	}
-
-
-	public double getLuongSanPham() {
+	public float getLuongSanPham() {
 		return luongSanPham;
 	}
 
 
-	public void setLuongSanPham(double luongSanPham) {
+	public void setLuongSanPham(float luongSanPham) {
 		this.luongSanPham = luongSanPham;
 	}
 
 
-	public double getPhuCap() {
+	public float getPhuCap() {
 		return phuCap;
 	}
 
 
-	public void setPhuCap(double phuCap) {
+	public void setPhuCap(float phuCap) {
 		this.phuCap = phuCap;
 	}
 
@@ -234,5 +213,15 @@ public class CongNhanSanXuat {
 		CongNhanSanXuat other = (CongNhanSanXuat) obj;
 		return Objects.equals(maCN, other.maCN);
 	}
-	
+
+
+	//---toString---
+	@Override
+	public String toString() {
+		return "CongNhanSanXuat [maCN=" + maCN + ", hoTenCN=" + hoTenCN + ", gioiTinh=" + gioiTinh + ", ngaySinh="
+				+ ngaySinh + ", diaChi=" + diaChi + ", CCCD=" + CCCD + ", SDT=" + SDT + ", ngayVao=" + ngayVao
+				+ ", toSanXuat=" + toSanXuat + ", trangThai=" + trangThai + ", bangCap=" + bangCap + ", tayNghe="
+				+ tayNghe + ", luongSanPham=" + luongSanPham + ", phuCap=" + phuCap + "]";
+	}
+
 }

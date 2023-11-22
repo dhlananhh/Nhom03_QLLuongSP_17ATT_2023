@@ -39,11 +39,14 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 
 
-	public NhanVienHanhChinh(String maNV, String hoTenNV, boolean gioiTinh, 
-			Date ngaySinh, String diaChi, String CCCD, String BHXH, String MST, 
-			Date ngayVao, PhongBan phongBan, String SDT, boolean trangThai, String bangCap, 
+	
+
+
+	public NhanVienHanhChinh(String maNV, String hoTenNV, boolean gioiTinh, Date ngaySinh, 
+			String diaChi, String CCCD, String SDT, Date ngayVao, 
+			PhongBan phongBan, boolean trangThai, String bangCap, 
 			float luongCoBan, float phuCap, float heSoLuong, 
-			TaiKhoan tenTaiKhoan, String email) {
+			TaiKhoan taiKhoan, String email) {
 		this.maNV = maNV;
 		this.hoTenNV = hoTenNV;
 		this.gioiTinh = gioiTinh;
@@ -58,7 +61,7 @@ public class NhanVienHanhChinh implements Serializable {
 		this.luongCoBan = luongCoBan;
 		this.phuCap = phuCap;
 		this.heSoLuong = heSoLuong;
-		this.taiKhoan = tenTaiKhoan;
+		this.taiKhoan = taiKhoan;
 		this.email = email;
 	}
 
@@ -119,8 +122,8 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 
 
-	public void setCCCD(String cCCD) {
-		CCCD = cCCD;
+	public void setCCCD(String CCCD) {
+		this.CCCD = CCCD;
 	}
 
 	
@@ -129,8 +132,8 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 
 
-	public void setSDT(String sDT) {
-		SDT = sDT;
+	public void setSDT(String SDT) {
+		this.SDT = SDT;
 	}
 
 
