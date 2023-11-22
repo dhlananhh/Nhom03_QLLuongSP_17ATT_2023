@@ -43,11 +43,10 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	private JButton btnLoc, btnXoa, btnLuu;
 	private JComboBox cbNam, cbThang, cbLoaiBangLuong;
 	private Font BVNPro;
-	private JTable tableNV, tableCN;
-	private DefaultTableModel modelNV, modelCN;
-	private DAO_LuongNhanVienHanhChinh DAO_LuongNhanVien;
-	private DAO_LuongCongNhanSanXuat DAO_LuongCongNhan;
-	private List<LuongNhanVienHanhChinh> dsLHC = new ArrayList<LuongNhanVienHanhChinh>();
+	private JTable tableCN;
+	private DefaultTableModel modelCN;
+	private DAO_LuongCongNhanSanXuat dao_luongCN;
+	private List<DAO_LuongCongNhanSanXuat> listLuongCN = new ArrayList<DAO_LuongCongNhanSanXuat>();
 	
 	
 	public GUI_LuongCongNhanSanXuat() {
@@ -55,15 +54,14 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		try {
 			ConnectDB.getInstance().connect();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		dao_luongCN = new DAO_LuongCongNhanSanXuat();
+		
 		//set JFrame properties
-//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//		setSize(screenSize.width, screenSize.height);
 		setSize(1300, 700);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
 		//load fonts
@@ -89,7 +87,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		pnContent.add(pnNorth, BorderLayout.NORTH);
 		pnNorth.setBackground(headerColor);
 		
-		lblTieuDe = new JLabel("TÍNH LƯƠNG");
+		lblTieuDe = new JLabel("LƯƠNG CÔNG NHÂN SẢN XUẤT");
 		pnNorth.add(lblTieuDe);
 		lblTieuDe.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 25));
 		lblTieuDe.setForeground(Color.WHITE);
@@ -184,7 +182,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		modelCN.addColumn("Mã CN");
 		modelCN.addColumn("Họ tên");
 		modelCN.addColumn("Lương sản phẩm");
-		modelCN.addColumn("Lương phụ cấp");
+		modelCN.addColumn("Phụ cấp");
 		modelCN.addColumn("Giảm trừ");
 		modelCN.addColumn("Tạm ứng");
 		modelCN.addColumn("Thực lãnh");
