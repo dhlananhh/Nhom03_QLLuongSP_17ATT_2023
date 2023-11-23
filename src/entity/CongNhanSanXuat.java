@@ -2,7 +2,7 @@ package entity;
 
 
 import java.util.Objects;
-import java.util.Date;
+import java.sql.Date;
 
 
 public class CongNhanSanXuat {
@@ -18,8 +18,8 @@ public class CongNhanSanXuat {
 	private boolean trangThai;
 	private String bangCap;
 	private int tayNghe;
-	private float luongSanPham;
-	private float phuCap;
+	private double luongSanPham;
+	private double phuCap;
 	
 	
 	//---constructors---
@@ -32,18 +32,22 @@ public class CongNhanSanXuat {
 		this.maCN = maCN;
 		this.hoTenCN = hoTenCN;
 	}
+	public CongNhanSanXuat(String maCN) {
+		this.maCN = maCN;
+	}
 
-	
-	public CongNhanSanXuat(String maCN, String hoTenCN, boolean gioiTinh, Date ngaySinh, 
-			String diaChi, String CCCD, String SDT, Date ngayVao, ToSanXuat toSanXuat, 
-			boolean trangThai, String bangCap, int tayNghe, float luongSanPham, float phuCap) {
+
+	public CongNhanSanXuat(String maCN, String hoTenCN, boolean gioiTinh, Date ngaySinh, String diaChi, String cCCD,
+			String sDT, Date ngayVao, ToSanXuat toSanXuat, boolean trangThai, String bangCap, int tayNghe,
+			double luongSanPham, double phuCap) {
+		super();
 		this.maCN = maCN;
 		this.hoTenCN = hoTenCN;
 		this.gioiTinh = gioiTinh;
 		this.ngaySinh = ngaySinh;
 		this.diaChi = diaChi;
-		this.CCCD = CCCD;
-		this.SDT = SDT;
+		CCCD = cCCD;
+		SDT = sDT;
 		this.ngayVao = ngayVao;
 		this.toSanXuat = toSanXuat;
 		this.trangThai = trangThai;
@@ -54,7 +58,6 @@ public class CongNhanSanXuat {
 	}
 
 
-	//---getters/setters---
 	public String getMaCN() {
 		return maCN;
 	}
@@ -73,8 +76,8 @@ public class CongNhanSanXuat {
 	public void setHoTenCN(String hoTenCN) {
 		this.hoTenCN = hoTenCN;
 	}
-	
-	
+
+
 	public boolean isGioiTinh() {
 		return gioiTinh;
 	}
@@ -110,11 +113,11 @@ public class CongNhanSanXuat {
 	}
 
 
-	public void setCCCD(String CCCD) {
-		this.CCCD = CCCD;
+	public void setCCCD(String cCCD) {
+		CCCD = cCCD;
 	}
 
-	
+
 	public String getSDT() {
 		return SDT;
 	}
@@ -135,16 +138,6 @@ public class CongNhanSanXuat {
 	}
 
 
-	public int getTayNghe() {
-		return tayNghe;
-	}
-
-
-	public void setTayNghe(int tayNghe) {
-		this.tayNghe = tayNghe;
-	}
-
-
 	public ToSanXuat getToSanXuat() {
 		return toSanXuat;
 	}
@@ -154,7 +147,7 @@ public class CongNhanSanXuat {
 		this.toSanXuat = toSanXuat;
 	}
 
-	
+
 	public boolean isTrangThai() {
 		return trangThai;
 	}
@@ -173,49 +166,38 @@ public class CongNhanSanXuat {
 	public void setBangCap(String bangCap) {
 		this.bangCap = bangCap;
 	}
-	
 
-	public float getLuongSanPham() {
+
+	public int getTayNghe() {
+		return tayNghe;
+	}
+
+
+	public void setTayNghe(int tayNghe) {
+		this.tayNghe = tayNghe;
+	}
+
+
+	public double getLuongSanPham() {
 		return luongSanPham;
 	}
 
 
-	public void setLuongSanPham(float luongSanPham) {
+	public void setLuongSanPham(double luongSanPham) {
 		this.luongSanPham = luongSanPham;
 	}
 
 
-	public float getPhuCap() {
+	public double getPhuCap() {
 		return phuCap;
 	}
 
 
-	public void setPhuCap(float phuCap) {
+	public void setPhuCap(double phuCap) {
 		this.phuCap = phuCap;
 	}
 
 
-	//---hashCode/equals---
-	@Override
-	public int hashCode() {
-		return Objects.hash(maCN);
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CongNhanSanXuat other = (CongNhanSanXuat) obj;
-		return Objects.equals(maCN, other.maCN);
-	}
-
-
-	//---toString---
 	@Override
 	public String toString() {
 		return "CongNhanSanXuat [maCN=" + maCN + ", hoTenCN=" + hoTenCN + ", gioiTinh=" + gioiTinh + ", ngaySinh="
@@ -223,5 +205,6 @@ public class CongNhanSanXuat {
 				+ ", toSanXuat=" + toSanXuat + ", trangThai=" + trangThai + ", bangCap=" + bangCap + ", tayNghe="
 				+ tayNghe + ", luongSanPham=" + luongSanPham + ", phuCap=" + phuCap + "]";
 	}
+	
 
 }
