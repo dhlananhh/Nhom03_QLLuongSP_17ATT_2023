@@ -57,11 +57,11 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 
 	private JPanel contentPane;
 	private JComboBox<Integer> cbThang, cbNam;
-	private JComboBox<String> cbMaNV;
+	private JComboBox<String> cbMaPB;
 	private LocalDate ngayHT = LocalDate.now();
 	private JComboBox<String> cbPhep = new JComboBox<String>(new String[] {"","P","K"});
 	private JTextField txtNghiPhep;
-	private JTextField txtTenNV;
+	private JTextField txtTenPB;
 	private DefaultTableModel modelDiemDanh;
 	private JTable tableDiemDanh;
 	private List<String> columnsDD = new ArrayList<>();
@@ -69,6 +69,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 	private DAO_NhanVienHanhChinh dao_NVHC = new DAO_NhanVienHanhChinh();
 	private DAO_DiemDanh dao_DiemDanh = new DAO_DiemDanh();
 	private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	private JTextField txtTenNV;
 	/**
 	 * Launch the application.
 	 */
@@ -136,54 +137,73 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		b1.add(Box.createVerticalStrut(30));
 		
 		Box b3 = Box.createHorizontalBox();
-		b3.add(Box.createHorizontalStrut(300));
-		JLabel lblMaNV = new JLabel("Mã nhân viên:   ");
-		b3.add(lblMaNV);
-		
-		cbMaNV = new JComboBox();
+		b3.add(Box.createHorizontalStrut(200));
+		JLabel lblMaPB = new JLabel("Mã phòng ban:   ");
+		b3.add(lblMaPB);
+		taoDSDiemDanhTrongNgay();
+		cbMaPB = new JComboBox();
 		for (NhanVienHanhChinh nv : dao_NVHC.getDanhSachNhanVien()) {
-			cbMaNV.addItem(nv.getMaNV());
+			cbMaPB.addItem(nv.getMaNV());
 		}
-		b3.add(cbMaNV);
-		cbMaNV.setPreferredSize(new Dimension(200, 30));
+		b3.add(cbMaPB);
+		cbMaPB.setPreferredSize(new Dimension(200, 30));
 		b1.add(b3);
+		
+		Component horizontalStrut_1 = Box.createHorizontalStrut(100);
+		b3.add(horizontalStrut_1);
 		b1.add(Box.createVerticalStrut(30));
-
-		pnCenter.add(Box.createVerticalStrut(20));
 		Box b2 = Box.createVerticalBox();
 		pnCenter.add(b2);
 		b2.add(Box.createVerticalStrut(30));
 		Box b4 = Box.createHorizontalBox();
-		b4.add(Box.createHorizontalStrut(300));
+		
+		JLabel lblNewLabel = new JLabel("Mã nhân viên:    ");
+		b4.add(lblNewLabel);
+		
+		JComboBox cbMaNV = new JComboBox();
+		cbMaNV.setMaximumRowCount(20);
+		b4.add(cbMaNV);
+		b4.add(Box.createHorizontalStrut(100));
 		JLabel lblNghiPhep = new JLabel("Số ngày nghỉ có phép:         ");
 		b4.add(lblNghiPhep);
 		txtNghiPhep = new JTextField();
 		txtNghiPhep.setText("");
 		b4.add(txtNghiPhep);
-		txtNghiPhep.setColumns(10);
+		txtNghiPhep.setColumns(5);
 		b4.add(Box.createHorizontalStrut(200));
 		
 		b2.add(b4);
 		b2.add(Box.createVerticalStrut(30));
 		Box b5= Box.createHorizontalBox();
-		b5.add(Box.createHorizontalStrut(300));
-		JLabel lblTenNV = new JLabel("Tên nhân viên:  ");
-		b5.add(lblTenNV);
+		b5.add(Box.createHorizontalStrut(200));
+		JLabel lblTenPB = new JLabel("Tên phòng ban:  ");
+		b5.add(lblTenPB);
 		
-		txtTenNV = new JTextField();
-		txtTenNV.setText("");
-		b5.add(txtTenNV);
-		txtTenNV.setColumns(10);
+		txtTenPB = new JTextField();
+		txtTenPB.setText("");
+		b5.add(txtTenPB);
+		txtTenPB.setColumns(10);
 		
 		b1.add(b5);
+		
+		Component horizontalStrut_2 = Box.createHorizontalStrut(100);
+		b5.add(horizontalStrut_2);
 		b1.add(Box.createVerticalStrut(90));
 		Box b6 = Box.createHorizontalBox();
 		b2.add(b6);
 		b2.add(Box.createVerticalStrut(90));
-		b6.add(Box.createHorizontalStrut(300));
+		
+		JLabel lblNewLabel_1 = new JLabel("Tên nhân viên:    ");
+		b6.add(lblNewLabel_1);
+		
+		txtTenNV = new JTextField();
+		b6.add(txtTenNV);
+		txtTenNV.setColumns(20);
+		b6.add(Box.createHorizontalStrut(100));
 		JLabel lblKhongPhep = new JLabel("Số ngày nghỉ không phép:   ");
 		b6.add(lblKhongPhep);
 		txtKhongPhep = new JTextField();
+		txtKhongPhep.setColumns(5);
 		b6.add(txtKhongPhep);
 		b6.add(Box.createHorizontalStrut(200));
 		
@@ -242,6 +262,8 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
                     changedValue = modelDiemDanh.getValueAt(row, column).toString();
                 try {
                 	dao_DiemDanh.capNhatDiemDanh(new DiemDanh(modelDiemDanh.getValueAt(row, 0).toString(),Date.valueOf(ngayHT) , changedValue.toString()));
+                	txtNghiPhep.setText(dao_DiemDanh.tongNgayPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
+            		txtKhongPhep.setText(dao_DiemDanh.tongNgayKhongPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
 	               } catch (SQLException e1) {
 	            	   // TODO Auto-generated catch block
 	            	   e1.printStackTrace();
@@ -273,10 +295,18 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		});
 		tableDiemDanh.addMouseListener(this);
 		
-		
-		
 	}
-
+	public void taoDSDiemDanhTrongNgay() {
+		if(!dao_DiemDanh.ktDiemDanh(Date.valueOf(ngayHT)))
+			for (NhanVienHanhChinh nv : dao_NVHC.getDanhSachNhanVien()) {
+				try {
+					dao_DiemDanh.themDiemDanh(new DiemDanh(nv.getMaNV(), Date.valueOf(ngayHT), ""));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+	}
 	private void taoCotTheoThang() {
 		columnsDD.removeAll(columnsDD);
 		columnsDD.add("Mã nhân viên");
@@ -339,8 +369,8 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		int row = tableDiemDanh.getSelectedRow();
-		cbMaNV.setSelectedItem(modelDiemDanh.getValueAt(row, 0).toString());
-		txtTenNV.setText(modelDiemDanh.getValueAt(row, 1).toString());
+		cbMaPB.setSelectedItem(modelDiemDanh.getValueAt(row, 0).toString());
+		txtTenPB.setText(modelDiemDanh.getValueAt(row, 1).toString());
 		txtNghiPhep.setText(dao_DiemDanh.tongNgayPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
 		txtKhongPhep.setText(dao_DiemDanh.tongNgayKhongPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
 	}

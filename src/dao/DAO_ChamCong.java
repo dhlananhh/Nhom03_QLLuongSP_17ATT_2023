@@ -49,7 +49,7 @@ public class DAO_ChamCong {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		con.close();
+		//con.close();
 		return false;
 	}
 	public boolean xoaPhanCong(String macn, Date date) throws SQLException {
@@ -84,5 +84,64 @@ public class DAO_ChamCong {
 		}
 		return dsChamCong;
 	}
+	public List<ChamCong> getDSChamCongTheoSP(String masp, Date ngayCham) {
+	    ConnectDB.getInstance();
+	    List<ChamCong> dsChamCong = new ArrayList<>();
+
+	    try (Connection con = ConnectDB.getConnection();
+	         PreparedStatement ps = con.prepareStatement("SELECT cc.maCN, cc.maCD, cc.ngayCham, cc.chiTieu, cc.soLuongHoanThanh \r\n"
+	         		+ "FROM ChamCong cc \r\n"
+	         		+ "JOIN CongDoan cd ON cc.maCD = cd.maCD \r\n"
+	         		+ "WHERE cd.maSP = ? AND cc.ngayCham = ?")) {
+
+	        ps.setString(1, masp);
+	        ps.setDate(2, ngayCham);
+	        try (ResultSet resultSet = ps.executeQuery()) {
+	            while (resultSet.next()) {
+	                dsChamCong.add(new ChamCong(
+	                        resultSet.getString("maCN"),
+	                        resultSet.getString("maCD"),
+	                        resultSet.getDate("ngayCham"),
+	                        resultSet.getInt("chiTieu"),
+	                        resultSet.getInt("soLuongHoanThanh")
+	                ));
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return dsChamCong;
+	}
+	public List<ChamCong> getDSChamCongTheoCN(String macn, Date ngayCham) {
+	    ConnectDB.getInstance();
+	    List<ChamCong> dsChamCong = new ArrayList<>();
+
+	    try (Connection con = ConnectDB.getConnection();
+	         PreparedStatement ps = con.prepareStatement("SELECT * FROM ChamCong WHERE maCN = ? AND ngayCham = ?")) {
+
+	        ps.setString(1, macn);
+	        ps.setDate(2, ngayCham);
+
+	        try (ResultSet resultSet = ps.executeQuery()) {
+	            while (resultSet.next()) {
+	                dsChamCong.add(new ChamCong(
+	                        resultSet.getString("maCN"),
+	                        resultSet.getString("maCD"),
+	                        resultSet.getDate("ngayCham"),
+	                        resultSet.getInt("chiTieu"),
+	                        resultSet.getInt("soLuongHoanThanh")
+	                ));
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return dsChamCong;
+	}
+
 	
 }

@@ -11,10 +11,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -63,13 +66,14 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		ConnectDB.getInstance().connect();;
 		setTitle("Bảng chấm công");
 		setSize(1300, 700);
+		setResizable(false);
 		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		//setSize(screenSize.width, screenSize.height);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		//font
 		try {
-			String fileName = "fonts/BeVietnamPro-Black.ttf";
+			String fileName = "fonts/BeVietnamPro-Regular.ttf";
 			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(30f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)));
@@ -83,6 +87,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		
 		JPanel pnTop = new JPanel();
 		pnTop.setBackground(new Color(0, 102, 204));
+		
 		
 		lblTieuDe = new JLabel("BẢNG CHẤM CÔNG");
 		lblTieuDe.setFont(new Font("BeVietnamPro-Black", Font.BOLD, 25));
@@ -116,11 +121,22 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
         chooserNgay.setDateFormatString("dd/MM/yyyy");
         chooserNgay.setBorder(new LineBorder(new Color(138, 255, 255), 1, true));
         chooserNgay.setDate(new Date());
+        chooserNgay.addPropertyChangeListener("date", new PropertyChangeListener() {
+			
+			@Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("date".equals(evt.getPropertyName())) {
+                	modelHT.setRowCount(0);
+                    loadBang();
+                    clear();
+                }
+            }
+		});
         
         b1.add(chooserNgay);
-        b1.add(Box.createHorizontalStrut(100));
+        b1.add(Box.createHorizontalStrut(400));
         b1.add(cbLoc = new JComboBox<String>());
-        cbLoc.addItem("Mã nhân viên");
+        cbLoc.addItem("Mã công nhân");
         cbLoc.addItem("Mã sản phẩm");
         cbLoc.addItem("Mã công đoạn");
         b1.add(Box.createHorizontalStrut(10));
@@ -177,6 +193,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
         
         c5.add(Box.createHorizontalStrut(400));
         c5.add(btnLuu = new JButton("Lưu"));
+        btnLuu.setEnabled(false);
         btnLuu.setBackground(new Color(0, 153, 204));
         btnLuu.setForeground(Color.WHITE);
         //preference
@@ -199,7 +216,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
         b2_1.add(c5);
         pnChamCong.add(b2_1);
         b2.add(pnChamCong);
-        
+        pnChamCong.setBorder(BorderFactory.createTitledBorder("Chấm công"));
         
         //box 2 phải
         JPanel pnHoanThanh = new JPanel();
@@ -240,7 +257,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		};
 		tableCC = new JTable(modelCC);
 		JScrollPane scroll = new JScrollPane(tableCC);
-		scroll.setPreferredSize(new Dimension(1000, 200));
+		scroll.setPreferredSize(new Dimension(1200, 300));
 		pnBot.add(scroll);
 		modelCC.addTableModelListener(new TableModelListener() {
 			
@@ -253,13 +270,29 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
                 if (column != TableModelEvent.ALL_COLUMNS && row != TableModelEvent.HEADER_ROW) 
                     // Lấy giá trị cụ thể từ ô vừa được thay đổi
                     changedValue = modelCC.getValueAt(row, column);
-                txtSoLuongHT.setText(changedValue.toString());
-                nhapChiTieu();
+                if(column == 7) {
+                	int sltruoc,slsau;
+                    if(txtSoLuongHT.getText().equals(""))
+                    	sltruoc = 0;
+                    else
+                    	sltruoc = Integer.parseInt(txtSoLuongHT.getText())+0;
+                    if(changedValue.equals(""))
+                    	slsau = 0 ;
+                    else
+                    	slsau = Integer.parseInt(changedValue.toString());
+                    String macd = modelCC.getValueAt(row, 4).toString();
+                    ChamCong chamCong= new ChamCong(macd, null, (slsau-sltruoc));
+                    loadBangHT(modelCC.getValueAt(row, 2).toString(), chamCong, macd);
+                    txtSoLuongHT.setText(changedValue.toString());
+                    nhapSLHT();
+                }
+                
 			}
 		});
 		loadBang();
 		tableCC.addMouseListener(this);
 		btnLuu.addActionListener(this);
+		btnLoc.addActionListener(this);
 	}
 	
 	public static void main(String[] args) throws SQLException {
@@ -272,10 +305,16 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
 		if(o.equals(btnLuu)) {
+			int row= tableCC.getSelectedRow();
+			int sltruoc= Integer.parseInt(modelCC.getValueAt(row, 7).toString());
+			int slsau = Integer.parseInt(txtSoLuongHT.getText());
+			loadBangHT(modelCC.getValueAt(row, 2).toString(), new ChamCong("", null, (slsau-sltruoc)), modelCC.getValueAt(row, 4).toString());
 			modelCC.setValueAt(txtSoLuongHT.getText(), tableCC.getSelectedRow(), 7);
 		}
+		if(o.equals(btnLoc))
+			loc();
 	}
-	public void nhapChiTieu() {
+	public void nhapSLHT() {
 		if(txtSoLuongHT.getText().equals(""))
 			txtSoLuongHT.setText("0");
 		ChamCong chamCong = new ChamCong(txtMaCN.getText(),new java.sql.Date(chooserNgay.getDate().getTime()),
@@ -287,15 +326,36 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 			e.printStackTrace();
 		}
 	}
+	public void loadBangHT(String masp, ChamCong chamCong, String macd) {
+		int slcd = congDoan_dao.getAllCongDoanTheoSP(masp.toString()).size();
+        if(congDoan_dao.getCongDoanTheoMa(macd).getThuTu()==slcd) {
+			int rowHT= modelHT.getRowCount();
+			boolean capNhat = false;
+			for (int i = 0; i < rowHT; i++) {
+	            if (modelHT.getValueAt(i, 0).equals(masp)) {
+	                int slht= Integer.parseInt(modelHT.getValueAt(i, 2).toString())+ chamCong.getSoLuongHoanThanh();
+	                modelHT.setValueAt(slht, i, 2);
+	                capNhat= true;
+	                break;
+	            }
+	        }
+			if(!capNhat) {
+				String[] addRowHT= {masp, sanPham_dao.getSanPhamTheoMa(masp).getTenSP(),chamCong.getSoLuongHoanThanh()+""}; 
+				modelHT.addRow(addRowHT);
+			}
+        }
+		
+	}
 	public void loadBang() {
 		modelCC.setRowCount(0);
 		for (ChamCong chamCong : chamCong_dao.getDSChamCongTheoNgay(new java.sql.Date(chooserNgay.getDate().getTime()))) {
 			String macd = chamCong.getMaCD();
-			String[] row = {chamCong.getMaCN(), congNhan_dao.getCongNhanTheoMa(chamCong.getMaCN()).getHoTenCN(),
-					sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getMaSP(),
+			String masp = sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getMaSP();
+			String[] row = {chamCong.getMaCN(), congNhan_dao.getCongNhanTheoMa(chamCong.getMaCN()).getHoTenCN(),masp,
 					sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getTenSP(),macd,
 					congDoan_dao.getCongDoanTheoMa(macd).getTenCD(), chamCong.getChiTieu()+"", chamCong.getSoLuongHoanThanh()+""};
 			modelCC.addRow(row);
+			loadBangHT(masp, chamCong, macd);
 		}
 	}
 
@@ -303,18 +363,59 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		int rowCCong = tableCC.getSelectedRow();
-		txtMaCN.setText(modelCC.getValueAt(rowCCong, 0).toString());
-		txtTenCN.setText(modelCC.getValueAt(rowCCong, 1).toString());
-		txtMaSP.setText(modelCC.getValueAt(rowCCong, 2).toString());
-		txtTenSP.setText(modelCC.getValueAt(rowCCong, 3).toString());
-		txtMaCD.setText(modelCC.getValueAt(rowCCong, 4).toString());
-		txtTenCD.setText(modelCC.getValueAt(rowCCong, 5).toString());
-		txtChiTieu.setText(modelCC.getValueAt(rowCCong, 6).toString());
-		txtSoLuongHT.setText(modelCC.getValueAt(rowCCong, 7).toString()+"");
-		if(rowCCong == -1)
+		if(rowCCong != -1) {
+			btnLuu.setEnabled(true);
+			txtMaCN.setText(modelCC.getValueAt(rowCCong, 0).toString());
+			txtTenCN.setText(modelCC.getValueAt(rowCCong, 1).toString());
+			txtMaSP.setText(modelCC.getValueAt(rowCCong, 2).toString());
+			txtTenSP.setText(modelCC.getValueAt(rowCCong, 3).toString());
+			txtMaCD.setText(modelCC.getValueAt(rowCCong, 4).toString());
+			txtTenCD.setText(modelCC.getValueAt(rowCCong, 5).toString());
+			txtChiTieu.setText(modelCC.getValueAt(rowCCong, 6).toString());
+			txtSoLuongHT.setText(modelCC.getValueAt(rowCCong, 7).toString()+"");
+		}
+		else
 			btnLuu.setEnabled(false);
+			
 	}
-
+	public void clear() {
+		txtMaCN.setText("");
+		txtTenCN.setText("");
+		txtMaSP.setText("");
+		txtTenSP.setText("");
+		txtMaCD.setText("");
+		txtTenCD.setText("");
+		txtChiTieu.setText("");
+		txtSoLuongHT.setText("");
+		btnLuu.setEnabled(false);
+	}
+	public void loc() {
+		String tieuChi = cbLoc.getSelectedItem().toString();
+		String ma = txtLoc.getText();
+		modelCC.setRowCount(0);
+		if(tieuChi.equals("Mã sản phẩm")) {
+			for (ChamCong chamCong : chamCong_dao.getDSChamCongTheoSP(ma, new java.sql.Date(chooserNgay.getDate().getTime()))) {
+				String macd = chamCong.getMaCD();
+				String masp = sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getMaSP();
+				String[] row = {chamCong.getMaCN(), congNhan_dao.getCongNhanTheoMa(chamCong.getMaCN()).getHoTenCN(),masp,
+						sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getTenSP(),macd,
+						congDoan_dao.getCongDoanTheoMa(macd).getTenCD(), chamCong.getChiTieu()+"", chamCong.getSoLuongHoanThanh()+""};
+				modelCC.addRow(row);
+			}
+		}
+		if(tieuChi.equals("Mã công nhân")) {
+			for (ChamCong chamCong : chamCong_dao.getDSChamCongTheoCN(ma, new java.sql.Date(chooserNgay.getDate().getTime()))) {
+				String macd = chamCong.getMaCD();
+				String masp = sanPham_dao.getSanPhamTheoMaCD(macd).getMaSP();
+				String[] row = {chamCong.getMaCN(), "","",
+						sanPham_dao.getSanPhamTheoMaCD(macd).getTenSP(),macd,
+						congDoan_dao.getCongDoanTheoMa(macd).getTenCD(), chamCong.getChiTieu()+"", chamCong.getSoLuongHoanThanh()+""};
+				modelCC.addRow(row);
+			}
+		}
+		if(modelCC.getRowCount()==0)
+			JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin");
+	}
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub

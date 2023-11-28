@@ -18,7 +18,7 @@ public class DAO_DiemDanh {
 		Connection con = ConnectDB.getConnection();
 		try {
 
-			PreparedStatement ps = con.prepareStatement("insert into NgayNghi values (?,?,?)");
+			PreparedStatement ps = con.prepareStatement("insert into DiemDanh values (?,?,?)");
 			ps.setString(1, dd.getMaNV());
 			ps.setDate(2, dd.getNgayCham());
 			ps.setString(3, dd.getTrangThai());
@@ -31,12 +31,26 @@ public class DAO_DiemDanh {
 		con.close();
 		return false;
 	}
+	public boolean ktDiemDanh(Date date) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		boolean kq= true;
+		try {
+			PreparedStatement ps = con.prepareStatement("select top 1 * from DiemDanh where ngayNghi = ?");
+			ps.setDate(1, date);
+			ResultSet rs = ps.executeQuery();
+			kq= rs.next();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return kq;
+	}
 	public boolean capNhatDiemDanh(DiemDanh dd) throws SQLException {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement(
-					"update NgayNghi set trangThai = ? where maNV = ? and ngayNghi = ?");
+					"update DiemDanh set trangThai = ? where maNV = ? and ngayNghi = ?");
 			ps.setString(1, dd.getTrangThai());
 			ps.setString(2, dd.getMaNV());
 			ps.setDate(3, dd.getNgayCham());
@@ -53,7 +67,7 @@ public class DAO_DiemDanh {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		try {
-			PreparedStatement ps = con.prepareStatement("select * from NgayNghi where ngayNghi = '"+ date + "'");
+			PreparedStatement ps = con.prepareStatement("select * from DiemDanh where ngayNghi = '"+ date + "'");
 			ResultSet rs = ps.executeQuery();
 			DiemDanh dd = new DiemDanh(date);
 			dd.setMaNV(rs.getString(1));
@@ -69,7 +83,7 @@ public class DAO_DiemDanh {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		try {
-			PreparedStatement ps = con.prepareStatement("select * from NgayNghi where maNV = ? and ngayNghi = ?");
+			PreparedStatement ps = con.prepareStatement("select * from DiemDanh where maNV = ? and ngayNghi = ?");
 			ps.setString(1, ma);
 			ps.setDate(2, date);
 			ResultSet rs = ps.executeQuery();
@@ -88,7 +102,7 @@ public class DAO_DiemDanh {
 			PreparedStatement ps = con.prepareStatement("SELECT \r\n"
 					+ "    SUM(CASE WHEN trangThai = 'P' AND MONTH(ngayNghi) = ? THEN 1 ELSE 0 END) AS tong_ngay_nghi_phep\r\n"
 					+ "FROM \r\n"
-					+ "    NgayNghi\r\n"
+					+ "    DiemDanh\r\n"
 					+ "WHERE \r\n"
 					+ "    MONTH(ngayNghi) = ?\r\n"
 					+ "	and maNV = ?\r\n"
@@ -113,7 +127,7 @@ public class DAO_DiemDanh {
 			PreparedStatement ps = con.prepareStatement("SELECT \r\n"
 					+ "    SUM(CASE WHEN trangThai = 'K' AND MONTH(ngayNghi) = ? THEN 1 ELSE 0 END) AS tong_ngay_nghi_phep\r\n"
 					+ "FROM \r\n"
-					+ "    NgayNghi\r\n"
+					+ "    DiemDanh\r\n"
 					+ "WHERE \r\n"
 					+ "    MONTH(ngayNghi) = ?\r\n"
 					+ "	and maNV = ?\r\n"

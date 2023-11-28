@@ -8,6 +8,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -48,6 +49,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 
 import java.awt.Component;
 import javax.swing.table.TableModel;
@@ -72,6 +74,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 	private DAO_SanPham sanPham_dao = new DAO_SanPham();
 	private DAO_CongDoan congDoan_dao = new DAO_CongDoan();
 	private DAO_CongNhan congNhan_dao = new DAO_CongNhan();
+	private Icon icon = new Icon();
 	/**
 	 * Launch the application.
 	 */
@@ -107,14 +110,19 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		
 		JPanel pnCongNhan = new JPanel();
 		contentPane.add(pnCongNhan, BorderLayout.WEST);
-		pnCongNhan.setLayout(new BoxLayout(pnCongNhan, BoxLayout.Y_AXIS));
+		pnCongNhan.setLayout(new BoxLayout(pnCongNhan, BoxLayout.X_AXIS));
 		
-		Box horizontalBox = Box.createHorizontalBox();
-		pnCongNhan.add(horizontalBox);
+		Box b = Box.createHorizontalBox();
 		
-		JLabel lblNewLabel = new JLabel("Ngày");
-		horizontalBox.add(lblNewLabel);
 		
+		JPanel pnNgay = new JPanel();
+		pnNgay.setLayout(new BoxLayout(pnNgay, BoxLayout.Y_AXIS));
+		JLabel lblNgay = new JLabel("Ngày");
+		
+		pnNgay.add(b);
+		pnNgay.add(Box.createVerticalStrut(20));
+		b.add(lblNgay);
+		contentPane.add(pnNgay, BorderLayout.NORTH);
 		chooserNgay.getCalendarButton().setToolTipText("Chọn ngày phân công");
 		chooserNgay.getCalendarButton().setPreferredSize(new Dimension(30, 24));
 		chooserNgay.getCalendarButton().setBackground(new Color(138, 255, 255));
@@ -122,8 +130,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		chooserNgay.setDateFormatString("dd/MM/yyyy");
 		chooserNgay.setBorder(new LineBorder(new Color(138, 255, 255), 1, true));
 		chooserNgay.setDate(new Date());
-		horizontalBox.add(chooserNgay);
-		horizontalBox.add(Box.createHorizontalStrut(200));
+		b.add(chooserNgay);
+		b.add(Box.createHorizontalStrut(1000));
 		chooserNgay.addPropertyChangeListener("date", new PropertyChangeListener() {
 			
 			@Override
@@ -154,13 +162,14 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		pnCongNhan.add(spTableCN);
 		spTableCN.setViewportView(tableCongNhan);
 		spTableCN.setBorder(BorderFactory.createTitledBorder("Công nhân chưa phân công"));
-		pnCongNhan.add(Box.createVerticalStrut(50));
+		pnCongNhan.add(Box.createVerticalStrut(20));
 		
 		loadBangCN();
 		
 		JPanel pnInput = new JPanel();
 		contentPane.add(pnInput, BorderLayout.CENTER);
 		pnInput.setLayout(new BoxLayout(pnInput, BoxLayout.Y_AXIS));
+		pnInput.setBorder(BorderFactory.createTitledBorder("Phân công"));
 		
 		Box b1 = Box.createHorizontalBox();
 		pnInput.add(Box.createVerticalStrut(20));
@@ -251,7 +260,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		
 		Box b4 = Box.createHorizontalBox();
 		pnInput.add(b4);
-		pnInput.add(Box.createVerticalStrut(50));
+		//pnInput.add(Box.createVerticalStrut(30));
 		b4.add(Box.createHorizontalStrut(30));
 		JLabel lblChiTieu = new JLabel("Chỉ tiêu");
 		b4.add(lblChiTieu);
@@ -263,8 +272,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		
 		Box b5 = Box.createHorizontalBox();
 		pnInput.add(b5);
-		
 		btnLuu = new JButton("Lưu");
+		//btnLuu.setIcon(icon.iconTim);
 		btnLuu.setBackground(new Color(0, 153, 204));
 		btnLuu.setForeground(Color.WHITE);
 		b5.add(btnLuu);
@@ -276,7 +285,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		btnXoa.setBackground(Color.red);
 		btnXoa.setEnabled(false);
 		b5.add(btnXoa);
-		pnInput.add(Box.createVerticalStrut(100));
+		pnInput.add(Box.createVerticalStrut(70));
 		
 		contentPane.add(Box.createHorizontalStrut(50), BorderLayout.EAST);
 		
@@ -291,7 +300,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		tablePhanCong = new JTable(modelPhanCong);
 		
 		JScrollPane spTablePC = new JScrollPane(tablePhanCong);
-		spTablePC.setPreferredSize(new Dimension(1500, 300));
+		spTablePC.setPreferredSize(new Dimension(1500, 380));
 		contentPane.add(spTablePC, BorderLayout.SOUTH);
 		spTablePC.setViewportView(tablePhanCong);
 		spTablePC.setBorder(BorderFactory.createTitledBorder("Bảng phân công"));
@@ -307,6 +316,9 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
 		if(o.equals(btnLuu)) {
+			CongDoan cd= congDoan_dao.getCongDoanTheoMa(cbMaCD.getSelectedItem().toString());
+            String maCDTruoc = String.format("%s%02d","CD",Integer.parseInt(cd.getMaCD().split("CD")[1])-1);
+            //if(cd.getThuTu()!=1 && (Integer) spinChiTieu.getValue())
 			themPhanCong();
 			clear();
 		}
