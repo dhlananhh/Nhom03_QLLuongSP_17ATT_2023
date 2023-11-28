@@ -117,7 +117,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		
 		JPanel pnNgay = new JPanel();
 		pnNgay.setLayout(new BoxLayout(pnNgay, BoxLayout.Y_AXIS));
-		JLabel lblNgay = new JLabel("Ngày");
+		JLabel lblNgay = new JLabel("Ngày:  ");
 		
 		pnNgay.add(b);
 		pnNgay.add(Box.createVerticalStrut(20));
@@ -272,8 +272,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		
 		Box b5 = Box.createHorizontalBox();
 		pnInput.add(b5);
-		btnLuu = new JButton("Lưu");
-		//btnLuu.setIcon(icon.iconTim);
+		btnLuu = new JButton(icon.iconTim);
+		btnLuu.setText("Lưu");
 		btnLuu.setBackground(new Color(0, 153, 204));
 		btnLuu.setForeground(Color.WHITE);
 		b5.add(btnLuu);
@@ -281,7 +281,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		Component horizontalStrut = Box.createHorizontalStrut(100);
 		b5.add(horizontalStrut);
 		
-		btnXoa = new JButton("Xóa");
+		btnXoa = new JButton(icon.iconXoa);
+		btnXoa.setText("Xóa");
 		btnXoa.setBackground(Color.red);
 		btnXoa.setEnabled(false);
 		b5.add(btnXoa);
