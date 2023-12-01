@@ -33,9 +33,11 @@ import com.formdev.flatlaf.FlatLightLaf;
 import connection.ConnectDB;
 import dao.DAO_DiemDanh;
 import dao.DAO_NhanVienHanhChinh;
+import dao.DAO_PhongBan;
 import entity.CongNhanSanXuat;
 import entity.DiemDanh;
 import entity.NhanVienHanhChinh;
+import entity.PhongBan;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -69,6 +71,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 	private JTextField txtKhongPhep;
 	private DAO_NhanVienHanhChinh dao_NVHC = new DAO_NhanVienHanhChinh();
 	private DAO_DiemDanh dao_DiemDanh = new DAO_DiemDanh();
+	private DAO_PhongBan dao_PhongBan = new DAO_PhongBan();
 	private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private JTextField txtTenPB;
 	/**
@@ -147,6 +150,10 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		cbMaPB = new JComboBox();
 		cbMaPB.setPreferredSize(new Dimension(100, 40));
 		b3.add(cbMaPB);
+		cbMaPB.addItem("");
+		for (PhongBan pb : dao_PhongBan.getDanhSachPhongBan()) {
+			cbMaPB.addItem(pb.getMaPhongBan());
+		}
 		cbMaPB.setMaximumRowCount(20);
 		
 		Component horizontalStrut_1 = Box.createHorizontalStrut(100);
@@ -160,6 +167,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		JLabel lblNewLabel = new JLabel("Mã nhân viên:    ");
 		b4.add(lblNewLabel);
 		cbMaNV = new JComboBox();
+		cbMaNV.addItem("");
 		for (NhanVienHanhChinh nv : dao_NVHC.getDanhSachNhanVien()) {
 			cbMaNV.addItem(nv.getMaNV());
 		}
@@ -294,10 +302,10 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 			public void itemStateChanged(ItemEvent e) {
 				taoCotTheoThang();
 				loadBang();
-				if((Integer)cbThang.getSelectedItem()!= ngayHT.getMonthValue())
-					tableDiemDanh.setEnabled(false);
-				else
-					tableDiemDanh.setEnabled(true);
+//				if((Integer)cbThang.getSelectedItem()!= ngayHT.getMonthValue())
+//					tableDiemDanh.setEnabled(false);
+//				else
+//					tableDiemDanh.setEnabled(true);
 			}
 		});
 		tableDiemDanh.addMouseListener(this);
@@ -383,6 +391,11 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		txtTenNV.setText(modelDiemDanh.getValueAt(row, 1).toString());
 		txtNghiPhep.setText(dao_DiemDanh.tongNgayPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
 		txtKhongPhep.setText(dao_DiemDanh.tongNgayKhongPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
+		cbMaPB.setSelectedItem(dao_NVHC.layNhanVienTheoMa(modelDiemDanh.getValueAt(row, 0).toString()).getPhongBan().getMaPhongBan());
+		txtTenPB.setText(dao_PhongBan.getPhongBanTheoMa(dao_NVHC.layNhanVienTheoMa(modelDiemDanh.getValueAt(row, 0).toString()).getPhongBan().getMaPhongBan()).getTenPhongBan());
+	}
+	public void clear() {
+		
 	}
 
 	@Override

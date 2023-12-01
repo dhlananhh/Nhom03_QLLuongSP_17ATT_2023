@@ -298,7 +298,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
                     changedValue = modelCC.getValueAt(row, column);
                 if(column == 7) {
                 	int sltruoc,slsau;
-                    sltruoc = (Integer) spinSLHT.getValue();
+                    sltruoc = (Integer)spinSLHT.getValue();
                     if(changedValue.equals(""))
                     	slsau = 0 ;
                     else
@@ -306,7 +306,6 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
                     String macd = modelCC.getValueAt(row, 4).toString();
                     ChamCong chamCong= new ChamCong(macd, null, (slsau-sltruoc));
                     loadBangHT(modelCC.getValueAt(row, 2).toString(), chamCong, macd);
-                    System.out.println(slsau);
                     spinSLHT.setValue(slsau);
                     nhapSLHT();
                 }
@@ -406,6 +405,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 	}
 	public void clear() {
 		tableCC.clearSelection();
+		modelHT.setRowCount(0);
 		txtMaCN.setText("");
 		txtTenCN.setText("");
 		txtMaSP.setText("");
