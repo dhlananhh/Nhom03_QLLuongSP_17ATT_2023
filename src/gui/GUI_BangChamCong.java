@@ -197,7 +197,8 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
         c4.add(Box.createHorizontalStrut(150));
         c4.add(lblSoLuongHT= new JLabel("Số lượng hoàn thành:"));
         c4.add(Box.createHorizontalStrut(20));
-        SpinnerModel modelSLHT = new SpinnerNumberModel(1, 1, 100, 1);
+        SpinnerModel modelSLHT = new SpinnerNumberModel(0, 0, 100, 1);
+        
 		spinSLHT = new JSpinner(modelSLHT);
 		spinSLHT.setMaximumSize(new Dimension(30, 32767));
 		spinSLHT.setValue(0);
@@ -305,7 +306,8 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
                     String macd = modelCC.getValueAt(row, 4).toString();
                     ChamCong chamCong= new ChamCong(macd, null, (slsau-sltruoc));
                     loadBangHT(modelCC.getValueAt(row, 2).toString(), chamCong, macd);
-                    spinSLHT.setValue((Integer) changedValue);
+                    System.out.println(slsau);
+                    spinSLHT.setValue(slsau);
                     nhapSLHT();
                 }
                 

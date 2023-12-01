@@ -115,7 +115,7 @@ public class GUI_TrangChu extends javax.swing.JFrame {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setUndecorated(true);
 		//setExtendedState(MAXIMIZED_BOTH);
-		setSize((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() -100,
+		setSize((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() -394,
 				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() -300);
 		jPanel1.setBackground(new java.awt.Color(245, 245, 245));
 		jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(163, 163, 163)));
