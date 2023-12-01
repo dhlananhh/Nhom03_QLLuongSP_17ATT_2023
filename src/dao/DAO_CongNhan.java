@@ -186,13 +186,6 @@ public class DAO_CongNhan {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		finally {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
 		return n > 0;
 	}
 	public boolean capNhatCN(CongNhanSanXuat cn) {

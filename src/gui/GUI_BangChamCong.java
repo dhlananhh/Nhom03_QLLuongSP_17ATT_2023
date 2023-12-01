@@ -29,8 +29,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -45,6 +48,7 @@ import dao.DAO_CongDoan;
 import dao.DAO_CongNhan;
 import dao.DAO_SanPham;
 import entity.ChamCong;
+import java.awt.Component;
 
 public class GUI_BangChamCong extends JFrame implements ActionListener, MouseListener{
 	private JPanel pnContent;
@@ -53,15 +57,18 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 	private DefaultTableModel modelCC, modelHT;
 	private JTable tableCC, tableHT;
 	private JDateChooser chooserNgay = new JDateChooser();
+	private JSpinner spinSLHT;
 	//private JLabel lblNgay;
 	private JButton btnLoc, btnLuu;
 	private JComboBox<String> cbLoc;
-	private JTextField txtLoc, txtMaCN, txtTenCN, txtMaSP, txtTenSP, txtMaCD, txtTenCD, txtChiTieu, txtSoLuongHT;
+	private JTextField txtLoc, txtMaCN, txtTenCN, txtMaSP, txtTenSP, txtMaCD, txtTenCD, txtChiTieu;
 	private JCheckBox ckDatCT;
 	private DAO_ChamCong chamCong_dao = new DAO_ChamCong();
 	private DAO_SanPham sanPham_dao = new DAO_SanPham();
 	private DAO_CongDoan congDoan_dao = new DAO_CongDoan();
 	private DAO_CongNhan congNhan_dao = new DAO_CongNhan();
+	private Component horizontalStrut;
+	private JButton btnTaiLai;
 	public GUI_BangChamCong() throws SQLException{
 		ConnectDB.getInstance().connect();;
 		setTitle("Bảng chấm công");
@@ -83,7 +90,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		//panel
 		pnContent = new JPanel();
 		pnContent.setLayout(new BorderLayout());
-		add(pnContent);
+		getContentPane().add(pnContent);
 		
 		JPanel pnTop = new JPanel();
 		pnTop.setBackground(new Color(0, 102, 204));
@@ -185,13 +192,22 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
         
         c4.add(lblChiTieu = new JLabel("Chỉ tiêu:"));
         c4.add(Box.createHorizontalStrut(20));
-        c4.add(txtChiTieu = new JTextField(12));
-        c4.add(Box.createHorizontalStrut(40));
+        c4.add(txtChiTieu = new JTextField(10));
+        txtChiTieu.setMaximumSize(new Dimension(100, 2147483647));
+        c4.add(Box.createHorizontalStrut(150));
         c4.add(lblSoLuongHT= new JLabel("Số lượng hoàn thành:"));
         c4.add(Box.createHorizontalStrut(20));
-        c4.add(txtSoLuongHT = new JTextField(12));
+        SpinnerModel modelSLHT = new SpinnerNumberModel(1, 1, 100, 1);
+		spinSLHT = new JSpinner(modelSLHT);
+		spinSLHT.setMaximumSize(new Dimension(30, 32767));
+		spinSLHT.setValue(0);
+        c4.add(spinSLHT);
         
-        c5.add(Box.createHorizontalStrut(400));
+        btnTaiLai = new JButton("Tải lại");
+        btnTaiLai.setBackground(Color.green);
+        c5.add(btnTaiLai);
+        
+        c5.add(Box.createHorizontalStrut(350));
         c5.add(btnLuu = new JButton("Lưu"));
         btnLuu.setEnabled(false);
         btnLuu.setBackground(new Color(0, 153, 204));
@@ -212,6 +228,9 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
         b2_1.add(c3);
         b2_1.add(Box.createRigidArea(new Dimension(0, 20)));
         b2_1.add(c4);
+        
+        horizontalStrut = Box.createHorizontalStrut(100);
+        c4.add(horizontalStrut);
         b2_1.add(Box.createRigidArea(new Dimension(0, 20)));
         b2_1.add(c5);
         pnChamCong.add(b2_1);
@@ -223,7 +242,13 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
         pnHoanThanh.setBorder(BorderFactory.createTitledBorder("Sản phẩm hoàn thành"));
         pnHoanThanh.setBackground(new Color(245, 251, 255));
         String col2[] = {"Mã sản phẩm","Tên sản phẩm","Số lượng hoàn thành"};
-        modelHT = new DefaultTableModel(col2,0);
+        modelHT = new DefaultTableModel(col2, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+                // Tất cả các ô đều không thể sửa đổi
+                return false;
+            }
+		};
         tableHT = new JTable(modelHT);
         JScrollPane scroll2 = new JScrollPane(tableHT);
         b2_2.add(scroll2);
@@ -257,7 +282,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		};
 		tableCC = new JTable(modelCC);
 		JScrollPane scroll = new JScrollPane(tableCC);
-		scroll.setPreferredSize(new Dimension(1200, 300));
+		scroll.setPreferredSize(new Dimension(1200, 250));
 		pnBot.add(scroll);
 		modelCC.addTableModelListener(new TableModelListener() {
 			
@@ -266,16 +291,13 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 				// TODO Auto-generated method stub
 				int row = e.getFirstRow();
                 int column = e.getColumn();
-                Object changedValue = "";
+                Object changedValue = 0;
                 if (column != TableModelEvent.ALL_COLUMNS && row != TableModelEvent.HEADER_ROW) 
                     // Lấy giá trị cụ thể từ ô vừa được thay đổi
                     changedValue = modelCC.getValueAt(row, column);
                 if(column == 7) {
                 	int sltruoc,slsau;
-                    if(txtSoLuongHT.getText().equals(""))
-                    	sltruoc = 0;
-                    else
-                    	sltruoc = Integer.parseInt(txtSoLuongHT.getText())+0;
+                    sltruoc = (Integer) spinSLHT.getValue();
                     if(changedValue.equals(""))
                     	slsau = 0 ;
                     else
@@ -283,7 +305,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
                     String macd = modelCC.getValueAt(row, 4).toString();
                     ChamCong chamCong= new ChamCong(macd, null, (slsau-sltruoc));
                     loadBangHT(modelCC.getValueAt(row, 2).toString(), chamCong, macd);
-                    txtSoLuongHT.setText(changedValue.toString());
+                    spinSLHT.setValue((Integer) changedValue);
                     nhapSLHT();
                 }
                 
@@ -293,6 +315,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		tableCC.addMouseListener(this);
 		btnLuu.addActionListener(this);
 		btnLoc.addActionListener(this);
+		btnTaiLai.addActionListener(this);
 	}
 	
 	public static void main(String[] args) throws SQLException {
@@ -307,18 +330,19 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		if(o.equals(btnLuu)) {
 			int row= tableCC.getSelectedRow();
 			int sltruoc= Integer.parseInt(modelCC.getValueAt(row, 7).toString());
-			int slsau = Integer.parseInt(txtSoLuongHT.getText());
+			int slsau = (Integer) spinSLHT.getValue();
 			loadBangHT(modelCC.getValueAt(row, 2).toString(), new ChamCong("", null, (slsau-sltruoc)), modelCC.getValueAt(row, 4).toString());
-			modelCC.setValueAt(txtSoLuongHT.getText(), tableCC.getSelectedRow(), 7);
+			modelCC.setValueAt(spinSLHT.getValue(), tableCC.getSelectedRow(), 7);
+			JOptionPane.showMessageDialog(null, "Chấm công thành công!");
 		}
 		if(o.equals(btnLoc))
 			loc();
+		if(o.equals(btnTaiLai))
+			clear();
 	}
 	public void nhapSLHT() {
-		if(txtSoLuongHT.getText().equals(""))
-			txtSoLuongHT.setText("0");
 		ChamCong chamCong = new ChamCong(txtMaCN.getText(),new java.sql.Date(chooserNgay.getDate().getTime()),
-				Integer.parseInt(txtSoLuongHT.getText()));
+				(Integer) spinSLHT.getValue());
 		try {
 			chamCong_dao.chamCong(chamCong);
 		} catch (SQLException e) {
@@ -328,7 +352,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 	}
 	public void loadBangHT(String masp, ChamCong chamCong, String macd) {
 		int slcd = congDoan_dao.getAllCongDoanTheoSP(masp.toString()).size();
-        if(congDoan_dao.getCongDoanTheoMa(macd).getThuTu()==slcd) {
+        if(congDoan_dao.getCongDoanTheoMa(macd).getThuTu()==slcd && chamCong.getSoLuongHoanThanh()!=0) {
 			int rowHT= modelHT.getRowCount();
 			boolean capNhat = false;
 			for (int i = 0; i < rowHT; i++) {
@@ -372,13 +396,14 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 			txtMaCD.setText(modelCC.getValueAt(rowCCong, 4).toString());
 			txtTenCD.setText(modelCC.getValueAt(rowCCong, 5).toString());
 			txtChiTieu.setText(modelCC.getValueAt(rowCCong, 6).toString());
-			txtSoLuongHT.setText(modelCC.getValueAt(rowCCong, 7).toString()+"");
+			spinSLHT.setValue(Integer.parseInt(modelCC.getValueAt(rowCCong, 7).toString()) );
 		}
 		else
 			btnLuu.setEnabled(false);
 			
 	}
 	public void clear() {
+		tableCC.clearSelection();
 		txtMaCN.setText("");
 		txtTenCN.setText("");
 		txtMaSP.setText("");
@@ -386,8 +411,9 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		txtMaCD.setText("");
 		txtTenCD.setText("");
 		txtChiTieu.setText("");
-		txtSoLuongHT.setText("");
+		spinSLHT.setValue(0);
 		btnLuu.setEnabled(false);
+		loadBang();
 	}
 	public void loc() {
 		String tieuChi = cbLoc.getSelectedItem().toString();

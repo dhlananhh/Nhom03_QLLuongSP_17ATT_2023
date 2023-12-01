@@ -265,7 +265,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		JLabel lblChiTieu = new JLabel("Chỉ tiêu");
 		b4.add(lblChiTieu);
 		b4.add(Box.createHorizontalStrut(30));
-		SpinnerModel modelChiTieu = new SpinnerNumberModel(1, 1, 25, 1);
+		SpinnerModel modelChiTieu = new SpinnerNumberModel(1, 1, 100, 1);
 		spinChiTieu = new JSpinner(modelChiTieu);
 		b4.add(spinChiTieu);
 		b4.add(Box.createHorizontalStrut(800));
@@ -301,7 +301,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		tablePhanCong = new JTable(modelPhanCong);
 		
 		JScrollPane spTablePC = new JScrollPane(tablePhanCong);
-		spTablePC.setPreferredSize(new Dimension(1500, 380));
+		spTablePC.setPreferredSize(new Dimension(1500, 350));
 		contentPane.add(spTablePC, BorderLayout.SOUTH);
 		spTablePC.setViewportView(tablePhanCong);
 		spTablePC.setBorder(BorderFactory.createTitledBorder("Bảng phân công"));
@@ -331,10 +331,12 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 	public void clear() {
 		txtMaCN.setText("");
 		txtTenCN.setText("");
+		txtTenCD.setText("");
 		cbMaSP.setSelectedIndex(0);
 		tableCongNhan.clearSelection();
 		tablePhanCong.clearSelection();
 		btnXoa.setEnabled(false);
+		spinChiTieu.setValue(1);
 		loadBangPhanCong();
 		loadBangCN();
 	}

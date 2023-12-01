@@ -205,6 +205,25 @@ public class CongNhanSanXuat {
 				+ ", toSanXuat=" + toSanXuat + ", trangThai=" + trangThai + ", bangCap=" + bangCap + ", tayNghe="
 				+ tayNghe + ", luongSanPham=" + luongSanPham + ", phuCap=" + phuCap + "]";
 	}
-	
 
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(maCN);
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CongNhanSanXuat other = (CongNhanSanXuat) obj;
+		return Objects.equals(maCN, other.maCN);
+	}
+	
+	
 }

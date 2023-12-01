@@ -50,13 +50,6 @@ public class DAO_SanPham {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		finally {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
 		return n > 0;
 	}
 	public SanPham getSanPhamTheoMa(String masp){
@@ -133,7 +126,8 @@ public class DAO_SanPham {
 			statement.setBoolean(4, sp.getTrangThai());
 			statement.setString(5, sp.getMaSP());
 			n = statement.executeUpdate();
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return n > 0;
@@ -144,12 +138,12 @@ public class DAO_SanPham {
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
 		try {
-			String maCD = macd.substring(0, 4);
+			//String maCD = macd.substring(0, 4);
 			
-			String sql = "Select top 1 sp.maSP, sp.tenSP, sp.soLuongTon, sp.giaThanh, sp.trangThai "
-					+ "from SanPham sp join CongDoan cd on sp.maSP = cd.maSP where maCD like ?";
+			String sql = "Select top 1 sp.maSP, sp.tenSP, sp.soLuongTon, sp.giaThanh, sp.trangThai \r\n"
+					+ "from SanPham sp join CongDoan cd on sp.maSP = cd.maSP where maCD = ?";
 			statement = con.prepareStatement(sql);
-			statement.setString(1, maCD+"%");
+			statement.setString(1, macd);
 			ResultSet rs = statement.executeQuery();
 			while(rs.next()) {
 				String maSP = rs.getString("maSP");
@@ -159,11 +153,31 @@ public class DAO_SanPham {
 				boolean trangThai = rs.getBoolean("trangThai");
 				SanPham sp = new SanPham(maSP, tenSP, soLuongTon, giaThanh, trangThai);
 				dsSanPham.add(sp);
-				
+			
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return dsSanPham;
+	}
+	public SanPham getSanPhamTheoMaCD(String macd){
+		SanPham sp = new SanPham();
+		try {
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery("Select top 1 sp.maSP, sp.tenSP, sp.soLuongTon, sp.giaThanh, sp.trangThai \r\n"
+					+ "from SanPham sp join CongDoan cd on sp.maSP = cd.maSP where maCD = '"+macd+"'");
+			while(rs.next()) {
+				sp.setMaSP(rs.getString(1));
+				sp.setTenSP(rs.getString(2));
+				sp.setSoLuongTon(rs.getInt(3));
+				sp.setGiaThanh(rs.getDouble(4));
+				sp.setTrangThai(rs.getBoolean(5));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return sp;
 	}
 }

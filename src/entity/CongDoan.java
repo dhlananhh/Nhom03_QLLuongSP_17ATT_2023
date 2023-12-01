@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.Objects;
+
 public class CongDoan {
 	private String maCD;
 	private String tenCD;
@@ -55,6 +57,21 @@ public class CongDoan {
 	public String toString() {
 		return "CongDoan [maCD=" + maCD + ", tenCD=" + tenCD + ", luongTheoSanPham=" + luongTheoSanPham + ", maSP="
 				+ maSP + ", thuTu=" + thuTu + "]";
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(maCD);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CongDoan other = (CongDoan) obj;
+		return Objects.equals(maCD, other.maCD);
 	}
 	
 	

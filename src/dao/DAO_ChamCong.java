@@ -31,7 +31,6 @@ public class DAO_ChamCong {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		con.close();
 
 		return false;
 	}
@@ -64,7 +63,6 @@ public class DAO_ChamCong {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		con.close();
 		return false;
 	}
 	public List<ChamCong> getDSChamCongTheoNgay(Date ngay){
@@ -82,6 +80,7 @@ public class DAO_ChamCong {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+
 		return dsChamCong;
 	}
 	public List<ChamCong> getDSChamCongTheoSP(String masp, Date ngayCham) {

@@ -51,13 +51,6 @@ public class DAO_CongDoan {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		finally {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
 		return n > 0;
 	}
 	public ArrayList<CongDoan> getAllCongDoanTheoSP(String maSP){
@@ -86,14 +79,11 @@ public class DAO_CongDoan {
 	}
 	public CongDoan getCongDoanTheoMa(String maCD){
 		CongDoan cd = new CongDoan(maCD);
-		ConnectDB.getInstance();
-		Connection con = ConnectDB.getConnection();
-		PreparedStatement statement = null;
 		try {
-			String sql = "Select * from CongDoan where maCD = ?";
-			statement = con.prepareStatement(sql);
-			statement.setString(1,maCD);
-			ResultSet rs = statement.executeQuery();
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery("Select * from CongDoan where maCD = '"+maCD+"'");
 			while(rs.next()) {
 				cd.setTenCD(rs.getString(2));
 				cd.setLuongTheoSanPham(rs.getDouble(3));
