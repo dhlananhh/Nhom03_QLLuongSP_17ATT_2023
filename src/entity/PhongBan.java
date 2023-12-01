@@ -18,8 +18,8 @@ public class PhongBan implements Serializable {
 	}
 
 	
-	public PhongBan(String tenPhongBan) {
-		this.tenPhongBan = tenPhongBan;
+	public PhongBan(String maPhongBan) {
+		this.maPhongBan = maPhongBan;
 	}
 
 

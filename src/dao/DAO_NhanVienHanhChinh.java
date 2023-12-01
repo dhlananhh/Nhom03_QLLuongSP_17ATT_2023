@@ -22,6 +22,46 @@ public class DAO_NhanVienHanhChinh {
 		
 		try {
 			Connection con = ConnectDB.getInstance().getConnection();
+			String sql = "SELECT * FROM NhanVienHanhChinh";
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			
+			while (rs.next()) {
+				String maNV = rs.getString(1);
+				String hoTenNV = rs.getString(2);
+				boolean gioiTinh = rs.getBoolean(3);
+				Date ngaySinh = rs.getDate(4);
+				String diaChi = rs.getString(5);
+				String cccd = rs.getString(6);
+				String sdt = rs.getString(7);
+				Date ngayVao = rs.getDate(8);
+				PhongBan phongBan = new PhongBan(rs.getString(9));
+				boolean trangThai = rs.getBoolean(10);
+				String bangCap = rs.getString(11);
+				double luongCoBan = rs.getDouble(12);
+				double phuCap = rs.getDouble(13);
+				double heSoLuong = rs.getDouble(14);
+				TaiKhoan taiKhoan = new TaiKhoan(rs.getString(15));
+				String email = rs.getString(16);
+				
+				NhanVienHanhChinh nhanVien = new NhanVienHanhChinh(maNV, hoTenNV, gioiTinh, ngaySinh, diaChi, cccd, sdt, ngayVao, phongBan, trangThai, bangCap, luongCoBan, phuCap, heSoLuong, taiKhoan, email);
+				dsNhanVien.add(nhanVien);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return dsNhanVien;
+	}
+	
+	
+	
+	
+	public List<NhanVienHanhChinh> getDSNV() {
+		List<NhanVienHanhChinh> dsNhanVien = new ArrayList<NhanVienHanhChinh>();
+		
+		try {
+			Connection con = ConnectDB.getInstance().getConnection();
 			String sql = 	"SELECT * FROM NhanVienHanhChinh \r\n" + 
 							"INNER JOIN PhongBan ON PhongBan.maPhongBan = NhanVienHanhChinh.maPhongBan \r\n" +
 							"INNER JOIN TaiKhoan ON TaiKhoan.tenTK = NhanVienHanhChinh.tenTK \r\n";
@@ -66,7 +106,7 @@ public class DAO_NhanVienHanhChinh {
 	}
 	
 	
-	public boolean themMoiNhanVien (NhanVienHanhChinh nv) throws SQLException {
+	public boolean themMoiNhanVien (NhanVienHanhChinh nv) {
 		Connection con = ConnectDB.getInstance().getConnection();
 		
 		if (con == null)
@@ -76,9 +116,7 @@ public class DAO_NhanVienHanhChinh {
 		int n = 0;
 		
 		try {
-			String sql = 	"INSERT INTO NhanVienHanhChinh (maNV, hoTenNV, gioiTinh, ngaySinh, diaChi, " +
-							"CCCD, SDT, ngayVao, maPhongBan, trangThai, bangCap, " + 
-							"luongCoBan, phuCap, heSoLuong, tenTK, email)" +
+			String sql = 	"INSERT INTO NhanVienHanhChinh " +
 							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			stmt = con.prepareStatement(sql);
 			
@@ -93,9 +131,9 @@ public class DAO_NhanVienHanhChinh {
 			stmt.setString(9, nv.getPhongBan().getMaPhongBan());
 			stmt.setBoolean(10, nv.isTrangThai());
 			stmt.setString(11, nv.getBangCap());
-			stmt.setFloat(12, nv.getLuongCoBan());
-			stmt.setFloat(13, nv.getPhuCap());
-			stmt.setFloat(14, nv.getHeSoLuong());
+			stmt.setDouble(12, nv.getLuongCoBan());
+			stmt.setDouble(13, nv.getPhuCap());
+			stmt.setDouble(14, nv.getHeSoLuong());
 			stmt.setString(15, nv.getTaiKhoan().getTenTK());
 			stmt.setString(16, nv.getEmail());
 			
@@ -131,7 +169,7 @@ public class DAO_NhanVienHanhChinh {
 	}
 	
 	
-	public boolean capNhatThongTinNhanVien (NhanVienHanhChinh nv, PhongBan pb, TaiKhoan tk) {
+	public boolean capNhatThongTinNhanVien (NhanVienHanhChinh nv) {
 		Connection con = ConnectDB.getInstance().getConnection();
 		
 		if (con == null)
@@ -142,13 +180,11 @@ public class DAO_NhanVienHanhChinh {
 		
 		try {
 			String sql = 	
-				"UPDATE NhanVienHanhChinh \r\n" +
+				"UPDATE NhanVienHanhChinh " +
 					"SET hoTenNV = ?, gioiTinh = ?, ngaySinh = ?, diaChi = ?, CCCD = ?, " +
-					"SDT = ?, ngayVao = ?, trangThai = ?, bangCap = ?, " +
-					"luongCoBan = ?, phuCap = ?, heSoLuong = ?, email = ? \r\n" +
-				"WHERE maNV = ? \r\n" +
-				"UPDATE PhongBan SET tenPhongBan = ?, soLuongNV = ?, moTa = ? WHERE maPhongBan = ? \r\n" +
-				"UPDATE TaiKhoan SET matKhau = ? WHERE tenTK = ? \r\n";
+					"SDT = ?, ngayVao = ?, maPhongBan = ?, trangThai = ?, bangCap = ?, " +
+					"luongCoBan = ?, phuCap = ?, heSoLuong = ?, tenTK = ?, email = ? \r\n" +
+				"WHERE maNV = ?";
 			stmt = con.prepareStatement(sql);
 			
 			stmt.setString(1, nv.getHoTenNV());
@@ -158,21 +194,16 @@ public class DAO_NhanVienHanhChinh {
 			stmt.setString(5, nv.getCCCD());
 			stmt.setString(6, nv.getSDT());
 			stmt.setDate(7, (Date) nv.getNgayVao());
-			stmt.setBoolean(8, nv.isTrangThai());
-			stmt.setString(9, nv.getBangCap());
-			stmt.setFloat(10, nv.getLuongCoBan());
-			stmt.setFloat(11, nv.getPhuCap());
-			stmt.setFloat(12, nv.getHeSoLuong());
-			stmt.setString(13, nv.getEmail());
-			stmt.setString(14, nv.getMaNV());
+			stmt.setString(8, nv.getPhongBan().getMaPhongBan());
+			stmt.setBoolean(9, nv.isTrangThai());
+			stmt.setString(10, nv.getBangCap());
+			stmt.setDouble(11, nv.getLuongCoBan());
+			stmt.setDouble(12, nv.getPhuCap());
+			stmt.setDouble(13, nv.getHeSoLuong());
+			stmt.setString(14, nv.getTaiKhoan().getTenTK());
+			stmt.setString(15, nv.getEmail());
 			
-			stmt.setString(15, pb.getTenPhongBan());
-			stmt.setInt(16, pb.getSoLuongNV());
-			stmt.setString(17, pb.getMoTa());
-			stmt.setString(18, pb.getMaPhongBan());
-			
-			stmt.setString(19, tk.getMatKhau());
-			stmt.setString(20, tk.getTenTK());
+			stmt.setString(16, nv.getMaNV());
 			
 			n = stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -185,43 +216,35 @@ public class DAO_NhanVienHanhChinh {
 	}
 	
 	
-	public NhanVienHanhChinh getNhanVienTheoMa (String maNhanVien) {
-		NhanVienHanhChinh nhanVien = new NhanVienHanhChinh();
+	public NhanVienHanhChinh layNhanVienTheoMa (String maNhanVien) {
+		NhanVienHanhChinh nhanVien = null;
 		
 		try {
 			Connection con = ConnectDB.getInstance().getConnection();
 			String sql = 	"SELECT * FROM NhanVienHanhChinh \r\n" + 
-							"INNER JOIN PhongBan ON PhongBan.maPhongBan = NhanVienHanhChinh.maPhongBan \r\n" +
-							"INNER JOIN TaiKhoan ON TaiKhoan.tenTK = NhanVienHanhChinh.tenTK \r\n" +
 							"WHERE maNV = '" + maNhanVien + "'";
 			Statement statement = con.createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
+			ResultSet rs = statement.executeQuery(sql);
 			
-			while (resultSet.next()) {
-				nhanVien.setMaNV(resultSet.getString(1));
-				nhanVien.setHoTenNV(resultSet.getString(2));
-				nhanVien.setGioiTinh(resultSet.getBoolean(3));
-				nhanVien.setNgaySinh(resultSet.getDate(4));
-				nhanVien.setDiaChi(resultSet.getString(5));
-				nhanVien.setCCCD(resultSet.getString(6));
-				nhanVien.setSDT(resultSet.getString(7));
-				nhanVien.setNgayVao(resultSet.getDate(8));
+			while (rs.next()) {
+				String maNV = rs.getString(1);
+				String hoTenNV = rs.getString(2);
+				boolean gioiTinh = rs.getBoolean(3);
+				Date ngaySinh = rs.getDate(4);
+				String diaChi = rs.getString(5);
+				String cccd = rs.getString(6);
+				String sdt = rs.getString(7);
+				Date ngayVao = rs.getDate(8);
+				PhongBan phongBan = new PhongBan(rs.getString(9));
+				boolean trangThai = rs.getBoolean(10);
+				String bangCap = rs.getString(11);
+				double luongCoBan = rs.getDouble(12);
+				double phuCap = rs.getDouble(13);
+				double heSoLuong = rs.getDouble(14);
+				TaiKhoan taiKhoan = new TaiKhoan(rs.getString(15));
+				String email = rs.getString(16);
 				
-				DAO_PhongBan dao_PB = new DAO_PhongBan();
-				PhongBan phongBan = dao_PB.getPhongBanTheoMa(resultSet.getString(9));
-				nhanVien.setPhongBan(phongBan);
-				
-				nhanVien.setTrangThai(resultSet.getBoolean(10));
-				nhanVien.setBangCap(resultSet.getString(11));
-				nhanVien.setLuongCoBan(resultSet.getFloat(12));
-				nhanVien.setPhuCap(resultSet.getFloat(13));
-				nhanVien.setHeSoLuong(resultSet.getFloat(14));
-				
-				DAO_TaiKhoan dao_TK = new DAO_TaiKhoan();
-				TaiKhoan taiKhoan = dao_TK.layTKTheoTen(resultSet.getString(15));
-				
-				nhanVien.setTaiKhoan(taiKhoan);
-				nhanVien.setEmail(resultSet.getString(16));
+				nhanVien = new NhanVienHanhChinh(maNV, hoTenNV, gioiTinh, ngaySinh, diaChi, cccd, sdt, ngayVao, phongBan, trangThai, bangCap, luongCoBan, phuCap, heSoLuong, taiKhoan, email);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -231,53 +254,187 @@ public class DAO_NhanVienHanhChinh {
 	}
 	
 	
-	public NhanVienHanhChinh getNhanVienTheoTen (String tenNhanVien) {
-		NhanVienHanhChinh nhanVien = new NhanVienHanhChinh();
+	public List<NhanVienHanhChinh> layNhanVienTheoTen (String tenNV) {
+		List<NhanVienHanhChinh> dsNhanVien = new ArrayList<NhanVienHanhChinh>();
+		Connection con = ConnectDB.getInstance().getConnection();
+		
+		if (con == null)
+			return null;
+		
+		PreparedStatement stmt = null;
 		
 		try {
-			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = 	"SELECT * FROM NhanVienHanhChinh \r\n" + 
-							"INNER JOIN PhongBan ON PhongBan.maPhongBan = NhanVienHanhChinh.maPhongBan \r\n" +
-							"INNER JOIN TaiKhoan ON TaiKhoan.tenTK = NhanVienHanhChinh.tenTK \r\n" +
-							"WHERE hoTenNV = '" + tenNhanVien + "'";
+			String sql = 	"SELECT * FROM NhanVienHanhChinh " +
+							"WHERE hoTenNV = '" + tenNV + "'";
 			Statement statement = con.createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
+			ResultSet rs = statement.executeQuery(sql);
 			
-			while (resultSet.next()) {
-				nhanVien.setMaNV(resultSet.getString(1));
-				nhanVien.setHoTenNV(resultSet.getString(2));
-				nhanVien.setGioiTinh(resultSet.getBoolean(3));
-				nhanVien.setNgaySinh(resultSet.getDate(4));
-				nhanVien.setDiaChi(resultSet.getString(5));
-				nhanVien.setCCCD(resultSet.getString(6));
-				nhanVien.setSDT(resultSet.getString(7));
-				nhanVien.setNgayVao(resultSet.getDate(8));
+			while (rs.next()) {
+				String maNV = rs.getString(1);
+				String hoTenNV = rs.getString(2);
+				boolean gioiTinh = rs.getBoolean(3);
+				Date ngaySinh = rs.getDate(4);
+				String diaChi = rs.getString(5);
+				String cccd = rs.getString(6);
+				String sdt = rs.getString(7);
+				Date ngayVao = rs.getDate(8);
+				PhongBan phongBan = new PhongBan(rs.getString(9));
+				boolean trangThai = rs.getBoolean(10);
+				String bangCap = rs.getString(11);
+				double luongCoBan = rs.getDouble(12);
+				double phuCap = rs.getDouble(13);
+				double heSoLuong = rs.getDouble(14);
+				TaiKhoan taiKhoan = new TaiKhoan(rs.getString(15));
+				String email = rs.getString(16);
 				
-				DAO_PhongBan dao_PB = new DAO_PhongBan();
-				PhongBan phongBan = dao_PB.getPhongBanTheoMa(resultSet.getString(9));
-				nhanVien.setPhongBan(phongBan);
-				
-				nhanVien.setTrangThai(resultSet.getBoolean(10));
-				nhanVien.setBangCap(resultSet.getString(11));
-				nhanVien.setLuongCoBan(resultSet.getFloat(12));
-				nhanVien.setPhuCap(resultSet.getFloat(13));
-				nhanVien.setHeSoLuong(resultSet.getFloat(14));
-				
-				DAO_TaiKhoan dao_TK = new DAO_TaiKhoan();
-				TaiKhoan taiKhoan = dao_TK.layTKTheoTen(resultSet.getString(15));
-				nhanVien.setTaiKhoan(taiKhoan);
-				
-				nhanVien.setEmail(resultSet.getString(16));
+				NhanVienHanhChinh nhanVien = new NhanVienHanhChinh(maNV, hoTenNV, gioiTinh, ngaySinh, diaChi, cccd, sdt, ngayVao, phongBan, trangThai, bangCap, luongCoBan, phuCap, heSoLuong, taiKhoan, email);
+				dsNhanVien.add(nhanVien);
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		return nhanVien;
+		return dsNhanVien;
 	}
 	
 	
-	public boolean xoaNhanVien (String maNhanVien) {
+	// lấy DSNV theo giới tính
+	public List<NhanVienHanhChinh> layNhanVienTheoGioiTinh (boolean gt) {
+		List<NhanVienHanhChinh> dsNhanVien = new ArrayList<NhanVienHanhChinh>();
+		Connection con = ConnectDB.getInstance().getConnection();
+		
+		if (con == null)
+			return null;
+		
+		PreparedStatement stmt = null;
+		
+		try {
+			String sql = 	"SELECT * FROM NhanVienHanhChinh " +
+							"WHERE gioiTinh = '" + gt + "'";
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			
+			while (rs.next()) {
+				String maNV = rs.getString(1);
+				String hoTenNV = rs.getString(2);
+				boolean gioiTinh = rs.getBoolean(3);
+				Date ngaySinh = rs.getDate(4);
+				String diaChi = rs.getString(5);
+				String cccd = rs.getString(6);
+				String sdt = rs.getString(7);
+				Date ngayVao = rs.getDate(8);
+				PhongBan phongBan = new PhongBan(rs.getString(9));
+				boolean trangThai = rs.getBoolean(10);
+				String bangCap = rs.getString(11);
+				double luongCoBan = rs.getDouble(12);
+				double phuCap = rs.getDouble(13);
+				double heSoLuong = rs.getDouble(14);
+				TaiKhoan taiKhoan = new TaiKhoan(rs.getString(15));
+				String email = rs.getString(16);
+				
+				NhanVienHanhChinh nhanVien = new NhanVienHanhChinh(maNV, hoTenNV, gioiTinh, ngaySinh, diaChi, cccd, sdt, ngayVao, phongBan, trangThai, bangCap, luongCoBan, phuCap, heSoLuong, taiKhoan, email);
+				dsNhanVien.add(nhanVien);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return dsNhanVien;
+	}
+	
+	
+	// lấy DSNV theo trạng thái
+	public List<NhanVienHanhChinh> layNhanVienTheoTrangThai (boolean tt) {
+		List<NhanVienHanhChinh> dsNhanVien = new ArrayList<NhanVienHanhChinh>();
+		Connection con = ConnectDB.getInstance().getConnection();
+		
+		if (con == null)
+			return null;
+		
+		PreparedStatement stmt = null;
+		
+		try {
+			String sql = 	"SELECT * FROM NhanVienHanhChinh " +
+							"WHERE trangThai = '" + tt + "'";
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			
+			while (rs.next()) {
+				String maNV = rs.getString(1);
+				String hoTenNV = rs.getString(2);
+				boolean gioiTinh = rs.getBoolean(3);
+				Date ngaySinh = rs.getDate(4);
+				String diaChi = rs.getString(5);
+				String cccd = rs.getString(6);
+				String sdt = rs.getString(7);
+				Date ngayVao = rs.getDate(8);
+				PhongBan phongBan = new PhongBan(rs.getString(9));
+				boolean trangThai = rs.getBoolean(10);
+				String bangCap = rs.getString(11);
+				double luongCoBan = rs.getDouble(12);
+				double phuCap = rs.getDouble(13);
+				double heSoLuong = rs.getDouble(14);
+				TaiKhoan taiKhoan = new TaiKhoan(rs.getString(15));
+				String email = rs.getString(16);
+				
+				NhanVienHanhChinh nhanVien = new NhanVienHanhChinh(maNV, hoTenNV, gioiTinh, ngaySinh, diaChi, cccd, sdt, ngayVao, phongBan, trangThai, bangCap, luongCoBan, phuCap, heSoLuong, taiKhoan, email);
+				dsNhanVien.add(nhanVien);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return dsNhanVien;
+	}
+	
+	
+	// lấy DSNV theo trạng thái
+	public List<NhanVienHanhChinh> layNhanVienTheoPhongBan (String maPB) {
+		List<NhanVienHanhChinh> dsNhanVien = new ArrayList<NhanVienHanhChinh>();
+		Connection con = ConnectDB.getInstance().getConnection();
+		
+		if (con == null)
+			return null;
+		
+		PreparedStatement stmt = null;
+		
+		try {
+			String sql = 	"SELECT * FROM NhanVienHanhChinh " +
+							"WHERE maPhongBan = '" + maPB + "'";
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			
+			while (rs.next()) {
+				String maNV = rs.getString(1);
+				String hoTenNV = rs.getString(2);
+				boolean gioiTinh = rs.getBoolean(3);
+				Date ngaySinh = rs.getDate(4);
+				String diaChi = rs.getString(5);
+				String cccd = rs.getString(6);
+				String sdt = rs.getString(7);
+				Date ngayVao = rs.getDate(8);
+				PhongBan phongBan = new PhongBan(rs.getString(9));
+				boolean trangThai = rs.getBoolean(10);
+				String bangCap = rs.getString(11);
+				double luongCoBan = rs.getDouble(12);
+				double phuCap = rs.getDouble(13);
+				double heSoLuong = rs.getDouble(14);
+				TaiKhoan taiKhoan = new TaiKhoan(rs.getString(15));
+				String email = rs.getString(16);
+				
+				NhanVienHanhChinh nhanVien = new NhanVienHanhChinh(maNV, hoTenNV, gioiTinh, ngaySinh, diaChi, cccd, sdt, ngayVao, phongBan, trangThai, bangCap, luongCoBan, phuCap, heSoLuong, taiKhoan, email);
+				dsNhanVien.add(nhanVien);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return dsNhanVien;
+	}
+	
+	
+	// xóa nhân viên
+	public boolean xoaNhanVien (String hoTenNV) {
 		Connection con = ConnectDB.getInstance().getConnection();
 		
 		if (con == null)
@@ -287,10 +444,10 @@ public class DAO_NhanVienHanhChinh {
 		int n = 0;
 		
 		try {
-			String sql = "DELETE FROM NhanVienHanhChinh WHERE maNV = ?";
+			String sql = "DELETE FROM NhanVienHanhChinh WHERE hoTenNV = ?";
 			stmt = con.prepareStatement(sql);
 			
-			stmt.setString(1, maNhanVien);
+			stmt.setString(1, hoTenNV);
 			
 			n = stmt.executeUpdate();
 		} catch (Exception e) {

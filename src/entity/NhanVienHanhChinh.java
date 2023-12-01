@@ -20,9 +20,9 @@ public class NhanVienHanhChinh implements Serializable {
 	private PhongBan phongBan;
 	private boolean trangThai;
 	private String bangCap;
-	private float luongCoBan;
-	private float phuCap;
-	private float heSoLuong;
+	private double luongCoBan;
+	private double phuCap;
+	private double heSoLuong;
 	private TaiKhoan taiKhoan;
 	private String email;
 	
@@ -45,7 +45,7 @@ public class NhanVienHanhChinh implements Serializable {
 	public NhanVienHanhChinh(String maNV, String hoTenNV, boolean gioiTinh, Date ngaySinh, 
 			String diaChi, String CCCD, String SDT, Date ngayVao, 
 			PhongBan phongBan, boolean trangThai, String bangCap, 
-			float luongCoBan, float phuCap, float heSoLuong, 
+			double luongCoBan, double phuCap, double heSoLuong, 
 			TaiKhoan taiKhoan, String email) {
 		this.maNV = maNV;
 		this.hoTenNV = hoTenNV;
@@ -177,32 +177,32 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 
 
-	public float getLuongCoBan() {
+	public double getLuongCoBan() {
 		return luongCoBan;
 	}
 
 
-	public void setLuongCoBan(float luongCoBan) {
+	public void setLuongCoBan(double luongCoBan) {
 		this.luongCoBan = luongCoBan;
 	}
 
 
-	public float getPhuCap() {
+	public double getPhuCap() {
 		return phuCap;
 	}
 
 
-	public void setPhuCap(float phuCap) {
+	public void setPhuCap(double phuCap) {
 		this.phuCap = phuCap;
 	}
 
 
-	public float getHeSoLuong() {
+	public double getHeSoLuong() {
 		return heSoLuong;
 	}
 
 
-	public void setHeSoLuong(float heSoLuong) {
+	public void setHeSoLuong(double heSoLuong) {
 		this.heSoLuong = heSoLuong;
 	}
 
@@ -248,7 +248,7 @@ public class NhanVienHanhChinh implements Serializable {
 	
 	
 	// tính hệ số lương
-	public float tinhHeSoLuong (Date ngayVaoLam, String bangCap) {
+	public double tinhHeSoLuong (Date ngayVaoLam, String bangCap) {
 		Instant instantNgayVaoLam = new java.util.Date(ngayVaoLam.getTime()).toInstant();
 		LocalDate localDateNgayVaoLam = instantNgayVaoLam.atZone(ZoneId.systemDefault()).toLocalDate();
 		
@@ -257,10 +257,10 @@ public class NhanVienHanhChinh implements Serializable {
 		int soNamLamViec = khoangThoiGian.getYears();
 		int soBacTangLuong = soNamLamViec / 3;
 		
-		float heSoTienTrienCaoDang = 0.31f;
-		float heSoTienTrienDaiHoc = 0.20f;
+		double heSoTienTrienCaoDang = 0.31f;
+		double heSoTienTrienDaiHoc = 0.20f;
 		
-		float heSoLuong = 0.0f;
+		double heSoLuong = 0.0f;
 		
 		if ("Cao đẳng".equalsIgnoreCase(bangCap))
 			heSoLuong = 2.1f;
@@ -276,7 +276,7 @@ public class NhanVienHanhChinh implements Serializable {
 	}
 	
 	
-	public float tinhHeSoLuong() {
+	public double tinhHeSoLuong() {
 		Instant instantNgayVaoLam = new java.util.Date(getNgayVao().getTime()).toInstant();
 		LocalDate localDateNgayVaoLam = instantNgayVaoLam.atZone(ZoneId.systemDefault()).toLocalDate();
 		
@@ -285,15 +285,15 @@ public class NhanVienHanhChinh implements Serializable {
 		int soNamLamViec = khoangThoiGian.getYears();
 		int soBacTangLuong = soNamLamViec / 3;
 		
-		float heSoTienTrienCaoDang = 0.31f;
-		float heSoTienTrienDaiHoc = 0.20f;
+		double heSoTienTrienCaoDang = 0.31f;
+		double heSoTienTrienDaiHoc = 0.20f;
 		
-		float heSoLuong = 0.0f;
+		double heSoLuong = 0.0;
 		
 		if ("Cao đẳng".equalsIgnoreCase(bangCap))
-			heSoLuong = 2.1f;
+			heSoLuong = 2.1;
 		else if ("Đại học".equalsIgnoreCase(bangCap))
-			heSoLuong = 2.34f;
+			heSoLuong = 2.34;
 		
 		if ("Cao đẳng".equalsIgnoreCase(bangCap))
 			heSoLuong += soBacTangLuong * heSoTienTrienCaoDang;
