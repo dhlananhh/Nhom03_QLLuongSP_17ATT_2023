@@ -95,7 +95,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 	public GUI_DiemDanh() throws SQLException {
 		ConnectDB.getInstance().connect();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1300, 700);
+		setSize(1300, 700);
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

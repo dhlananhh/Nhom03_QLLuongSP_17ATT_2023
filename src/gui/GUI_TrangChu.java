@@ -1,6 +1,7 @@
 package gui;
 
 import bettergui.component.DefaultForm;
+import bettergui.component.HomeForm;
 import bettergui.menu.MenuEvent;
 import java.awt.Component;
 import java.awt.Image;
@@ -19,18 +20,7 @@ public class GUI_TrangChu extends javax.swing.JFrame {
         Image img = kit.createImage(url);
         setIconImage(img);
 		initComponents();
-		Component GUI_QuanLyNhanVien = new GUI_QuanLyNhanVienHanhChinh().getContentPane(),
-				GUI_QuanLyCongNhan = new GUI_QuanLyCongNhan().getContentPane(),
-				GUI_DiemDanh = new GUI_DiemDanh().getContentPane(),
-				GUI_ChamCong = new GUI_BangChamCong().getContentPane(),
-				GUI_QuanLySanPham = new GUI_QuanLySanPham().getContentPane(),
-				//GUI_TinhLuong = new GUI_TinhLuong().getContentPane(),
-				GUI_ThayDoiMatKhau = new GUI_ThayDoiMatKhau().getContentPane(),
-				GUI_BangChamCong = new GUI_BangChamCong().getContentPane(),
-				GUI_PhanCong = new GUI_PhanCong().getContentPane(),
-				GUI_TaoBangLuong = new GUI_TaoBangLuong().getContentPane(),
-				GUI_TraCuuBangLuong = new GUI_TraCuuBangLuong().getContentPane(),
-				GUI_LuongNhanVienHanhChinh = new GUI_LuongNhanVienHanhChinh().getContentPane();
+		showForm(new HomeForm().getParent());
 		
 				
 		menu1.setEvent(new MenuEvent() {
@@ -52,23 +42,20 @@ public class GUI_TrangChu extends javax.swing.JFrame {
 				} else if (index == 2) {
 					switch (subIndex) {
 					case 1:
-						showForm(GUI_QuanLyNhanVien);
+						showForm(new GUI_QuanLyNhanVienHanhChinh().getContentPane());
 						break;
 					case 2:
-						showForm(GUI_QuanLyCongNhan);
+						showForm(new GUI_QuanLyCongNhan().getContentPane());
 						break;
 					case 3:
-						showForm(GUI_DiemDanh);
+						showForm(new GUI_QuanLySanPham().getContentPane());
 						break;		
 					case 4:
-						showForm(GUI_ChamCong);
+						showForm(new GUI_LuongNhanVienHanhChinh().getContentPane());
 						break;		
 					case 5:
-						showForm(GUI_QuanLySanPham);
+						showForm(new GUI_LuongCongNhanSanXuat().getContentPane());
 						break;			
-					case 6:
-						//showForm(GUI_TinhLuong);
-						break;	
 					default:
 						break;
 					}
@@ -76,19 +63,28 @@ public class GUI_TrangChu extends javax.swing.JFrame {
 				} else if (index == 3) {
 					switch (subIndex) {
 					case 1:
-						showForm(GUI_BangChamCong);
+						try {
+							showForm(new GUI_PhanCong().getContentPane());
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
 						break;
 					case 2:
-						showForm(GUI_TraCuuBangLuong);
+						try {
+							showForm(new GUI_BangChamCong().getContentPane());
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
 						break;
 					case 3:
-						showForm(GUI_PhanCong);
+						try {
+							showForm(new GUI_DiemDanh().getContentPane());
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
 						break;		
 					case 4:
-						showForm(GUI_TaoBangLuong);
-						break;		
-					case 5:
-						showForm(GUI_LuongNhanVienHanhChinh);
+						//showForm(GUI_TaoBangLuong);
 						break;			
 					default:
 						break;
@@ -119,8 +115,8 @@ public class GUI_TrangChu extends javax.swing.JFrame {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setUndecorated(true);
 		//setExtendedState(MAXIMIZED_BOTH);
-		setSize((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() -50,
-				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() -200);
+		setSize((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() -100,
+				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() -300);
 		jPanel1.setBackground(new java.awt.Color(245, 245, 245));
 		jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(163, 163, 163)));
 

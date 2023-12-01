@@ -31,7 +31,7 @@ public class DAO_LuongNhanVienHanhChinh {
 				luongNV.setTrangThai(rs.getBoolean(4));
 				
 				DAO_NhanVienHanhChinh dao_nv = new DAO_NhanVienHanhChinh();
-				NhanVienHanhChinh nhanVien = dao_nv.getNhanVienTheoMa(rs.getString(5));
+				NhanVienHanhChinh nhanVien = dao_nv.layNhanVienTheoMa(rs.getString(5));
 				luongNV.setNhanVien(nhanVien);
 				
 				luongNV.setHeSoLuong(rs.getFloat(6));
@@ -102,7 +102,7 @@ public class DAO_LuongNhanVienHanhChinh {
 				luongNV.setTrangThai(rs.getBoolean(4));
 				
 				DAO_NhanVienHanhChinh dao_nv = new DAO_NhanVienHanhChinh();
-				NhanVienHanhChinh nhanVien = dao_nv.getNhanVienTheoMa(rs.getString(5));
+				NhanVienHanhChinh nhanVien = dao_nv.layNhanVienTheoMa(rs.getString(5));
 				luongNV.setNhanVien(nhanVien);
 				
 				luongNV.setHeSoLuong(rs.getFloat(6));
@@ -137,7 +137,7 @@ public class DAO_LuongNhanVienHanhChinh {
 				luongNV.setTrangThai(rs.getBoolean(4));
 				
 				DAO_NhanVienHanhChinh dao_nv = new DAO_NhanVienHanhChinh();
-				NhanVienHanhChinh nhanVien = dao_nv.getNhanVienTheoMa(rs.getString(5));
+				NhanVienHanhChinh nhanVien = dao_nv.layNhanVienTheoMa(rs.getString(5));
 				luongNV.setNhanVien(nhanVien);
 				
 				luongNV.setHeSoLuong(rs.getFloat(6));
@@ -172,7 +172,7 @@ public class DAO_LuongNhanVienHanhChinh {
 				luongNV.setTrangThai(rs.getBoolean(4));
 				
 				DAO_NhanVienHanhChinh dao_nv = new DAO_NhanVienHanhChinh();
-				NhanVienHanhChinh nhanVien = dao_nv.getNhanVienTheoMa(rs.getString(5));
+				NhanVienHanhChinh nhanVien = dao_nv.layNhanVienTheoMa(rs.getString(5));
 				luongNV.setNhanVien(nhanVien);
 				
 				luongNV.setHeSoLuong(rs.getFloat(6));

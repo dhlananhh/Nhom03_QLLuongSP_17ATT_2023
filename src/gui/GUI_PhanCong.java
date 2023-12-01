@@ -358,7 +358,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		List<CongNhanSanXuat> congNhanChuaPhanCong = congNhan_dao.getDSCongNhan();
 		congNhanChuaPhanCong.removeAll(congNhanDaPhanCong);
 		for (CongNhanSanXuat cn : congNhanChuaPhanCong) {
-			String[] row = {cn.getMaCN(), cn.getHoTenCN(), cn.getToSanXuat()+""};
+			String[] row = {cn.getMaCN(), cn.getHoTenCN(), cn.getToSanXuat().getMaToSX()+""};
 			modelCongNhan.addRow(row);
 		}
 	}

@@ -28,9 +28,9 @@ public class Menu extends JComponent {
     private MigLayout layout;
     private String[][] menuItems = new String[][]{
     	{"Trang chủ"},
-    	{"Hệ thống", "Đổi mật khẩu", "Đăng xuất"},
-    	{"Xử lý nghiệp vụ", "Quản lý Nhân viên", "Quản lý Công nhân", "Quản lý Điểm danh", "Quản lý Chấm công", "Quản lý sản phẩm", "Tính lương", "Thống kê lương"},
-    	{"Quản lý", "Bảng chấm công", "Bảng lương", "Phân Công", "Tạo bảng lương", "Lương nhân viên hành chính"},
+    	{"Tài khoản", "Đổi mật khẩu", "Đăng xuất"},
+    	{"Quản lý", "Nhân viên", "Công nhân", "Sản phẩm", "Lương nhân viên", "Lương công nhân"},
+    	{"Nghiệp vụ", "Phân công", "Chấm công", "Điểm danh"},
     	{"Trợ giúp"},
     	{"Nguyễn Văn A"}
     };
@@ -52,6 +52,9 @@ public class Menu extends JComponent {
 
     private Icon getIcon(int index) {
         URL url = getClass().getResource("/icons/" + index + ".png");
+    	//ImageIcon i = new ImageIcon(Menu.class.getResource("/image/0.png"));
+    	//System.out.println(i);
+        System.out.println();
         if (url != null) {
             return new ImageIcon(url);
         } else {

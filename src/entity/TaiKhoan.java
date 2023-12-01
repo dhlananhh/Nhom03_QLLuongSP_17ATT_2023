@@ -4,10 +4,11 @@ public class TaiKhoan {
 	private String tenTK;
 	private String matKhau;
 	public TaiKhoan() {
-		super();
+	}
+	public TaiKhoan(String tenTK) {
+		this.tenTK = tenTK;
 	}
 	public TaiKhoan(String tenTK, String matKhau) {
-		super();
 		this.tenTK = tenTK;
 		this.matKhau = matKhau;
 	}

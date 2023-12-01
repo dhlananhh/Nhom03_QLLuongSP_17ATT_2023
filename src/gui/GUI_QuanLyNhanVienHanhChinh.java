@@ -808,9 +808,9 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 			xoaRong();
 		}
 		else if (o.equals(btnThem)) {
-			if (checkRegex() == true) {
+			//if (checkRegex() == true) {
 				themDuLieuNV();
-			}
+			//}
 		}
 		else if (o.equals(btnSua)) {
 			suaDuLieuNV();
