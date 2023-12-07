@@ -16,6 +16,9 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -136,6 +139,16 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
                 	modelHT.setRowCount(0);
                     loadBang();
                     clear();
+                    Instant instant = chooserNgay.getDate().toInstant();
+                    LocalDate day = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+                    if(!day.isEqual(LocalDate.now()) ) {
+                    	JOptionPane.showMessageDialog(null, "Lưu ý: bạn không thể chỉnh sửa danh sách phân công của ngày này!");
+                    	btnLuu.setEnabled(false);
+                    	tableCC.setEnabled(false);
+                    }else {
+                    	btnLuu.setEnabled(true);
+                    	tableCC.setEnabled(true);
+                    }
                 }
             }
 		});

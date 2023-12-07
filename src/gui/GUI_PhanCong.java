@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
@@ -38,6 +39,9 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -117,6 +121,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		
 		JPanel pnNgay = new JPanel();
 		pnNgay.setLayout(new BoxLayout(pnNgay, BoxLayout.Y_AXIS));
+		pnNgay.setBackground(new Color(245, 251, 255));
 		JLabel lblNgay = new JLabel("Ngày:  ");
 		
 		pnNgay.add(b);
@@ -140,6 +145,20 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
                     loadBangCN();
                     loadBangPhanCong();
                     clear();
+                    Instant instant = chooserNgay.getDate().toInstant();
+                    LocalDate day = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+                    if(day.isBefore(LocalDate.now()) ) {
+                    	JOptionPane.showMessageDialog(null, "Lưu ý: bạn không thể chỉnh sửa danh sách phân công của ngày này!");
+                    	btnLuu.setEnabled(false);
+                    	tableCongNhan.setEnabled(false);
+                    	cbMaSP.setEnabled(false);
+                    	btnXoa.setEnabled(false);
+                    }else {
+                    	btnLuu.setEnabled(true);
+                    	tableCongNhan.setEnabled(true);
+                    	cbMaSP.setEnabled(true);
+                    	btnXoa.setEnabled(true);
+                    }
                 }
             }
 		});
@@ -163,6 +182,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		spTableCN.setViewportView(tableCongNhan);
 		spTableCN.setBorder(BorderFactory.createTitledBorder("Công nhân chưa phân công"));
 		pnCongNhan.add(Box.createVerticalStrut(20));
+		pnCongNhan.setBackground(new Color(245, 251, 255));
 		
 		loadBangCN();
 		
@@ -170,6 +190,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		contentPane.add(pnInput, BorderLayout.CENTER);
 		pnInput.setLayout(new BoxLayout(pnInput, BoxLayout.Y_AXIS));
 		pnInput.setBorder(BorderFactory.createTitledBorder("Phân công"));
+		pnInput.setBackground(new Color(130, 199, 250));
 		
 		Box b1 = Box.createHorizontalBox();
 		pnInput.add(Box.createVerticalStrut(20));
