@@ -1,55 +1,63 @@
 package dao;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import connection.ConnectDB;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 
-import connection.ConnectDB;
 import entity.LuongNhanVienHanhChinh;
 import entity.NhanVienHanhChinh;
 
+
 public class DAO_LuongNhanVienHanhChinh {
 	public List<LuongNhanVienHanhChinh> getDanhSachLuongNhanVien() {
-		List<LuongNhanVienHanhChinh> dsLuongNhanVien = new ArrayList<LuongNhanVienHanhChinh>();
+		List<LuongNhanVienHanhChinh> dsLuongNV = new ArrayList<LuongNhanVienHanhChinh>();
 		
 		try {
 			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = 	"SELECT * FROM LuongNhanVienHanhChinh \r\n" +
-							"INNER JOIN NhanVienHanhChinh ON LuongNhanVienHanhChinh.maNV = NhanVienHanhChinh.maNV \r\n";
-			Statement statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(sql);
+			String sql = "SELECT * FROM LuongNhanVienHanhChinh";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
 			
 			while (rs.next()) {
-				LuongNhanVienHanhChinh luongNV = new LuongNhanVienHanhChinh();
-				luongNV.setMaBangLuongHC(rs.getString(1));
-				luongNV.setNam(rs.getInt(2));
-				luongNV.setThang(rs.getInt(3));
-				luongNV.setTrangThai(rs.getBoolean(4));
+				String maLuongNV = rs.getString(1);
+				Date ngayTinhLuong = rs.getDate(2);
+				int nam = rs.getInt(3);
+				int thang = rs.getInt(4);
+				int soNgayDiLam = rs.getInt(5);
+				int soNgayNghi = rs.getInt(6);
+				int soNghiPhep = rs.getInt(7);
+				double luongChinh = rs.getDouble(8);
+				double tienPhuCapTrongThang = rs.getDouble(9);
+				double tienTamUng = rs.getDouble(10);
+				double baoHiemXaHoi = rs.getDouble(11);
+				double baoHiemYTe = rs.getDouble(12);
+				double baoHiemThatNghiep = rs.getDouble(13);
+				double thueTNCN = rs.getDouble(14);
+				double luongThucLanh = rs.getDouble(15);
+				String maNhanVien = rs.getString(16);
 				
-				DAO_NhanVienHanhChinh dao_nv = new DAO_NhanVienHanhChinh();
-				NhanVienHanhChinh nhanVien = dao_nv.layNhanVienTheoMa(rs.getString(5));
-				luongNV.setNhanVien(nhanVien);
+				NhanVienHanhChinh nhanVien = new NhanVienHanhChinh(maNhanVien);
+				LuongNhanVienHanhChinh luongNhanVien = new LuongNhanVienHanhChinh(maLuongNV, ngayTinhLuong, nam, thang, soNgayDiLam, soNgayNghi, soNghiPhep, luongChinh, tienPhuCapTrongThang, tienTamUng, baoHiemXaHoi, baoHiemYTe, baoHiemThatNghiep, thueTNCN, luongThucLanh, nhanVien);
+						
 				
-				luongNV.setHeSoLuong(rs.getFloat(6));
-				luongNV.setLuongCoBan(rs.getFloat(7));
-				luongNV.setPhuCap(rs.getFloat(8));
-				luongNV.setLuongThucLanh(rs.getFloat(9));
-				
-				dsLuongNhanVien.add(luongNV);
+				dsLuongNV.add(luongNhanVien);
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		return dsLuongNhanVien;
+		return dsLuongNV;
 	}
 	
 	
-	public boolean themMoiLuongNhanVien (LuongNhanVienHanhChinh luongNV) {
+	public boolean createLuongNhanVien (LuongNhanVienHanhChinh luongNV) {
 		Connection con = ConnectDB.getInstance().getConnection();
 		
 		if (con == null)
@@ -59,22 +67,62 @@ public class DAO_LuongNhanVienHanhChinh {
 		int n = 0;
 		
 		try {
-			String sql = 	"INSERT INTO LuongNhanVienHanhChinh (maBangLuongHC, nam, thang, trangThai, maNV, heSoLuong, luongCoBan, phuCap, luongThucLanh)" +
-							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO LuongNhanVienHanhChinh VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			stmt = con.prepareStatement(sql);
-		
+			
 			stmt.setString(1, luongNV.getMaBangLuongHC());
-			stmt.setInt(2, luongNV.getNam());
-			stmt.setInt(3, luongNV.getThang());
-			stmt.setBoolean(4, luongNV.isTrangThai());
-			stmt.setString(5, luongNV.getNhanVien().getMaNV());
-			stmt.setFloat(6, luongNV.getHeSoLuong());
-			stmt.setFloat(7, luongNV.getLuongCoBan());
-			stmt.setFloat(8, luongNV.getPhuCap());
-			stmt.setFloat(9, luongNV.getLuongThucLanh());
+			stmt.setDate(2, luongNV.getNgayTinhLuong());
+			stmt.setInt(3, luongNV.getSoNgayDiLam());
+			stmt.setInt(4, luongNV.getSoNgayNghi());
+			stmt.setInt(5, luongNV.getSoNghiPhep());
+			stmt.setDouble(5, luongNV.getLuongChinh());
+			stmt.setDouble(6, luongNV.getTienPhuCapTrongThang());
+			stmt.setDouble(7, luongNV.getTienTamUng());
+			stmt.setDouble(8, luongNV.getBaoHiemXaHoi());
+			stmt.setDouble(9, luongNV.getThueTNCN());
+			stmt.setDouble(10, luongNV.getLuongThucLanh());
+			stmt.setString(11, luongNV.getNhanVien().getMaNV());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return n > 0;
+	}
+	
+	/*
+	public boolean updateLuongNhanVien (LuongNhanVienHanhChinh luongNV) {
+		Connection con = ConnectDB.getInstance().getConnection();
+		
+		if (con == null)
+			return false;
+		
+		PreparedStatement stmt = null;
+		int n = 0;
+		
+		try {
+			String sql = 	"UPDATE LuongNhanVienHanhChinh " +
+							"SET ngayTinhLuong = ?, soNgayLam = ?, soNgayNghi = ?, " +
+							"luongChinh = ?, tienPhuCap = ?, tienTamUng = ?, " +
+							"baoHiemXaHoi = ?, thueTNCN = ?, luongThucLanh = ?," +
+							"maNV = ? \r\n" +
+							"WHERE maBangLuongHC = ?";
+			stmt = con.prepareStatement(sql);
+			
+			stmt.setDate(1, luongNV.getNgayTinhLuong());
+			stmt.setInt(2, luongNV.getSoNgayLam());
+			stmt.setInt(3, luongNV.getSoNgayNghi());
+			stmt.setDouble(4, luongNV.getLuongChinh());
+			stmt.setDouble(5, luongNV.getTienPhuCap());
+			stmt.setDouble(6, luongNV.getTienTamUng());
+			stmt.setDouble(7, luongNV.getBaoHiemXaHoi());
+			stmt.setDouble(8, luongNV.getThueTNCN());
+			stmt.setDouble(9, luongNV.getLuongThucLanh());
+			stmt.setString(10, luongNV.getNhanVien().getMaNV());
+			
+			stmt.setString(11, luongNV.getMaBangLuongHC());
 			
 			n = stmt.executeUpdate();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close(stmt);
@@ -82,113 +130,33 @@ public class DAO_LuongNhanVienHanhChinh {
 		
 		return n > 0;
 	}
-	
-	
-	public LuongNhanVienHanhChinh timKiemTheoMaNhanVien (String maNV) {
-		LuongNhanVienHanhChinh luongNV = new LuongNhanVienHanhChinh();
+	*/
+	/*
+	public boolean deleteLuongNhanVien (String maLuongNV) {
+		Connection con = ConnectDB.getInstance().getConnection();
+		
+		if (con == null)
+			return false;
+		
+		PreparedStatement stmt = null;
+		int n = 0;
 		
 		try {
-			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = 	"select * from LuongNhanVienHanhChinh \r\n" +
-							"INNER JOIN NhanVienHanhChinh ON LuongNhanVienHanhChinh.maNV = NhanVienHanhChinh.maNV \r\n" +
-							"where maNV = '" + maNV + "'";
-			PreparedStatement preparedStatement = con.prepareStatement(sql);
-			ResultSet rs = preparedStatement.executeQuery();
-			
-			while (rs.next()) {
-				luongNV.setMaBangLuongHC(rs.getString(1));
-				luongNV.setNam(rs.getInt(2));
-				luongNV.setThang(rs.getInt(3));
-				luongNV.setTrangThai(rs.getBoolean(4));
-				
-				DAO_NhanVienHanhChinh dao_nv = new DAO_NhanVienHanhChinh();
-				NhanVienHanhChinh nhanVien = dao_nv.layNhanVienTheoMa(rs.getString(5));
-				luongNV.setNhanVien(nhanVien);
-				
-				luongNV.setHeSoLuong(rs.getFloat(6));
-				luongNV.setLuongCoBan(rs.getFloat(7));
-				luongNV.setPhuCap(rs.getFloat(8));
-				luongNV.setLuongThucLanh(rs.getFloat(9));
-			}
-		} catch (Exception e) {
+			String sql = 	"DELETE FROM LuongNhanVienHanhChinh " +
+							"WHERE maBangLuongHC = '" + maLuongNV + "'";
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, maLuongNV);
+							
+			n = stmt.executeUpdate();
+		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			close(stmt);
 		}
 		
-		return luongNV;
+		return n > 0;
 	}
-	
-	
-	public LuongNhanVienHanhChinh timKiem (String maNV, int nam, int thang) {
-		LuongNhanVienHanhChinh luongNV = new LuongNhanVienHanhChinh();
-		
-		try {
-			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = 	"select * from LuongNhanVienHanhChinh \r\n" +
-							"INNER JOIN NhanVienHanhChinh ON LuongNhanVienHanhChinh.maNV = NhanVienHanhChinh.maNV \r\n" +
-							"where maNV = '" + maNV + "'" +
-							" and nam = '" + nam + "'" + " and thang = '" + thang + "'";
-			PreparedStatement preparedStatement = con.prepareStatement(sql);
-			ResultSet rs = preparedStatement.executeQuery();
-			
-			while (rs.next()) {
-				luongNV.setMaBangLuongHC(rs.getString(1));
-				luongNV.setNam(rs.getInt(2));
-				luongNV.setThang(rs.getInt(3));
-				luongNV.setTrangThai(rs.getBoolean(4));
-				
-				DAO_NhanVienHanhChinh dao_nv = new DAO_NhanVienHanhChinh();
-				NhanVienHanhChinh nhanVien = dao_nv.layNhanVienTheoMa(rs.getString(5));
-				luongNV.setNhanVien(nhanVien);
-				
-				luongNV.setHeSoLuong(rs.getFloat(6));
-				luongNV.setLuongCoBan(rs.getFloat(7));
-				luongNV.setPhuCap(rs.getFloat(8));
-				luongNV.setLuongThucLanh(rs.getFloat(9));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return luongNV;
-	}
-	
-	
-	public List<LuongNhanVienHanhChinh> timKiemTheoNamThang (int nam, int thang) {
-		List<LuongNhanVienHanhChinh> dsLuongNV = new ArrayList<LuongNhanVienHanhChinh>();
-		
-		try {
-			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = 	"SELECT * FROM LuongNhanVienHanhChinh \r\n" +
-							"INNER JOIN NhanVienHanhChinh ON LuongNhanVienHanhChinh.maNV = NhanVienHanhChinh.maNV \r\n" +
-							" where nam = '" + nam + "'" + " and thang = '" + thang + "'";
-			Statement statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(sql);
-			
-			while (rs.next()) {
-				LuongNhanVienHanhChinh luongNV = new LuongNhanVienHanhChinh();
-				luongNV.setMaBangLuongHC(rs.getString(1));
-				luongNV.setNam(rs.getInt(2));
-				luongNV.setThang(rs.getInt(3));
-				luongNV.setTrangThai(rs.getBoolean(4));
-				
-				DAO_NhanVienHanhChinh dao_nv = new DAO_NhanVienHanhChinh();
-				NhanVienHanhChinh nhanVien = dao_nv.layNhanVienTheoMa(rs.getString(5));
-				luongNV.setNhanVien(nhanVien);
-				
-				luongNV.setHeSoLuong(rs.getFloat(6));
-				luongNV.setLuongCoBan(rs.getFloat(7));
-				luongNV.setPhuCap(rs.getFloat(8));
-				luongNV.setLuongThucLanh(rs.getFloat(9));
-				
-				dsLuongNV.add(luongNV);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return dsLuongNV;
-	}
-
+	*/
 	
 	public void close (PreparedStatement stmt) {
 		if (stmt != null) {
@@ -199,5 +167,4 @@ public class DAO_LuongNhanVienHanhChinh {
 			}
 		}
 	}
-	
 }
