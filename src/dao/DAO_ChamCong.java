@@ -112,9 +112,9 @@ public class DAO_ChamCong {
 
 	    return dsChamCong;
 	}
-	public List<ChamCong> getDSChamCongTheoCN(String macn, Date ngayCham) {
+	public ChamCong getChamCongTheoCN(String macn, Date ngayCham) {
 	    ConnectDB.getInstance();
-	    List<ChamCong> dsChamCong = new ArrayList<>();
+	    ChamCong kq = new ChamCong(macn, ngayCham);
 
 	    try (Connection con = ConnectDB.getConnection();
 	         PreparedStatement ps = con.prepareStatement("SELECT * FROM ChamCong WHERE maCN = ? AND ngayCham = ?")) {
@@ -124,21 +124,16 @@ public class DAO_ChamCong {
 
 	        try (ResultSet resultSet = ps.executeQuery()) {
 	            while (resultSet.next()) {
-	                dsChamCong.add(new ChamCong(
-	                        resultSet.getString("maCN"),
-	                        resultSet.getString("maCD"),
-	                        resultSet.getDate("ngayCham"),
-	                        resultSet.getInt("chiTieu"),
-	                        resultSet.getInt("soLuongHoanThanh")
-	                ));
+	                kq.setMaCD(resultSet.getString(2));
+	                kq.setChiTieu(resultSet.getInt(4));
+	                kq.setSoLuongHoanThanh(resultSet.getInt(5));
 	            }
 	        }
-
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 
-	    return dsChamCong;
+	    return kq;
 	}
 
 	

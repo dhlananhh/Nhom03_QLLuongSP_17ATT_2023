@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -55,8 +57,9 @@ import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
+import javax.swing.JButton;
 
-public class GUI_DiemDanh extends JFrame implements MouseListener{
+public class GUI_DiemDanh extends JFrame implements MouseListener, ActionListener{
 
 	private JPanel contentPane;
 	private JComboBox<Integer> cbThang, cbNam;
@@ -74,6 +77,8 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 	private DAO_PhongBan dao_PhongBan = new DAO_PhongBan();
 	private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private JTextField txtTenPB;
+	private JButton btnTaiLai;
+	private boolean isloadBang = true;
 	/**
 	 * Launch the application.
 	 */
@@ -128,10 +133,17 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		for(int i=1; i<=12; i++) 
 			cbThang.addItem(i);
 		cbThang.setSelectedItem(ngayHT.getMonthValue());
-		Component horizontalStrut = Box.createHorizontalStrut(1000);
+		Component horizontalStrut = Box.createHorizontalStrut(800);
 		pnNorth.add(horizontalStrut);
+		
+		btnTaiLai = new JButton("Tải lại");
+		pnNorth.add(btnTaiLai);
+		
+		Component horizontalStrut_3 = Box.createHorizontalStrut(100);
+		pnNorth.add(horizontalStrut_3);
 
 		JPanel pnCenter = new JPanel();
+		pnCenter.setBackground(new Color(245, 251, 255));
 		contentPane.add(pnCenter, BorderLayout.CENTER);
 		pnCenter.setLayout(new BoxLayout(pnCenter, BoxLayout.X_AXIS));
 		
@@ -158,7 +170,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		
 		Component horizontalStrut_1 = Box.createHorizontalStrut(100);
 		b3.add(horizontalStrut_1);
-		b1.add(Box.createVerticalStrut(40));
+		b1.add(Box.createVerticalStrut(20));
 		Box b2 = Box.createVerticalBox();
 		pnCenter.add(b2);
 		b2.add(Box.createVerticalStrut(30));
@@ -177,13 +189,14 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		JLabel lblNghiPhep = new JLabel("Số ngày nghỉ có phép:         ");
 		b4.add(lblNghiPhep);
 		txtNghiPhep = new JTextField();
+		txtNghiPhep.setEditable(false);
 		txtNghiPhep.setText("");
 		b4.add(txtNghiPhep);
 		txtNghiPhep.setColumns(7);
 		b4.add(Box.createHorizontalStrut(200));
 		
 		b2.add(b4);
-		b2.add(Box.createVerticalStrut(40));
+		b2.add(Box.createVerticalStrut(20));
 		Box b5= Box.createHorizontalBox();
 		b5.add(Box.createHorizontalStrut(200));
 		JLabel lblTenPB = new JLabel("Tên phòng ban:  ");
@@ -192,8 +205,9 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		b1.add(b5);
 		
 		txtTenPB = new JTextField();
+		txtTenPB.setEditable(false);
 		b5.add(txtTenPB);
-		txtTenPB.setColumns(20);
+		txtTenPB.setColumns(17);
 		
 		Component horizontalStrut_2 = Box.createHorizontalStrut(100);
 		b5.add(horizontalStrut_2);
@@ -206,13 +220,15 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		b6.add(lblNewLabel_1);
 		
 		txtTenNV = new JTextField();
+		txtTenNV.setEditable(false);
 		b6.add(txtTenNV);
 		txtTenNV.setText("");
-		txtTenNV.setColumns(17);
+		txtTenNV.setColumns(24);
 		b6.add(Box.createHorizontalStrut(80));
 		JLabel lblKhongPhep = new JLabel("Số ngày nghỉ không phép:         ");
 		b6.add(lblKhongPhep);
 		txtKhongPhep = new JTextField();
+		txtKhongPhep.setEditable(false);
 		txtKhongPhep.setColumns(7);
 		b6.add(txtKhongPhep);
 		b6.add(Box.createHorizontalStrut(200));
@@ -240,7 +256,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		taoCotTheoThang();
 		JScrollPane spTableDD = new JScrollPane(tableDiemDanh, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		spTableDD.setPreferredSize(new Dimension(1200,400));
+		spTableDD.setPreferredSize(new Dimension(1200, 500));
 		contentPane.add(pnTable, BorderLayout.SOUTH);
 		tableDiemDanh.setFillsViewportHeight(true);
 //		modelDiemDanh.addTableModelListener(new TableModelListener() {
@@ -266,20 +282,26 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 				// TODO Auto-generated method stub
 				int row = e.getFirstRow();
                 int column = e.getColumn();
-                String changedValue = "";
-                if (column != TableModelEvent.ALL_COLUMNS && row != TableModelEvent.HEADER_ROW) 
-                    // Lấy giá trị cụ thể từ ô vừa được thay đổi
-                    changedValue = modelDiemDanh.getValueAt(row, column)+"".toString();
-                if(modelDiemDanh.getRowCount() > 0 && row != -1 && column != 0 && column != 1) {
-                	try {
-                    	dao_DiemDanh.capNhatDiemDanh(new DiemDanh(modelDiemDanh.getValueAt(row, 0).toString(),Date.valueOf(ngayHT) , changedValue.toString()));
-                    	txtNghiPhep.setText(dao_DiemDanh.tongNgayPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
-                		txtKhongPhep.setText(dao_DiemDanh.tongNgayKhongPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
-    	            } catch (SQLException e1) {
-    	            	   // TODO Auto-generated catch block
-    	            	   e1.printStackTrace();
-    	            }
-                }
+                if(!isloadBang && modelDiemDanh.getRowCount()!=-1 && column > 1) {
+	                String changedValue = dao_DiemDanh.getNgayPhep(modelDiemDanh.getValueAt(row, 0).toString(), Date.valueOf(ngayHT));
+	                if (column != TableModelEvent.ALL_COLUMNS && row != TableModelEvent.HEADER_ROW) 
+	                    // Lấy giá trị cụ thể từ ô vừa được thay đổi
+	                    changedValue = modelDiemDanh.getValueAt(row, column)+"".toString();
+	                
+	                	try {
+	                    	dao_DiemDanh.capNhatDiemDanh(new DiemDanh(modelDiemDanh.getValueAt(row, 0).toString(),Date.valueOf(ngayHT) , changedValue.toString()));
+	                    	txtNghiPhep.setText(dao_DiemDanh.tongNgayPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
+	                		txtKhongPhep.setText(dao_DiemDanh.tongNgayKhongPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
+	                		cbMaNV.setSelectedItem(modelDiemDanh.getValueAt(row, 0).toString());
+	                		txtTenNV.setText(modelDiemDanh.getValueAt(row, 1).toString());
+	                		cbMaPB.setEnabled(false);
+	                		cbMaPB.setSelectedItem(dao_NVHC.layNhanVienTheoMa(modelDiemDanh.getValueAt(row, 0).toString()).getPhongBan().getMaPhongBan());
+	                		txtTenPB.setText(dao_PhongBan.getPhongBanTheoMa(dao_NVHC.layNhanVienTheoMa(modelDiemDanh.getValueAt(row, 0).toString()).getPhongBan().getMaPhongBan()).getTenPhongBan());
+	    	            } catch (SQLException e1) {
+	    	            	   // TODO Auto-generated catch block
+	    	            	   e1.printStackTrace();
+	    	            }
+	                }
 			}
 		});
 		cbNam.addItemListener(new ItemListener() {
@@ -300,16 +322,58 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		cbThang.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
+				
+				modelDiemDanh.getDataVector().removeAllElements();
 				taoCotTheoThang();
 				loadBang();
+				clear();
 //				if((Integer)cbThang.getSelectedItem()!= ngayHT.getMonthValue())
 //					tableDiemDanh.setEnabled(false);
 //				else
 //					tableDiemDanh.setEnabled(true);
 			}
 		});
-		tableDiemDanh.addMouseListener(this);
+		cbMaPB.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				if(tableDiemDanh.getSelectedRow()==-1) {
+					cbMaNV.removeAllItems();
+					cbMaNV.addItem("");
+					isloadBang = true;
+					modelDiemDanh.setRowCount(0);
+					int dem = 0;
+					int ngayTrongThang = YearMonth.of(Integer.parseInt(cbNam.getSelectedItem().toString()), Integer.parseInt(cbThang.getSelectedItem().toString())).lengthOfMonth();
+					for (NhanVienHanhChinh nv : dao_NVHC.layNhanVienTheoPhongBan(cbMaPB.getSelectedItem().toString())) {
+						cbMaNV.addItem(nv.getMaNV());
+						List<Object> row = new ArrayList<>();
+						row.add(nv.getMaNV());
+						row.add(nv.getHoTenNV());
+						
+						for(int i=1; i<= ngayTrongThang; i++) {
+							String strDate = cbNam.getSelectedItem().toString()+"-"+cbThang.getSelectedItem().toString()+"-"+i;
+							Date date;
+							try {
+								date = new java.sql.Date(df.parse(strDate).getTime());
+								String value= dao_DiemDanh.getNgayPhep(nv.getMaNV(), date);
+								row.add(value);
+								
+							} catch (ParseException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+						modelDiemDanh.addRow(row.toArray());
+						dem++;
+					}
+					isloadBang = false;
+				}
+			}
+		});
 		
+		tableDiemDanh.addMouseListener(this);
+		btnTaiLai.addActionListener(this);
 	}
 	public void taoDSDiemDanhTrongNgay() {
 		if(!dao_DiemDanh.ktDiemDanh(Date.valueOf(ngayHT)))
@@ -357,6 +421,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
         
 	}
 	private void loadBang() {
+		isloadBang = true;
 		modelDiemDanh.setRowCount(0);
 		int dem = 0;
 		int ngayTrongThang = YearMonth.of(Integer.parseInt(cbNam.getSelectedItem().toString()), Integer.parseInt(cbThang.getSelectedItem().toString())).lengthOfMonth();
@@ -365,28 +430,34 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 			row.add(nv.getMaNV());
 			row.add(nv.getHoTenNV());
 			
-			modelDiemDanh.addRow(row.toArray());
 			for(int i=1; i<= ngayTrongThang; i++) {
 				String strDate = cbNam.getSelectedItem().toString()+"-"+cbThang.getSelectedItem().toString()+"-"+i;
 				Date date;
 				try {
 					date = new java.sql.Date(df.parse(strDate).getTime());
 					String value= dao_DiemDanh.getNgayPhep(nv.getMaNV(), date);
-					tableDiemDanh.setValueAt(value, dem, i+1);
+					row.add(value);
+					//tableDiemDanh.setValueAt(value, dem, i+1);
 					
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			modelDiemDanh.addRow(row.toArray());
 			dem++;
 		}
+		isloadBang = false;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		int row = tableDiemDanh.getSelectedRow();
+		if(row == -1)
+			cbMaPB.setEnabled(true);
+		else
+			cbMaPB.setEnabled(false);
 		cbMaNV.setSelectedItem(modelDiemDanh.getValueAt(row, 0).toString());
 		txtTenNV.setText(modelDiemDanh.getValueAt(row, 1).toString());
 		txtNghiPhep.setText(dao_DiemDanh.tongNgayPhepTrongThang((Integer)cbThang.getSelectedItem(),modelDiemDanh.getValueAt(row, 0).toString())+"");
@@ -395,7 +466,14 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 		txtTenPB.setText(dao_PhongBan.getPhongBanTheoMa(dao_NVHC.layNhanVienTheoMa(modelDiemDanh.getValueAt(row, 0).toString()).getPhongBan().getMaPhongBan()).getTenPhongBan());
 	}
 	public void clear() {
-		
+		cbMaPB.setSelectedIndex(0);
+		cbMaNV.setSelectedIndex(0);
+		txtKhongPhep.setText("");
+		txtNghiPhep.setText("");
+		txtTenNV.setText("");
+		txtTenPB.setText("");
+		tableDiemDanh.clearSelection();
+		cbMaPB.setEnabled(true);
 	}
 
 	@Override
@@ -420,5 +498,15 @@ public class GUI_DiemDanh extends JFrame implements MouseListener{
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		if(o.equals(btnTaiLai)) {
+			clear();
+			loadBang();
+		}
 	}
 }

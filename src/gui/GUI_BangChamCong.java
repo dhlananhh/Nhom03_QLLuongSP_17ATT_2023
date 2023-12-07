@@ -336,8 +336,13 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 			modelCC.setValueAt(spinSLHT.getValue(), tableCC.getSelectedRow(), 7);
 			JOptionPane.showMessageDialog(null, "Chấm công thành công!");
 		}
-		if(o.equals(btnLoc))
-			loc();
+		if(o.equals(btnLoc)) {
+			String tieuChi = cbLoc.getSelectedItem().toString();
+			if(tieuChi.equalsIgnoreCase("Mã sản phẩm"))
+				locTheoMaSP();
+			if(tieuChi.equalsIgnoreCase("Mã công nhân"))
+				locTheoCN();
+		}
 		if(o.equals(btnTaiLai))
 			clear();
 	}
@@ -405,7 +410,8 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 	}
 	public void clear() {
 		tableCC.clearSelection();
-		modelHT.setRowCount(0);
+		//modelHT.setRowCount(0);
+		modelHT.getDataVector().removeAllElements();
 		txtMaCN.setText("");
 		txtTenCN.setText("");
 		txtMaSP.setText("");
@@ -417,29 +423,56 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		btnLuu.setEnabled(false);
 		loadBang();
 	}
+	public void locTheoMaSP() {
+		String ma = txtLoc.getText();
+		modelCC.setRowCount(0);
+		
+//		for (ChamCong chamCong : chamCong_dao.getDSChamCongTheoSP(ma, new java.sql.Date(chooserNgay.getDate().getTime()))) {
+//			String macd = chamCong.getMaCD();
+//			String masp = sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getMaSP();
+//			String[] row = {chamCong.getMaCN(), congNhan_dao.getCongNhanTheoMa(chamCong.getMaCN()).getHoTenCN(),masp,
+//					sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getTenSP(),macd,
+//					congDoan_dao.getCongDoanTheoMa(macd).getTenCD(), chamCong.getChiTieu()+"", chamCong.getSoLuongHoanThanh()+""};
+//			modelCC.addRow(row);
+//		}
+	}
+	public void locTheoCN() {
+		modelCC.setRowCount(0);
+		String ma = txtLoc.getText();
+		ChamCong chamCong = chamCong_dao.getChamCongTheoCN(ma, new java.sql.Date(chooserNgay.getDate().getTime()));
+		String macd = chamCong.getMaCD();
+		String masp = "";
+		String[] row = {chamCong.getMaCN(), "","",
+				"",macd,
+				"", chamCong.getChiTieu()+"", chamCong.getSoLuongHoanThanh()+""};
+		modelCC.addRow(row);
+	}
 	public void loc() {
+		DAO_SanPham sp_dao = new DAO_SanPham();
+		DAO_CongNhan cn_dao = new DAO_CongNhan();
+		DAO_CongDoan cd_dao = new DAO_CongDoan();
 		String tieuChi = cbLoc.getSelectedItem().toString();
 		String ma = txtLoc.getText();
 		modelCC.setRowCount(0);
 		if(tieuChi.equals("Mã sản phẩm")) {
 			for (ChamCong chamCong : chamCong_dao.getDSChamCongTheoSP(ma, new java.sql.Date(chooserNgay.getDate().getTime()))) {
 				String macd = chamCong.getMaCD();
-				String masp = sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getMaSP();
-				String[] row = {chamCong.getMaCN(), congNhan_dao.getCongNhanTheoMa(chamCong.getMaCN()).getHoTenCN(),masp,
-						sanPham_dao.getalltbSanPhamTheoMaCD(macd).get(0).getTenSP(),macd,
-						congDoan_dao.getCongDoanTheoMa(macd).getTenCD(), chamCong.getChiTieu()+"", chamCong.getSoLuongHoanThanh()+""};
+				String masp = sp_dao.getalltbSanPhamTheoMaCD(macd).get(0).getMaSP();
+				String[] row = {chamCong.getMaCN(), cn_dao.getCongNhanTheoMa(chamCong.getMaCN()).getHoTenCN(),masp,
+						sp_dao.getalltbSanPhamTheoMaCD(macd).get(0).getTenSP(),macd,
+						cd_dao.getCongDoanTheoMa(macd).getTenCD(), chamCong.getChiTieu()+"", chamCong.getSoLuongHoanThanh()+""};
 				modelCC.addRow(row);
 			}
 		}
 		if(tieuChi.equals("Mã công nhân")) {
-			for (ChamCong chamCong : chamCong_dao.getDSChamCongTheoCN(ma, new java.sql.Date(chooserNgay.getDate().getTime()))) {
-				String macd = chamCong.getMaCD();
-				String masp = sanPham_dao.getSanPhamTheoMaCD(macd).getMaSP();
-				String[] row = {chamCong.getMaCN(), "","",
-						sanPham_dao.getSanPhamTheoMaCD(macd).getTenSP(),macd,
-						congDoan_dao.getCongDoanTheoMa(macd).getTenCD(), chamCong.getChiTieu()+"", chamCong.getSoLuongHoanThanh()+""};
-				modelCC.addRow(row);
-			}
+//			for (ChamCong chamCong : chamCong_dao.getDSChamCongTheoCN(ma, new java.sql.Date(chooserNgay.getDate().getTime()))) {
+//				String macd = chamCong.getMaCD();
+//				String masp = sanPham_dao.getSanPhamTheoMaCD(macd).getMaSP();
+//				String[] row = {chamCong.getMaCN(), "","",
+//						sanPham_dao.getSanPhamTheoMaCD(macd).getTenSP(),macd,
+//						congDoan_dao.getCongDoanTheoMa(macd).getTenCD(), chamCong.getChiTieu()+"", chamCong.getSoLuongHoanThanh()+""};
+//				modelCC.addRow(row);
+//			}
 		}
 		if(modelCC.getRowCount()==0)
 			JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin");

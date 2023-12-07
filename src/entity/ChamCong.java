@@ -58,5 +58,10 @@ public class ChamCong {
 		this.ngayCham = ngayCham;
 		this.chiTieu = chiTieu;
 	}
+	public ChamCong(String maCN, Date ngayCham) {
+		super();
+		this.maCN = maCN;
+		this.ngayCham = ngayCham;
+	}
 	
 }
