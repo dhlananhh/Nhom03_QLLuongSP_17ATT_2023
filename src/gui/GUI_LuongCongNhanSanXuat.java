@@ -61,13 +61,13 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	private JPanel pnContent, pnNorth, pnCenter;
 	private JPanel pnTable;
 	private JLabel lblTieuDe, lblLocNam, lblLocThang, lblError;
-	private JLabel lblNgayTinhLuong, lblNam, lblThang, lblMaNV;
+	private JLabel lblNgayTinhLuong, lblNam, lblThang, lblMaCN;
 	private JLabel lblSoNgayDiLam, lblSoNgayNghi, lblSoNghiPhep, lblTienTamUng;
 	private JTextField txtNam, txtThang, txtTienTamUng;
 	private JDateChooser dcNgayTinhLuong;
 	private JTextField txtSoNgayDiLam, txtSoNgayNghi, txtSoNghiPhep;
 	private JButton btnThem, btnSua, btnLoc, btnTimKiem, btnXuatExcel;
-	private JComboBox cbMaNV;
+	private JComboBox cbMaCN;
 	private JComboBox cbLocNam, cbLocThang;
 	private Font BVNPro;
 	private JLabel lblTimKiem;
@@ -91,8 +91,8 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 			e.printStackTrace();
 		}
 		
-		dao_luongNV = new DAO_LuongNhanVienHanhChinh();
-		dao_nv = new DAO_NhanVienHanhChinh();
+//		dao_luongNV = new DAO_LuongNhanVienHanhChinh();
+//		dao_nv = new DAO_NhanVienHanhChinh();
 		
 		//set JFrame properties
 		setSize(1300, 700);
@@ -121,7 +121,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		pnContent.add(pnNorth, BorderLayout.NORTH);
 		pnNorth.setBackground(headerColor);
 		
-		lblTieuDe = new JLabel("LƯƠNG NHÂN VIÊN SẢN PHẨM");
+		lblTieuDe = new JLabel("LƯƠNG CÔNG NHÂN SẢN XUẤT");
 		pnNorth.add(lblTieuDe);
 		lblTieuDe.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 25));
 		lblTieuDe.setForeground(Color.WHITE);
@@ -150,9 +150,9 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		lblThang = new JLabel("Tháng: ");
 		txtThang = new JTextField();
 		
-		lblMaNV = new JLabel("Mã NV: ");
-		cbMaNV = new JComboBox<>();
-		cbMaNV.addItem("---Chọn---");
+		lblMaCN = new JLabel("Mã CN: ");
+		cbMaCN = new JComboBox<>();
+		cbMaCN.addItem("---Chọn---");
 		
 		lblSoNgayDiLam = new JLabel("Số ngày đi làm: ");
 		txtSoNgayDiLam = new JTextField();
@@ -171,8 +171,8 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		txtNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
  		lblThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		txtThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblMaNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		cbMaNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblMaCN.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		cbMaCN.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		lblTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		txtTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		lblSoNgayDiLam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
@@ -215,8 +215,8 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		Box b1 = Box.createHorizontalBox();
 		Box b2 = Box.createHorizontalBox();
 		
-		b1.add(lblMaNV);
-		b1.add(cbMaNV);
+		b1.add(lblMaCN);
+		b1.add(cbMaCN);
 		b2.add(lblTienTamUng);
 		b2.add(txtTienTamUng);
 		
@@ -319,7 +319,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		pnTable.add(pnTieuDeBang, BorderLayout.NORTH);
 		pnTieuDeBang.setBackground(bgColor);
 		
-		JLabel lblTieuDeBang = new JLabel("Bảng lương nhân viên hành chính");
+		JLabel lblTieuDeBang = new JLabel("Bảng lương công nhân sản xuất");
 		pnTieuDeBang.add(lblTieuDeBang);
 		lblTieuDeBang.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
 		
@@ -340,11 +340,11 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		createTableNV();
 		
 		// load bảng NV
-		layDuLieuLuong();
+//		layDuLieuLuong();
 				
 		
 		// lấy data vô combobox mã NV
-		getDataIntoCombobox();
+//		getDataIntoCombobox();
 		
 		Container container = getContentPane();
 		container.add(pnContent);
@@ -363,9 +363,9 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		tableNV.setRowHeight(25);
 		
 		modelNV.addColumn("STT");
-		modelNV.addColumn("Mã lương NV");
+		modelNV.addColumn("Mã lương CN");
 		modelNV.addColumn("Mã NV");
-		modelNV.addColumn("Lương chính");
+		modelNV.addColumn("Lương SP");
 		modelNV.addColumn("Tiền PC trong tháng");
 		modelNV.addColumn("Các khoản trừ vào lương");
 		modelNV.addColumn("Tiền tạm ứng");
@@ -390,7 +390,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 			ResultSet rs = statement.executeQuery(sql);
 			
 			while (rs.next()) {
-				cbMaNV.addItem(rs.getString("maNV"));
+				cbMaCN.addItem(rs.getString("maNV"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -492,7 +492,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		
 		if (selectedRow >= 0) {
 			txtTienTamUng.setText(modelNV.getValueAt(selectedRow, 6).toString());
-			cbMaNV.setSelectedItem(modelNV.getValueAt(selectedRow, 2).toString());
+			cbMaCN.setSelectedItem(modelNV.getValueAt(selectedRow, 2).toString());
 		}
 	}
 	
@@ -549,6 +549,6 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	
 	public static void main(String[] args) {
 		FlatLightLaf.setup();
-		new GUI_LuongNhanVienHanhChinh().setVisible(true);
+		new GUI_LuongCongNhanSanXuat().setVisible(true);
 	}
 }
