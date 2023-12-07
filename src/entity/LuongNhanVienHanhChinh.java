@@ -1,53 +1,85 @@
 package entity;
 
-import java.io.Serializable;
+import java.sql.Date;
+import java.text.DecimalFormat;
 import java.util.Objects;
 
-public class LuongNhanVienHanhChinh implements Serializable {
+public class LuongNhanVienHanhChinh {
 	private String maBangLuongHC;
+	private Date ngayTinhLuong;
 	private int nam;
 	private int thang;
-	private boolean trangThai;
+	private int soNgayDiLam;
+	private int soNgayNghi;
+	private int soNghiPhep;
+	// lương chính = (lương CB * hệ số lương) / 26 * số ngày đi làm
+	private double luongChinh;
+	private double tienPhuCapTrongThang;
+	private double tienTamUng;
+	private double baoHiemXaHoi;
+	private double baoHiemYTe;
+	private double baoHiemThatNghiep;
+	private double thueTNCN;
+	private double luongThucLanh;
 	private NhanVienHanhChinh nhanVien;
-	private float heSoLuong;
-	private float luongCoBan;
-	private float phuCap;
-	private float luongThucLanh;
 	
 	
-	//---constructors---
 	public LuongNhanVienHanhChinh() {
 		
 	}
 
 
-	public LuongNhanVienHanhChinh (String maBangLuongHC) {
+	public LuongNhanVienHanhChinh(String maBangLuongHC) {
 		this.maBangLuongHC = maBangLuongHC;
 	}
 
 
-	public LuongNhanVienHanhChinh (String maBangLuongHC, int nam, int thang) {
+	public LuongNhanVienHanhChinh (String maBangLuongHC, Date ngayTinhLuong, 
+			int nam, int thang, int soNgayDiLam, int soNgayNghi, int soNghiPhep, 
+			double tienTamUng, NhanVienHanhChinh nhanVien) {
 		this.maBangLuongHC = maBangLuongHC;
+		this.ngayTinhLuong = ngayTinhLuong;
 		this.nam = nam;
 		this.thang = thang;
-	}
-
-	
-	public LuongNhanVienHanhChinh (String maBangLuongHC, int nam, int thang, 
-			boolean trangThai, NhanVienHanhChinh nhanVien, 
-			float heSoLuong, float luongCoBan, float phuCap) {
-		this.maBangLuongHC = maBangLuongHC;
-		this.nam = nam;
-		this.thang = thang;
-		this.trangThai = trangThai;
+		this.soNgayDiLam = soNgayDiLam;
+		this.soNgayNghi = soNgayNghi;
+		this.soNghiPhep = soNghiPhep;
+		this.tienTamUng = tienTamUng;
 		this.nhanVien = nhanVien;
-		this.heSoLuong = heSoLuong;
-		this.luongCoBan = luongCoBan;
-		this.phuCap = phuCap;
+		
+		setLuongChinh();
+		setTienPhuCapTrongThang();
+		setBaoHiemXaHoi();
+		setBaoHiemYTe();
+		setBaoHiemThatNghiep();
+		setThueTNCN();
+		setLuongThucLanh();
+	}
+	
+
+	public LuongNhanVienHanhChinh(String maBangLuongHC, Date ngayTinhLuong, int nam, int thang, int soNgayDiLam,
+			int soNgayNghi, int soNghiPhep, double luongChinh, double tienPhuCapTrongThang, double tienTamUng,
+			double baoHiemXaHoi, double baoHiemYTe, double baoHiemThatNghiep, double thueTNCN, double luongThucLanh,
+			NhanVienHanhChinh nhanVien) {
+		this.maBangLuongHC = maBangLuongHC;
+		this.ngayTinhLuong = ngayTinhLuong;
+		this.nam = nam;
+		this.thang = thang;
+		this.soNgayDiLam = soNgayDiLam;
+		this.soNgayNghi = soNgayNghi;
+		this.soNghiPhep = soNghiPhep;
+		this.luongChinh = luongChinh;
+		this.tienPhuCapTrongThang = tienPhuCapTrongThang;
+		this.tienTamUng = tienTamUng;
+		this.baoHiemXaHoi = baoHiemXaHoi;
+		this.baoHiemYTe = baoHiemYTe;
+		this.baoHiemThatNghiep = baoHiemThatNghiep;
+		this.thueTNCN = thueTNCN;
+		this.luongThucLanh = luongThucLanh;
+		this.nhanVien = nhanVien;
 	}
 
 
-	//---getters/setters---
 	public String getMaBangLuongHC() {
 		return maBangLuongHC;
 	}
@@ -55,6 +87,16 @@ public class LuongNhanVienHanhChinh implements Serializable {
 
 	public void setMaBangLuongHC(String maBangLuongHC) {
 		this.maBangLuongHC = maBangLuongHC;
+	}
+
+	
+	public Date getNgayTinhLuong() {
+		return ngayTinhLuong;
+	}
+
+
+	public void setNgayTinhLuong(Date ngayTinhLuong) {
+		this.ngayTinhLuong = ngayTinhLuong;
 	}
 
 
@@ -78,13 +120,206 @@ public class LuongNhanVienHanhChinh implements Serializable {
 	}
 
 
-	public boolean isTrangThai() {
-		return trangThai;
+	public int getSoNgayDiLam() {
+		return soNgayDiLam;
 	}
 
 
-	public void setTrangThai(boolean trangThai) {
-		this.trangThai = trangThai;
+	public void setSoNgayDiLam(int soNgayDiLam) throws Exception {
+		if (soNgayDiLam < 0)
+			throw new Exception("Số ngày đi làm không được nhỏ hơn 0");
+		else
+			this.soNgayDiLam = soNgayDiLam;
+		
+		setTienPhuCapTrongThang();
+	}
+
+
+	public int getSoNgayNghi() {
+		return soNgayNghi;
+	}
+
+
+	public void setSoNgayNghi(int soNgayNghi) throws Exception {
+		if (soNgayNghi < 0)
+			throw new Exception("Số ngày nghỉ không được nhỏ hơn 0");
+		else
+			this.soNgayNghi = soNgayNghi;
+	}
+
+
+	public int getSoNghiPhep() {
+		return soNghiPhep;
+	}
+
+
+	public void setSoNghiPhep(int soNghiPhep) throws Exception {
+		if (soNghiPhep > soNgayNghi)
+			throw new Exception("Số ngày nghỉ phép không được nhiều hơn số ngày nghỉ");
+		else if (soNghiPhep < 0)
+			throw new Exception("Số ngày nghỉ phép không được nhỏ hơn 0");
+		else
+			this.soNghiPhep = soNghiPhep;
+	}
+
+
+	public double getLuongChinh() {
+		return luongChinh;
+	}
+
+
+	public void setLuongChinh(){
+		this.luongChinh = (getNhanVien().getLuongCoBan() * getNhanVien().getHeSoLuong()) / 26 * soNgayDiLam;
+	}
+	
+
+	public double getTienPhuCapTrongThang() {
+		return tienPhuCapTrongThang;
+	}
+
+
+	public void setTienPhuCapTrongThang() {
+		this.tienPhuCapTrongThang = getNhanVien().getPhuCap() * soNgayDiLam;
+	}
+
+
+	public double getTienTamUng() {
+		return tienTamUng;
+	}
+
+
+	public void setTienTamUng(double tienTamUng) {
+		this.tienTamUng = tienTamUng;
+	}
+
+
+	public double getBaoHiemXaHoi() {
+		return baoHiemXaHoi;
+	}
+
+
+	public void setBaoHiemXaHoi() {
+		this.baoHiemXaHoi = getLuongChinh() * 0.08;
+	}
+
+	
+	public double getBaoHiemYTe() {
+		return baoHiemYTe;
+	}
+
+
+	public void setBaoHiemYTe() {
+		this.baoHiemYTe = getLuongChinh() * 0.015;
+	}
+
+
+	public double getBaoHiemThatNghiep() {
+		return baoHiemThatNghiep;
+	}
+
+
+	public void setBaoHiemThatNghiep() {
+		this.baoHiemThatNghiep = getLuongChinh() * 0.01;
+	}
+
+
+	public double getThueTNCN() {
+		return thueTNCN;
+	}
+	
+	
+	public double tinhThueSuat (double thuNhapTinhThue) {
+		double thueSuat = 0;
+		
+		// bậc 1
+		if (thuNhapTinhThue < 5000) 
+			thueSuat = 0.05;
+		// bậc 2
+		else if (thuNhapTinhThue >= 5000 && thuNhapTinhThue <= 10000)
+			thueSuat = 0.1;
+		// bậc 3
+		else if (thuNhapTinhThue >= 10000 && thuNhapTinhThue <= 18000)
+			thueSuat = 0.15;
+		// bậc 4
+		else if (thuNhapTinhThue >= 18000 && thuNhapTinhThue <= 32000)
+			thueSuat = 0.2;
+		// bậc 5
+		else if (thuNhapTinhThue >= 32000 && thuNhapTinhThue <= 52000)
+			thueSuat = 0.25;
+		// bậc 6
+		else if (thuNhapTinhThue >= 52000 && thuNhapTinhThue <= 80000)
+			thueSuat = 0.3;
+		// bậc 7
+		else if (thuNhapTinhThue >= 80000)
+			thueSuat = 0.35;
+		
+		return thueSuat;
+	}
+	
+	
+	public int tinhBacThue (double thuNhapTinhThue) {
+		int bacThue = 0;
+		
+		if (tinhThueSuat(thuNhapTinhThue) == 0.05)
+			bacThue = 1;
+		else if (tinhThueSuat(thuNhapTinhThue) == 0.1)
+			bacThue = 2;
+		else if (tinhThueSuat(thuNhapTinhThue) == 0.15)
+			bacThue = 3;
+		else if (tinhThueSuat(thuNhapTinhThue) == 0.2)
+			bacThue = 4;
+		else if (tinhThueSuat(thuNhapTinhThue) == 0.25)
+			bacThue = 5;
+		else if (tinhThueSuat(thuNhapTinhThue) == 0.3)
+			bacThue = 6;
+		else if (tinhThueSuat(thuNhapTinhThue) == 0.35)
+			bacThue = 7;
+		
+		return bacThue;
+	}
+	
+	
+	public double tinhThueTNCN() {
+		// tính thuế thu nhập thực tế khi đã trừ tiền bảo hiểm bắt buộc
+		double thuNhapThucTe = getLuongChinh() - getBaoHiemXaHoi() - getBaoHiemYTe() - getBaoHiemThatNghiep();
+		double tienGiamTruBanThan = 11000;
+		double thuNhapTinhThue = thuNhapThucTe - tienGiamTruBanThan;
+		double thueSuat = tinhThueSuat(thuNhapTinhThue);
+		int bacThue = tinhBacThue(thuNhapTinhThue);
+		double thuePhaiDong = 0;
+		
+		
+		if (bacThue == 1)
+			thuePhaiDong = 5000 * 0.05;
+		else if (bacThue == 2)
+			thuePhaiDong = thuNhapTinhThue * 0.1 - 250;
+		else if (bacThue == 3)
+			thuePhaiDong = thuNhapTinhThue * 0.15 - 750;
+		else if (bacThue == 4)
+			thuePhaiDong = thuNhapTinhThue * 0.2 - 1650;
+		else if (bacThue == 5)
+			thuePhaiDong = thuNhapTinhThue * 0.25 - 3250;
+		else if (bacThue == 6)
+			thuePhaiDong = thuNhapTinhThue * 0.3 - 5850;
+		else if (bacThue == 7)
+			thuePhaiDong = thuNhapTinhThue * 0.35 - 9850;
+		
+		return thuePhaiDong;
+	}
+
+
+	public void setThueTNCN() {
+		this.thueTNCN = tinhThueTNCN();
+	}
+	
+	
+	public double getLuongThucLanh() {
+		return luongThucLanh;
+	}
+
+
+	public void setLuongThucLanh() {
+		this.luongThucLanh = getLuongChinh() + getTienPhuCapTrongThang() - getTienTamUng() - getBaoHiemXaHoi() - getBaoHiemYTe() - getBaoHiemThatNghiep() - getThueTNCN();
 	}
 
 
@@ -93,52 +328,21 @@ public class LuongNhanVienHanhChinh implements Serializable {
 	}
 
 
-	public void setNhanVien(NhanVienHanhChinh nhanVien) {
-		this.nhanVien = nhanVien;
+	public void setNhanVien(NhanVienHanhChinh nhanVien) throws Exception {
+		if (nhanVien == null)
+			throw new Exception("Nhân viên không được để trống");
+		else
+			this.nhanVien = nhanVien;
 	}
-
-
-	public float getHeSoLuong() {
-		return heSoLuong;
-	}
-
-
-	public void setHeSoLuong(float heSoLuong) {
-		this.heSoLuong = heSoLuong;
-	}
-
-
-	public float getLuongCoBan() {
-		return luongCoBan;
-	}
-
-
-	public void setLuongCoBan(float luongCoBan) {
-		this.luongCoBan = luongCoBan;
-	}
-
-
-	public float getPhuCap() {
-		return phuCap;
-	}
-
-
-	public void setPhuCap(float phuCap) {
-		this.phuCap = phuCap;
-	}
-
 	
-	public float getLuongThucLanh() {
-		return luongThucLanh;
+	
+	public double getCacKhoanTruVaoLuongNV() {
+		double giamTru = 0;
+		giamTru = getBaoHiemXaHoi() + getBaoHiemYTe() + getBaoHiemThatNghiep() + tinhThueTNCN();
+		return giamTru;
 	}
 
 
-	public void setLuongThucLanh(float luongThucLanh) {
-		this.luongThucLanh = luongThucLanh;
-	}
-
-
-	//---hashCode/equals---
 	@Override
 	public int hashCode() {
 		return Objects.hash(maBangLuongHC);
@@ -157,23 +361,15 @@ public class LuongNhanVienHanhChinh implements Serializable {
 		return Objects.equals(maBangLuongHC, other.maBangLuongHC);
 	}
 
-	
-	// hàm tính lương thực lãnh cho nhân viên hành chính
-	public float tinhLuongThucLanh() {
-		float luongThucLanh = 0;
-		
-		luongThucLanh = (luongCoBan * heSoLuong) + phuCap / 26 * 26;
-		
-		return luongThucLanh;
-	}
 
-
-	//---toString---
 	@Override
 	public String toString() {
-		return "LuongNhanVienHanhChinh [maBangLuongHC=" + maBangLuongHC + ", nam=" + nam + ", thang=" + thang
-				+ ", trangThai=" + trangThai + ", nhanVien=" + nhanVien + ", heSoLuong=" + heSoLuong + ", luongCoBan="
-				+ luongCoBan + ", phuCap=" + phuCap + ", luongThucLanh=" + luongThucLanh + "]";
+		return "LuongNhanVienHanhChinh [maBangLuongHC=" + maBangLuongHC + ", ngayTinhLuong=" + ngayTinhLuong + ", nam="
+				+ nam + ", thang=" + thang + ", soNgayDiLam=" + soNgayDiLam + ", soNgayNghi=" + soNgayNghi
+				+ ", soNghiPhep=" + soNghiPhep + ", luongChinh=" + luongChinh + ", tienPhuCapTrongThang="
+				+ tienPhuCapTrongThang + ", tienTamUng=" + tienTamUng + ", baoHiemXaHoi=" + baoHiemXaHoi
+				+ ", baoHiemYTe=" + baoHiemYTe + ", baoHiemThatNghiep=" + baoHiemThatNghiep + ", thueTNCN=" + thueTNCN
+				+ ", luongThucLanh=" + luongThucLanh + ", nhanVien=" + nhanVien + "]";
 	}
-	
+
 }
