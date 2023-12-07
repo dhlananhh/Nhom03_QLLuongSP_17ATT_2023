@@ -48,7 +48,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 	private DefaultTableModel modelSP;
 	private JTable tableSP, tableCD;
 	private DefaultTableModel modelCD;
-	private JButton btnLoc, btnThem, btnSua, btnXoa, btnXoaTrang, btnLuu;
+	private JButton btnLoc, btnThem, btnSua, btnTaiLai, btnXoaTrang, btnLuu;
 	private JComboBox<String> cbLoc, cbTrangThai;
 	private JTextField txtLoc, txtMSP, txtMCD, txtTenSP, txtTenCD, txtLuongSP, txtSoLuong, txtGiaThanh, txtThuTu;
 	private DAO_CongDoan cd_dao;
@@ -178,7 +178,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		b3_6.add(Box.createHorizontalStrut(50));
 		b3_6.add(btnSua = new JButton("Sửa"));
 		b3_6.add(Box.createHorizontalStrut(50));
-		b3_6.add(btnXoa = new JButton("Xóa"));
+		b3_6.add(btnTaiLai = new JButton("Tải lại"));
 		b3_6.add(Box.createHorizontalStrut(50));
 		b3_6.add(btnXoaTrang = new JButton("Xóa Trắng"));
 		b3_6.add(Box.createHorizontalStrut(50));
@@ -188,8 +188,8 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		btnThem.setForeground(Color.WHITE);
         btnSua.setBackground(new Color(0, 153, 204));
         btnSua.setForeground(Color.WHITE);
-        btnXoa.setBackground(new Color(0, 153, 204));
-        btnXoa.setForeground(Color.WHITE);
+        btnTaiLai.setBackground(new Color(0, 153, 204));
+        btnTaiLai.setForeground(Color.WHITE);
         btnXoaTrang.setBackground(new Color(0, 153, 204));
         btnXoaTrang.setForeground(Color.WHITE);
         btnLuu.setBackground(new Color(0, 153, 204));
@@ -260,7 +260,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		//action
 		btnThem.addActionListener(this);
 		btnSua.addActionListener(this);
-		btnXoa.addActionListener(this);
+		btnTaiLai.addActionListener(this);
 		btnLoc.addActionListener(this);
 		btnXoaTrang.addActionListener(this);
 		btnLuu.addActionListener(this);
@@ -332,19 +332,11 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 				docDuLieuSPVaoTable();
 			}
 		}
-		if(o.equals(btnXoa)) {
-			int r = tableSP.getSelectedRow();
-			String maSP = modelSP.getValueAt(r, 0).toString();
-			modelSP.removeRow(r);
-			txtMSP.setText("");
-			txtTenSP.setText("");
-			txtGiaThanh.setText("");
-			txtSoLuong.setText("");
-			ArrayList<CongDoan> dsCD = cd_dao.getAllCongDoanTheoSP(maSP);
-			for(int i = dsCD.size()-1; i >= 0 ; i--) {
-				modelCD.removeRow(i);
-			}
-		}	
+		if(o.equals(btnTaiLai)) {
+			modelSP.getDataVector().removeAllElements();
+			docDuLieuSPVaoTable();
+		}
+		
 		if(o.equals(btnLoc)) {
 			if(cbLoc.getSelectedItem().equals("Mã sản phẩm")) {
 				modelSP.getDataVector().removeAllElements();
@@ -368,6 +360,11 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 			txtGiaThanh.setText("");
 			txtThuTu.setText("");
 			txtSoLuong.setText("");
+			soLuongCD = 0;
+			int row = tableCD.getRowCount();
+            for (int i = row - 1; i >= 0; i--) {
+                modelCD.removeRow(i);     
+            }
 			khoaCD();
 			moSP();
 		}
