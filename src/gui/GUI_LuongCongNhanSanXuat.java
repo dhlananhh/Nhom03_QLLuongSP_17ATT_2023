@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -48,9 +49,11 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
 
 import connection.ConnectDB;
+import dao.DAO_CongNhan;
 import dao.DAO_LuongCongNhanSanXuat;
 import dao.DAO_LuongNhanVienHanhChinh;
 import dao.DAO_NhanVienHanhChinh;
+import entity.LuongCongNhanSanXuat;
 import entity.LuongNhanVienHanhChinh;
 import entity.NhanVienHanhChinh;
 
@@ -73,13 +76,11 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	private JTextField txtTimKiem;
 	private JTable tableNV;
 	private DefaultTableModel modelCN;
+	private int soLuongBangLuong;
+	private boolean chinhSua = true;
 	
-	private DAO_LuongNhanVienHanhChinh dao_luongNV;
-	private List<LuongNhanVienHanhChinh> listLuongNV = new ArrayList<LuongNhanVienHanhChinh>();
-	
-	private DAO_NhanVienHanhChinh dao_nv;
-	private List<NhanVienHanhChinh> listNhanVien = new ArrayList<NhanVienHanhChinh>();
-	
+	private DAO_LuongCongNhanSanXuat dao_luongCNSX;
+	private DAO_CongNhan dao_cn;
 	
 	public GUI_LuongCongNhanSanXuat() {
 		//get sql connection
@@ -90,8 +91,8 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 			e.printStackTrace();
 		}
 		
-//		dao_luongNV = new DAO_LuongNhanVienHanhChinh();
-//		dao_nv = new DAO_NhanVienHanhChinh();
+		dao_luongCNSX = new DAO_LuongCongNhanSanXuat();
+		dao_cn = new DAO_CongNhan();
 		
 		//set JFrame properties
 		setSize(1300, 700);
@@ -300,7 +301,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		pnTieuDeBang.add(lblTieuDeBang);
 		lblTieuDeBang.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
 		
-		lblTimKiem = new JLabel(" | Tìm kiếm theo tên công nhân: ");
+		lblTimKiem = new JLabel(" | Tìm kiếm theo mã công nhân: ");
 		lblTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		txtTimKiem = new JTextField();
 		
@@ -317,11 +318,11 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		createTableNV();
 		
 		// load bảng NV
-//		layDuLieuLuong();
+		layDuLieuLuongCongNhan();
 				
 		
 		// lấy data vô combobox mã NV
-//		getDataIntoCombobox();
+		getDataIntoCombobox();
 		
 		Container container = getContentPane();
 		container.add(pnContent);
@@ -330,6 +331,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		btnLoc.addActionListener(this);
 		btnSua.addActionListener(this);
 		btnXuatExcel.addActionListener(this);
+		btnTimKiem.addActionListener(this);
 		tableNV.addMouseListener(this);
 	}
 	
@@ -367,12 +369,12 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	public void getDataIntoCombobox() {
 		try {
 			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = "select * from NhanVienHanhChinh";
+			String sql = "select * from CongNhanSanXuat";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
 			
 			while (rs.next()) {
-				cbMaCN.addItem(rs.getString("maNV"));
+				cbMaCN.addItem(rs.getString("maCN"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -381,8 +383,16 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	
 	
 	// tải dữ liệu lên bảng lương NV
-	public void layDuLieuLuong() {
-		
+	public void layDuLieuLuongCongNhan() {
+		List<LuongCongNhanSanXuat> dsLuongCongNhanSanXuat = dao_luongCNSX.layDuLieuLuongCN();
+		soLuongBangLuong = dsLuongCongNhanSanXuat.size();
+		int i = 1;
+		for (LuongCongNhanSanXuat luongCN : dsLuongCongNhanSanXuat) {
+			modelCN.addRow(new Object[] {i++, luongCN.getNgayTinhLuong(), luongCN.getMaBangLuongCN(), luongCN.getNam(),
+					luongCN.getThang(), luongCN.getLuongSanPham(), luongCN.getTamUng(), luongCN.getBaoHiemXaHoi(),
+					luongCN.getBaoHiemYTe(), luongCN.getBaoHiemThatNghiep(), luongCN.getThueTNCN(), luongCN.getLuongThucLanh(),
+					luongCN.getCongNhan().getMaCN()});
+		}
 	}
 	
 	/*
@@ -456,14 +466,16 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		
 		if (selectedRow >= 0) {
 			txtTienTamUng.setText(modelCN.getValueAt(selectedRow, 6).toString());
-			cbMaCN.setSelectedItem(modelCN.getValueAt(selectedRow, 2).toString());
+			cbMaCN.setSelectedItem(modelCN.getValueAt(selectedRow, 12).toString());
+			txtNam.setText(modelCN.getValueAt(selectedRow, 3).toString());
+			txtThang.setText(modelCN.getValueAt(selectedRow, 4).toString());
+			dcNgayTinhLuong.setDate((Date) modelCN.getValueAt(selectedRow, 1));
 		}
 	}
 	
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 		hienThiDuLieuDuocChon();
 	}
 
@@ -504,10 +516,66 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 //			exportExcel(tableNV);
 			exportCSV(tableNV);
 		}
-		else if (o.equals(btnThem)) {
+		if (o.equals(btnThem)) {
 //			themDuLieuLuongNV();
 //			layDuLieuLuong();
 		}
+		if(o.equals(btnLoc)) {
+			String strThang = (String) cbLocThang.getSelectedItem();
+			String strNam = (String) cbLocNam.getSelectedItem();
+			int thang = Integer.parseInt(strThang);
+			int nam = Integer.parseInt(strNam);
+			ArrayList<LuongCongNhanSanXuat> dsLuongCN = new ArrayList<>();
+			int i = 1;
+			modelCN.getDataVector().removeAllElements();
+
+			if (thang == 0 && nam != 0) {
+			    dsLuongCN = dao_luongCNSX.timLuongTheoNam(nam);
+			} else if (nam == 0 && thang != 0) {
+			    dsLuongCN = dao_luongCNSX.timLuongTheoThang(thang);
+			} else {
+			    dsLuongCN = dao_luongCNSX.timLuongTheoThangNam(nam, thang);
+			}
+
+			for (LuongCongNhanSanXuat luongCN : dsLuongCN) {
+			    modelCN.addRow(new Object[] {i++, luongCN.getNgayTinhLuong(), luongCN.getMaBangLuongCN(), luongCN.getNam(),
+			            luongCN.getThang(), luongCN.getLuongSanPham(), luongCN.getTamUng(), luongCN.getBaoHiemXaHoi(),
+			            luongCN.getBaoHiemYTe(), luongCN.getBaoHiemThatNghiep(), luongCN.getThueTNCN(), luongCN.getLuongThucLanh(),
+			            luongCN.getCongNhan().getMaCN()});
+			}
+		}
+		if(o.equals(btnTimKiem)) {
+			String maCN = txtTimKiem.getText();
+			ArrayList<LuongCongNhanSanXuat> dsluongCN = dao_luongCNSX.timLuongTheoMaCN(maCN);
+			int i = 1;
+			modelCN.getDataVector().removeAllElements();
+			for (LuongCongNhanSanXuat luongCN : dsluongCN) {
+			    modelCN.addRow(new Object[] {i++, luongCN.getNgayTinhLuong(), luongCN.getMaBangLuongCN(), luongCN.getNam(),
+			            luongCN.getThang(), luongCN.getLuongSanPham(), luongCN.getTamUng(), luongCN.getBaoHiemXaHoi(),
+			            luongCN.getBaoHiemYTe(), luongCN.getBaoHiemThatNghiep(), luongCN.getThueTNCN(), luongCN.getLuongThucLanh(),
+			            luongCN.getCongNhan().getMaCN()});
+			}
+		}
+		if (o.equals(btnSua)) {
+            if (chinhSua) {
+                btnSua.setText("Lưu");
+                txtNam.setText("");
+                txtThang.setText("");
+                txtNam.setEditable(false);
+                txtThang.setEditable(false);
+                txtTienTamUng.setText("");
+            } else {
+                btnSua.setText("Sửa");
+                double tienTamUng = Double.parseDouble(txtTienTamUng.getText());
+                int row = tableNV.getSelectedRow();
+                String maLuong = modelCN.getValueAt(row, 2).toString();
+                LuongCongNhanSanXuat luongCN = new LuongCongNhanSanXuat(maLuong, tienTamUng);
+                dao_luongCNSX.capNhatLuong(luongCN);
+                modelCN.getDataVector().removeAllElements();
+                layDuLieuLuongCongNhan();
+            }
+            chinhSua = !chinhSua;
+        }
 	}
 
 	
