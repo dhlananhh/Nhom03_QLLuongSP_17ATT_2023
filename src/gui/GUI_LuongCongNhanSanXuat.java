@@ -62,10 +62,9 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	private JPanel pnTable;
 	private JLabel lblTieuDe, lblLocNam, lblLocThang, lblError;
 	private JLabel lblNgayTinhLuong, lblNam, lblThang, lblMaCN;
-	private JLabel lblSoNgayDiLam, lblSoNgayNghi, lblSoNghiPhep, lblTienTamUng;
+	private JLabel lblTienTamUng;
 	private JTextField txtNam, txtThang, txtTienTamUng;
 	private JDateChooser dcNgayTinhLuong;
-	private JTextField txtSoNgayDiLam, txtSoNgayNghi, txtSoNghiPhep;
 	private JButton btnThem, btnSua, btnLoc, btnTimKiem, btnXuatExcel;
 	private JComboBox cbMaCN;
 	private JComboBox cbLocNam, cbLocThang;
@@ -73,7 +72,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	private JLabel lblTimKiem;
 	private JTextField txtTimKiem;
 	private JTable tableNV;
-	private DefaultTableModel modelNV;
+	private DefaultTableModel modelCN;
 	
 	private DAO_LuongNhanVienHanhChinh dao_luongNV;
 	private List<LuongNhanVienHanhChinh> listLuongNV = new ArrayList<LuongNhanVienHanhChinh>();
@@ -154,15 +153,6 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		cbMaCN = new JComboBox<>();
 		cbMaCN.addItem("---Chọn---");
 		
-		lblSoNgayDiLam = new JLabel("Số ngày đi làm: ");
-		txtSoNgayDiLam = new JTextField();
-		
-		lblSoNgayNghi = new JLabel("Số ngày nghỉ: ");
-		txtSoNgayNghi = new JTextField();
-		
-		lblSoNghiPhep = new JLabel("Số ngày nghỉ có phép: ");
-		txtSoNghiPhep = new JTextField();
-		
 		lblTienTamUng = new JLabel("Tiền tạm ứng: ");
 		txtTienTamUng = new JTextField();
 		
@@ -175,12 +165,6 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		cbMaCN.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		lblTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		txtTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblSoNgayDiLam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtSoNgayDiLam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblSoNgayNghi.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtSoNgayNghi.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblSoNghiPhep.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtSoNghiPhep.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		
 		Box a = Box.createVerticalBox();
 		Box b = Box.createVerticalBox();
@@ -224,22 +208,15 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		b.add(Box.createVerticalStrut(10));
 		b.add(b2);
 		
-		Box c1 = Box.createHorizontalBox();
-		Box c2 = Box.createHorizontalBox();
-		Box c3 = Box.createHorizontalBox();
-		
-		c1.add(lblSoNgayDiLam);
-		c1.add(txtSoNgayDiLam);
-		c2.add(lblSoNgayNghi);
-		c2.add(txtSoNgayNghi);
-		c3.add(lblSoNghiPhep);
-		c3.add(txtSoNghiPhep);
-		
-		c.add(c1);
-		c.add(Box.createVerticalStrut(10));
-		c.add(c2);
-		c.add(Box.createVerticalStrut(10));
-		c.add(c3);
+//		Box c1 = Box.createHorizontalBox();
+//		Box c2 = Box.createHorizontalBox();
+//		Box c3 = Box.createHorizontalBox();
+//		
+//		c.add(c1);
+//		c.add(Box.createVerticalStrut(10));
+//		c.add(c2);
+//		c.add(Box.createVerticalStrut(10));
+//		c.add(c3);
 		
 		JPanel pnThongTinLuong = new JPanel();
 		pnCenter.add(pnThongTinLuong, BorderLayout.CENTER);
@@ -323,7 +300,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		pnTieuDeBang.add(lblTieuDeBang);
 		lblTieuDeBang.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
 		
-		lblTimKiem = new JLabel(" | Tìm kiếm theo tên nhân viên: ");
+		lblTimKiem = new JLabel(" | Tìm kiếm theo tên công nhân: ");
 		lblTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
 		txtTimKiem = new JTextField();
 		
@@ -358,23 +335,28 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	
 	
 	public void createTableNV() {
-		modelNV = new DefaultTableModel();
-		tableNV = new JTable(modelNV);
+		modelCN = new DefaultTableModel();
+		tableNV = new JTable(modelCN);
 		tableNV.setRowHeight(25);
 		
-		modelNV.addColumn("STT");
-		modelNV.addColumn("Mã lương CN");
-		modelNV.addColumn("Mã NV");
-		modelNV.addColumn("Lương SP");
-		modelNV.addColumn("Tiền PC trong tháng");
-		modelNV.addColumn("Các khoản trừ vào lương");
-		modelNV.addColumn("Tiền tạm ứng");
-		modelNV.addColumn("Lương thực lãnh");
+		modelCN.addColumn("STT");
+		modelCN.addColumn("Ngày tính lương");
+		modelCN.addColumn("Mã lương CN");
+		modelCN.addColumn("Năm");
+		modelCN.addColumn("Tháng");
+		modelCN.addColumn("Lương SP");
+		modelCN.addColumn("Tiền tạm ứng");
+		modelCN.addColumn("BHXH");
+		modelCN.addColumn("BHYT");
+		modelCN.addColumn("BHTN");
+		modelCN.addColumn("Thuế TNCN");
+		modelCN.addColumn("Lương thực lãnh");
+		modelCN.addColumn("Mã CN");
 		
-		JScrollPane scrollPaneNV = new 	JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		JScrollPane scrollPaneCN = new 	JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 											JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPaneNV.setPreferredSize(new Dimension(400, 50));
-		pnTable.add(scrollPaneNV, BorderLayout.CENTER);
+		scrollPaneCN.setPreferredSize(new Dimension(400, 50));
+		pnTable.add(scrollPaneCN, BorderLayout.CENTER);
 	}
 	
 	
@@ -400,25 +382,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	
 	// tải dữ liệu lên bảng lương NV
 	public void layDuLieuLuong() {
-		dao_luongNV = new DAO_LuongNhanVienHanhChinh();
-		listLuongNV = dao_luongNV.getDanhSachLuongNhanVien();
-		modelNV.setRowCount(0);
-		int i = 1;
-		DecimalFormat df = new DecimalFormat("##,###00,000");
 		
-		for (LuongNhanVienHanhChinh luongNV : listLuongNV) {
-			Object[] rowData = {
-					i++,
-					luongNV.getMaBangLuongHC(),
-					luongNV.getNhanVien().getMaNV(),
-					df.format(luongNV.getLuongChinh()),
-					df.format(luongNV.getTienPhuCapTrongThang()),
-					df.format(luongNV.getCacKhoanTruVaoLuongNV()),
-					df.format(luongNV.getTienTamUng()),
-					df.format(luongNV.getLuongThucLanh())
-			};
-			modelNV.addRow(rowData);
-		}
 	}
 	
 	/*
@@ -437,7 +401,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 				luongNV.getLuongThucLanh()
 				
 		};
-		modelNV.addRow(rowData);
+		modelCN.addRow(rowData);
 		JOptionPane.showMessageDialog(this, "Thêm thành công!");
 		
 		return true;
@@ -456,22 +420,22 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
             try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(file + ".csv"), StandardCharsets.UTF_8);
                  BufferedWriter bwrite = new BufferedWriter(out)) {
 
-                DefaultTableModel modelNV = (DefaultTableModel) table.getModel();
+                DefaultTableModel modelCN = (DefaultTableModel) table.getModel();
 
                 // Ten Cot
-                for (int j = 0; j < modelNV.getColumnCount(); j++) {
-                    bwrite.write(modelNV.getColumnName(j));
-                    if (j < modelNV.getColumnCount() - 1) {
+                for (int j = 0; j < modelCN.getColumnCount(); j++) {
+                    bwrite.write(modelCN.getColumnName(j));
+                    if (j < modelCN.getColumnCount() - 1) {
                         bwrite.write(","); // Phân tách giữa các cột
                     }
                 }
                 bwrite.write("\n");
 
                 // Lay du lieu dong
-                for (int j = 0; j < modelNV.getRowCount(); j++) {
-                    for (int k = 0; k < modelNV.getColumnCount(); k++) {
-                        bwrite.write(modelNV.getValueAt(j, k).toString());
-                        if (k < modelNV.getColumnCount() - 1) {
+                for (int j = 0; j < modelCN.getRowCount(); j++) {
+                    for (int k = 0; k < modelCN.getColumnCount(); k++) {
+                        bwrite.write(modelCN.getValueAt(j, k).toString());
+                        if (k < modelCN.getColumnCount() - 1) {
                             bwrite.write(","); // Phân tách giữa các cột
                         }
                     }
@@ -491,8 +455,8 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		int selectedRow = tableNV.getSelectedRow();
 		
 		if (selectedRow >= 0) {
-			txtTienTamUng.setText(modelNV.getValueAt(selectedRow, 6).toString());
-			cbMaCN.setSelectedItem(modelNV.getValueAt(selectedRow, 2).toString());
+			txtTienTamUng.setText(modelCN.getValueAt(selectedRow, 6).toString());
+			cbMaCN.setSelectedItem(modelCN.getValueAt(selectedRow, 2).toString());
 		}
 	}
 	
