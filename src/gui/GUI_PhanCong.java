@@ -293,7 +293,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		
 		Box b5 = Box.createHorizontalBox();
 		pnInput.add(b5);
-		btnLuu = new JButton(icon.iconTim);
+		btnLuu = new JButton(icon.iconLuu);
 		btnLuu.setText("Lưu");
 		btnLuu.setBackground(new Color(0, 153, 204));
 		btnLuu.setForeground(Color.WHITE);
@@ -432,8 +432,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		
 		if(rowPC != -1){
 			btnXoa.setEnabled(true);
-			cbMaCD.setEnabled(false);
-			cbMaSP.setEnabled(false);
+			//cbMaCD.setEnabled(false);
+			//cbMaSP.setEnabled(false);
 			txtMaCN.setText(modelPhanCong.getValueAt(rowPC, 0).toString());
 			txtTenCN.setText(modelPhanCong.getValueAt(rowPC, 1).toString());
 			cbMaSP.setSelectedItem(modelPhanCong.getValueAt(rowPC, 2));
