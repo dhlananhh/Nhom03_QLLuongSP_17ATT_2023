@@ -72,6 +72,8 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 	private DAO_CongNhan congNhan_dao = new DAO_CongNhan();
 	private Component horizontalStrut;
 	private JButton btnTaiLai;
+	private Icon icon = new Icon();
+	
 	public GUI_BangChamCong() throws SQLException{
 		ConnectDB.getInstance().connect();;
 		setTitle("Bảng chấm công");
@@ -142,7 +144,7 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
                     Instant instant = chooserNgay.getDate().toInstant();
                     LocalDate day = instant.atZone(ZoneId.systemDefault()).toLocalDate();
                     if(!day.isEqual(LocalDate.now()) ) {
-                    	JOptionPane.showMessageDialog(null, "Lưu ý: bạn không thể chỉnh sửa danh sách phân công của ngày này!");
+                    	JOptionPane.showMessageDialog(null, "Lưu ý: bạn không thể chấm công cho ngày này!");
                     	btnLuu.setEnabled(false);
                     	tableCC.setEnabled(false);
                     }else {
@@ -160,7 +162,8 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
         cbLoc.addItem("Mã sản phẩm");
         cbLoc.addItem("Mã công đoạn");
         b1.add(Box.createHorizontalStrut(10));
-        b1.add(btnLoc = new JButton("Lọc"));
+        b1.add(btnLoc = new JButton(icon.iconTim));
+        btnLoc.setText("Lọc");
         b1.add(Box.createHorizontalStrut(10));
         b1.add(txtLoc = new JTextField(5));
         b1.add(Box.createHorizontalStrut(10));
@@ -217,12 +220,14 @@ public class GUI_BangChamCong extends JFrame implements ActionListener, MouseLis
 		spinSLHT.setValue(0);
         c4.add(spinSLHT);
         
-        btnTaiLai = new JButton("Tải lại");
+        btnTaiLai = new JButton(icon.iconTaiLai);
+        btnTaiLai.setText("Tải lại");
         btnTaiLai.setBackground(Color.green);
         c5.add(btnTaiLai);
         
         c5.add(Box.createHorizontalStrut(350));
-        c5.add(btnLuu = new JButton("Lưu"));
+        c5.add(btnLuu = new JButton(icon.iconLuu));
+        btnLuu.setText("Lưu");
         btnLuu.setEnabled(false);
         btnLuu.setBackground(new Color(0, 153, 204));
         btnLuu.setForeground(Color.WHITE);

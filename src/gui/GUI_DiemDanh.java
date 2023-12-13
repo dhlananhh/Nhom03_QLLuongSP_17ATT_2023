@@ -78,6 +78,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener, ActionListene
 	private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private JTextField txtTenPB;
 	private JButton btnTaiLai;
+	private Icon icon = new Icon();
 	private boolean isloadBang = true;
 	/**
 	 * Launch the application.
@@ -136,7 +137,8 @@ public class GUI_DiemDanh extends JFrame implements MouseListener, ActionListene
 		Component horizontalStrut = Box.createHorizontalStrut(800);
 		pnNorth.add(horizontalStrut);
 		
-		btnTaiLai = new JButton("Tải lại");
+		btnTaiLai = new JButton(icon.iconTaiLai);
+		btnTaiLai.setText("Tải lại");
 		pnNorth.add(btnTaiLai);
 		
 		Component horizontalStrut_3 = Box.createHorizontalStrut(100);
@@ -149,7 +151,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener, ActionListene
 		
 		Box b1 = Box.createVerticalBox();
 		pnCenter.add(b1);
-		b1.add(Box.createVerticalStrut(30));
+		b1.add(Box.createVerticalStrut(20));
 		
 		Box b3 = Box.createHorizontalBox();
 		b3.add(Box.createHorizontalStrut(200));
@@ -173,7 +175,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener, ActionListene
 		b1.add(Box.createVerticalStrut(20));
 		Box b2 = Box.createVerticalBox();
 		pnCenter.add(b2);
-		b2.add(Box.createVerticalStrut(30));
+		b2.add(Box.createVerticalStrut(20));
 		Box b4 = Box.createHorizontalBox();
 		
 		JLabel lblNewLabel = new JLabel("Mã nhân viên:    ");

@@ -56,6 +56,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 	private int soLuongSP;
 	private int soLuongCD;
 	private Map<String, Boolean> daNhap = new HashMap<>();
+	private Icon icon = new Icon();
 	private Font BVNPro;
 	public GUI_QuanLySanPham() {
 		setTitle("Quản lý sản phẩm");
@@ -84,7 +85,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		//panel
 		pnContent = new JPanel();
 		pnContent.setLayout(new BorderLayout());
-		add(pnContent);
+		getContentPane().add(pnContent);
 		
 		JPanel pnTop = new JPanel();
 		pnTop.setBackground(new Color(0, 102, 204));
@@ -100,6 +101,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		pnCenter.setBackground(new Color(245, 251, 255));
 		
 		JPanel pnBot = new JPanel();
+		pnBot.setPreferredSize(new Dimension(10, 250));
 		pnContent.add(pnBot, BorderLayout.SOUTH);
 		pnBot.setBackground(new Color(245, 251, 255));
 		pnBot.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
@@ -110,7 +112,8 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		b2 = Box.createHorizontalBox();
 		//b1
 		b1.add(Box.createHorizontalStrut(700));
-		b1.add(btnLoc = new JButton("Lọc"));
+		b1.add(btnLoc = new JButton(icon.iconTim));
+		btnLoc.setText("Lọc");
 		b1.add(Box.createHorizontalStrut(10));
 		b1.add(cbLoc = new JComboBox<String>());
 		cbLoc.addItem("Mã sản phẩm");
@@ -174,9 +177,10 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		b3_5.add(txtGiaThanh = new JTextField(15));
 		b3_5.add(Box.createHorizontalStrut(480));
 		
-		b3_6.add(btnThem = new JButton("Thêm"));
+		b3_6.add(btnThem = new JButton(icon.iconThem));
+		btnThem.setText("Thêm");
 		b3_6.add(Box.createHorizontalStrut(50));
-		b3_6.add(btnSua = new JButton("Sửa"));
+		b3_6.add(btnSua = new JButton(icon.iconSua));
 		b3_6.add(Box.createHorizontalStrut(50));
 		b3_6.add(btnTaiLai = new JButton("Tải lại"));
 		b3_6.add(Box.createHorizontalStrut(50));
