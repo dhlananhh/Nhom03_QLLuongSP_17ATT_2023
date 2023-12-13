@@ -221,6 +221,7 @@ public class LuongNhanVienHanhChinh {
 	}
 	
 	
+	// tính thuế TNCN
 	public double tinhThueTNCN() {
 		// tính thuế thu nhập thực tế khi đã trừ tiền bảo hiểm bắt buộc
 		double thuNhapThucTe = getLuongChinh() - getBaoHiemXaHoi() - getBaoHiemYTe() - getBaoHiemThatNghiep();
