@@ -43,8 +43,18 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
@@ -370,9 +380,6 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	}
 	
 	
-	
-	
-	
 	// lấy data vô combobox phòng ban
 	public void getDataIntoCombobox() {
 		try {
@@ -427,6 +434,93 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	}
 	*/
 	
+	
+	public void exportXLSX (JTable table) {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Chọn nơi lưu tệp Excel");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Tệp Excel (.xls)", "xls");
+		fileChooser.setFileFilter(filter);
+
+		int userSelection = fileChooser.showSaveDialog(null);
+
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			try {
+				File fileToSave = fileChooser.getSelectedFile();
+				String filePath = fileToSave.getAbsolutePath();
+				if (fileToSave.exists()) {
+					int response = JOptionPane.showConfirmDialog(null, "Tệp đã tồn tại. Bạn có muốn ghi đè không?",
+							"Xác nhận ghi đè", JOptionPane.YES_NO_OPTION);
+
+					if (response != JOptionPane.YES_OPTION) {
+						return;
+					}
+				}
+				if (!filePath.endsWith(".xls")) {
+					filePath += ".xls";
+				}
+
+				Workbook workbook = new HSSFWorkbook();
+				Sheet sheet = workbook.createSheet("DanhSachNhanVien");
+
+				org.apache.poi.ss.usermodel.Font titleFont = sheet.getWorkbook().createFont();
+				titleFont.setBold(true);
+				titleFont.setFontHeightInPoints((short) 16);
+
+				CellStyle titleCellStyle = sheet.getWorkbook().createCellStyle();
+				titleCellStyle.setFont(titleFont);
+				titleCellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+				Row titleRow = sheet.createRow(0);
+
+				Cell titleCell = titleRow.createCell(0);
+				int nam = Integer.parseInt(cbLocNam.getSelectedItem().toString());
+				int thang = Integer.parseInt(cbLocThang.getSelectedItem().toString());
+				String txt = "Danh sách lương nhân viên Tháng " + thang + " Năm " + nam;
+
+				titleCell.setCellValue(txt);
+				titleCell.setCellStyle(titleCellStyle);
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, tableCN.getColumnCount() - 1));
+
+				Row headerRow = sheet.createRow(1);
+				for (int col = 0; col < tableCN.getColumnCount(); col++) {
+					Cell cell = headerRow.createCell(col);
+					cell.setCellValue(tableCN.getColumnName(col));
+					sheet.autoSizeColumn(col);
+				}
+
+				for (int row = 0; row < tableCN.getRowCount(); row++) {
+					Row dataRow = sheet.createRow(row + 2);
+					for (int col = 0; col < tableCN.getColumnCount(); col++) {
+						Cell cell = dataRow.createCell(col);
+						Object cellValue = tableCN.getValueAt(row, col);
+						if (cellValue != null) {
+							if (cellValue instanceof String) {
+								cell.setCellValue((String) cellValue);
+							} else if (cellValue instanceof Number) {
+								cell.setCellValue(((Number) cellValue).doubleValue());
+							} else {
+								cell.setCellValue(cellValue.toString());
+							}
+						}
+					}
+				}
+
+				for (int col = 0; col < tableCN.getColumnCount(); col++) {
+					sheet.autoSizeColumn(col);
+				}
+
+				try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+					workbook.write(fileOut);
+					JOptionPane.showMessageDialog(null, "Tạo và lưu tệp Excel thành công!");
+				} catch (Exception e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Lỗi khi tạo và lưu tệp Excel!");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	
 	
@@ -582,8 +676,10 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
                 double tienTamUng = Double.parseDouble(txtTienTamUng.getText());
                 int row = tableCN.getSelectedRow();
                 String maLuong = modelCN.getValueAt(row, 2).toString();
+                double luongCu = Double.parseDouble(modelCN.getValueAt(row, 11).toString());
+                double tienCu = Double.parseDouble(modelCN.getValueAt(row, 6).toString());
                 LuongCongNhanSanXuat luongCN = new LuongCongNhanSanXuat(maLuong, tienTamUng);
-                dao_luongCNSX.capNhatLuong(luongCN);
+                dao_luongCNSX.capNhatLuong(luongCN, luongCu, tienCu);
                 modelCN.getDataVector().removeAllElements();
                 layDuLieuLuongCongNhan();
             }
