@@ -55,57 +55,6 @@ public class DAO_NhanVienHanhChinh {
 	}
 	
 	
-	
-	
-	public List<NhanVienHanhChinh> getDSNV() {
-		List<NhanVienHanhChinh> dsNhanVien = new ArrayList<NhanVienHanhChinh>();
-		
-		try {
-			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = 	"SELECT * FROM NhanVienHanhChinh \r\n" + 
-							"INNER JOIN PhongBan ON PhongBan.maPhongBan = NhanVienHanhChinh.maPhongBan \r\n" +
-							"INNER JOIN TaiKhoan ON TaiKhoan.tenTK = NhanVienHanhChinh.tenTK \r\n";
-			Statement statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(sql);
-			
-			while(rs.next()) {
-				NhanVienHanhChinh nhanVien = new NhanVienHanhChinh();
-				nhanVien.setMaNV(rs.getString(1));
-				nhanVien.setHoTenNV(rs.getString(2));
-				nhanVien.setGioiTinh(rs.getBoolean(3));
-				nhanVien.setNgaySinh(rs.getDate(4));
-				nhanVien.setDiaChi(rs.getString(5));
-				nhanVien.setCCCD(rs.getString(6));
-				nhanVien.setSDT(rs.getString(7));
-				nhanVien.setNgayVao(rs.getDate(8));
-				
-				DAO_PhongBan dao_PB = new DAO_PhongBan();
-				PhongBan phongBan = dao_PB.getPhongBanTheoMa(rs.getString(9));
-				nhanVien.setPhongBan(phongBan);
-				
-				nhanVien.setTrangThai(rs.getBoolean(10));
-				nhanVien.setBangCap(rs.getString(11));
-				nhanVien.setLuongCoBan(rs.getFloat(12));
-				nhanVien.setPhuCap(rs.getFloat(13));
-				nhanVien.setHeSoLuong(rs.getFloat(14));
-				
-				DAO_TaiKhoan dao_TK = new DAO_TaiKhoan();
-				TaiKhoan taiKhoan = dao_TK.layTKTheoTen(rs.getString(15));
-				nhanVien.setTaiKhoan(taiKhoan);
-				
-				nhanVien.setEmail(rs.getString(16));
-				
-				dsNhanVien.add(nhanVien);
-			}
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return dsNhanVien;
-	}
-	
-	
 	public boolean themMoiNhanVien (NhanVienHanhChinh nv) {
 		Connection con = ConnectDB.getInstance().getConnection();
 		

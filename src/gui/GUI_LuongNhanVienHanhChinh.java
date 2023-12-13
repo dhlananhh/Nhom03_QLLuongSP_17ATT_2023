@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -47,10 +48,17 @@ import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import connection.ConnectDB;
 import dao.DAO_LuongCongNhanSanXuat;
 import dao.DAO_LuongNhanVienHanhChinh;
 import dao.DAO_NhanVienHanhChinh;
+import entity.LuongCongNhanSanXuat;
 import entity.LuongNhanVienHanhChinh;
 import entity.NhanVienHanhChinh;
 
@@ -62,11 +70,11 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 	private JPanel pnTable;
 	private JLabel lblTieuDe, lblLocNam, lblLocThang, lblError;
 	private JLabel lblNgayTinhLuong, lblNam, lblThang, lblMaNV;
-	private JLabel lblSoNgayDiLam, lblSoNgayNghi, lblSoNghiPhep, lblTienTamUng;
+	private JLabel lblTienTamUng;
 	private JTextField txtNam, txtThang, txtTienTamUng;
 	private JDateChooser dcNgayTinhLuong;
-	private JTextField txtSoNgayDiLam, txtSoNgayNghi, txtSoNghiPhep;
-	private JButton btnThem, btnSua, btnLoc, btnTimKiem, btnXuatExcel, btnInPDF;
+	private JButton btnSua, btnLoc, btnTimKiem;
+	private JButton btnXuatExcel, btnInPDF, btnLamMoi;
 	private JComboBox cbMaNV;
 	private JComboBox cbLocNam, cbLocThang;
 	private Font BVNPro;
@@ -74,6 +82,7 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 	private JTextField txtTimKiem;
 	private JTable tableNV;
 	private DefaultTableModel modelNV;
+	private boolean chinhSua = true;
 	
 	private DAO_LuongNhanVienHanhChinh dao_luongNV;
 	private List<LuongNhanVienHanhChinh> listLuongNV = new ArrayList<LuongNhanVienHanhChinh>();
@@ -112,7 +121,7 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		//create new color
 		Color headerColor = new Color(0, 102, 204);
 		Color bgColor = new Color(245, 251, 255);
-		Color buttonColor = new Color(0, 153, 204);
+		Color buttonColor = new Color(0, 133, 204);
 		
 		pnContent = new JPanel();
 		pnContent.setLayout(new BorderLayout());
@@ -137,7 +146,7 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		
 		lblNgayTinhLuong = new JLabel("Ngày tính lương: ");
 		dcNgayTinhLuong = new JDateChooser();
-		dcNgayTinhLuong.getCalendarButton().setToolTipText("Chọn ngày vào");
+		dcNgayTinhLuong.getCalendarButton().setToolTipText("Chọn ngày: ");
 		dcNgayTinhLuong.getCalendarButton().setPreferredSize(new Dimension(30, 24));
 		dcNgayTinhLuong.getCalendarButton().setBackground(Color.WHITE);
 		dcNgayTinhLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
@@ -154,42 +163,27 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		cbMaNV = new JComboBox<>();
 		cbMaNV.addItem("---Chọn---");
 		
-		lblSoNgayDiLam = new JLabel("Số ngày đi làm: ");
-		txtSoNgayDiLam = new JTextField();
-		
-		lblSoNgayNghi = new JLabel("Số ngày nghỉ: ");
-		txtSoNgayNghi = new JTextField();
-		
-		lblSoNghiPhep = new JLabel("Số ngày nghỉ có phép: ");
-		txtSoNghiPhep = new JTextField();
-		
 		lblTienTamUng = new JLabel("Tiền tạm ứng: ");
-		txtTienTamUng = new JTextField();
+		txtTienTamUng = new JTextField(10);
 		
-		lblNgayTinhLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
- 		lblThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblMaNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		cbMaNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblSoNgayDiLam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtSoNgayDiLam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblSoNgayNghi.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtSoNgayNghi.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblSoNghiPhep.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtSoNghiPhep.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblNgayTinhLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		lblNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		txtNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+ 		lblThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		txtThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		lblMaNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		cbMaNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		lblTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		txtTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		
 		Box a = Box.createVerticalBox();
 		Box b = Box.createVerticalBox();
 		Box c = Box.createVerticalBox();
 		
 		pnThongTin.add(a);
-		pnThongTin.add(Box.createHorizontalStrut(30));
+		pnThongTin.add(Box.createHorizontalStrut(100));
 		pnThongTin.add(b);
-		pnThongTin.add(Box.createHorizontalStrut(30));
+		pnThongTin.add(Box.createHorizontalStrut(100));
 		pnThongTin.add(c);
 		
 		Box a1 = Box.createHorizontalBox();
@@ -228,13 +222,6 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		Box c2 = Box.createHorizontalBox();
 		Box c3 = Box.createHorizontalBox();
 		
-		c1.add(lblSoNgayDiLam);
-		c1.add(txtSoNgayDiLam);
-		c2.add(lblSoNgayNghi);
-		c2.add(txtSoNgayNghi);
-		c3.add(lblSoNghiPhep);
-		c3.add(txtSoNghiPhep);
-		
 		c.add(c1);
 		c.add(Box.createVerticalStrut(10));
 		c.add(c2);
@@ -254,39 +241,43 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		Box t1 = Box.createHorizontalBox();
 		
 		lblLocNam = new JLabel("Năm: ");
-		lblLocNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblLocNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		String[] years = {"0",
 	            "2020", "2021", "2022", "2023", "2024"
 	        };
 		cbLocNam = new JComboBox<>(years);
-		cbLocNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		cbLocNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		
 		lblLocThang = new JLabel("Tháng: ");
-		lblLocThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblLocThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		String[] months = {"0",
 	            "1", "2", "3", "4", "5", "6",
 	            "7", "8", "9", "10", "11", "12"
 	        };
 		cbLocThang = new JComboBox<>(months);
-		cbLocThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		cbLocThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		
 		btnLoc = new JButton("Lọc");
-		btnThem = new JButton("Thêm");
 		btnSua = new JButton("Sửa");
 		btnXuatExcel = new JButton("Xuất Excel");
+		btnLamMoi = new JButton("Làm mới");
+		btnInPDF = new JButton("In PDF");
 		
-		btnLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnLoc.setBackground(buttonColor);
 		btnLoc.setForeground(Color.WHITE);
-		btnThem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		btnThem.setBackground(buttonColor);
-		btnThem.setForeground(Color.WHITE);
-		btnSua.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnSua.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnSua.setBackground(buttonColor);
 		btnSua.setForeground(Color.WHITE);
-		btnXuatExcel.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnXuatExcel.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnXuatExcel.setBackground(buttonColor);
 		btnXuatExcel.setForeground(Color.WHITE);
+		btnLamMoi.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		btnLamMoi.setBackground(buttonColor);
+		btnLamMoi.setForeground(Color.WHITE);
+		btnInPDF.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		btnInPDF.setBackground(buttonColor);
+		btnInPDF.setForeground(Color.WHITE);
 		
 		t1.add(lblLocNam);
 		t1.add(Box.createHorizontalStrut(10));
@@ -298,12 +289,13 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		t1.add(Box.createHorizontalStrut(20));
 		t1.add(btnLoc);
 		t1.add(Box.createHorizontalStrut(10));
-		t1.add(btnThem);
-		t1.add(Box.createHorizontalStrut(10));
 		t1.add(btnSua);
 		t1.add(Box.createHorizontalStrut(10));
+		t1.add(btnLamMoi);
 		t1.add(Box.createHorizontalStrut(10));
+		t1.add(btnInPDF);
 		t1.add(Box.createHorizontalStrut(10));
+//		t1.add(Box.createHorizontalStrut(10));
 		t1.add(btnXuatExcel);
 		
 		t.add(t1);
@@ -321,14 +313,14 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		
 		JLabel lblTieuDeBang = new JLabel("Bảng lương nhân viên hành chính");
 		pnTieuDeBang.add(lblTieuDeBang);
-		lblTieuDeBang.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		lblTieuDeBang.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
 		
-		lblTimKiem = new JLabel(" | Tìm kiếm theo tên nhân viên: ");
-		lblTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblTimKiem = new JLabel(" | Tìm kiếm theo mã nhân viên: ");
+		lblTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		txtTimKiem = new JTextField();
 		
 		btnTimKiem = new JButton("Tìm kiếm");
-		btnTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnTimKiem.setBackground(buttonColor);
 		btnTimKiem.setForeground(Color.WHITE);
 		
@@ -349,9 +341,11 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		Container container = getContentPane();
 		container.add(pnContent);
 		
-		btnThem.addActionListener(this);
 		btnLoc.addActionListener(this);
 		btnSua.addActionListener(this);
+		btnLamMoi.addActionListener(this);
+		btnTimKiem.addActionListener(this);
+		btnInPDF.addActionListener(this);
 		btnXuatExcel.addActionListener(this);
 		tableNV.addMouseListener(this);
 	}
@@ -363,22 +357,24 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		tableNV.setRowHeight(25);
 		
 		modelNV.addColumn("STT");
+		modelNV.addColumn("Ngày tính lương");
 		modelNV.addColumn("Mã lương NV");
-		modelNV.addColumn("Mã NV");
+		modelNV.addColumn("Năm");
+		modelNV.addColumn("Tháng");
 		modelNV.addColumn("Lương chính");
-		modelNV.addColumn("Tiền PC trong tháng");
-		modelNV.addColumn("Các khoản trừ vào lương");
 		modelNV.addColumn("Tiền tạm ứng");
+		modelNV.addColumn("BHXH");
+		modelNV.addColumn("BHYT");
+		modelNV.addColumn("BHTN");
+		modelNV.addColumn("Thuế TNCN");
 		modelNV.addColumn("Lương thực lãnh");
+		modelNV.addColumn("Mã NV");
 		
 		JScrollPane scrollPaneNV = new 	JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 											JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPaneNV.setPreferredSize(new Dimension(400, 50));
 		pnTable.add(scrollPaneNV, BorderLayout.CENTER);
 	}
-	
-	
-	
 	
 	
 	// lấy data vô combobox phòng ban
@@ -409,13 +405,18 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		for (LuongNhanVienHanhChinh luongNV : listLuongNV) {
 			Object[] rowData = {
 					i++,
+					luongNV.getNgayTinhLuong(),
 					luongNV.getMaBangLuongHC(),
-					luongNV.getNhanVien().getMaNV(),
+					luongNV.getNam(),
+					luongNV.getThang(),
 					df.format(luongNV.getLuongChinh()),
-					df.format(luongNV.getTienPhuCapTrongThang()),
-					df.format(luongNV.getCacKhoanTruVaoLuongNV()),
 					df.format(luongNV.getTienTamUng()),
-					df.format(luongNV.getLuongThucLanh())
+					df.format(luongNV.getBaoHiemXaHoi()),
+					df.format(luongNV.getBaoHiemYTe()),
+					df.format(luongNV.getBaoHiemThatNghiep()),
+					df.format(luongNV.getThueTNCN()),
+					df.format(luongNV.getLuongThucLanh()),
+					luongNV.getNhanVien().getMaNV()
 			};
 			modelNV.addRow(rowData);
 		}
@@ -445,6 +446,106 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 	*/
 	
 	
+	public void locDuLieuLuongNV() {
+		String strNam = (String) cbLocNam.getSelectedItem();
+		String strThang = (String) cbLocThang.getSelectedItem();
+		int nam = Integer.parseInt(strNam);
+		int thang = Integer.parseInt(strThang);
+		
+		int i = 1;
+		DecimalFormat df = new DecimalFormat("##,###00,000");
+		
+		listLuongNV = new ArrayList<LuongNhanVienHanhChinh>();
+		modelNV.getDataVector().removeAllElements();
+		
+		if (thang == 0 && nam != 0) {
+			listLuongNV = dao_luongNV.timLuongNVTheoNam(nam);
+		} else if (nam == 0 && thang != 0) {
+			listLuongNV = dao_luongNV.timLuongNVTheoThang(thang);
+		} else {
+			listLuongNV = dao_luongNV.timLuongNVTheoNamThang(nam, thang);
+		}
+		
+		for (LuongNhanVienHanhChinh luongNV : listLuongNV) {
+			Object[] rowData = {
+					i++,
+					luongNV.getNgayTinhLuong(),
+					luongNV.getMaBangLuongHC(),
+					luongNV.getNam(),
+					luongNV.getThang(),
+					df.format(luongNV.getLuongChinh()),
+					df.format(luongNV.getTienTamUng()),
+					df.format(luongNV.getBaoHiemXaHoi()),
+					df.format(luongNV.getBaoHiemYTe()),
+					df.format(luongNV.getBaoHiemThatNghiep()),
+					df.format(luongNV.getThueTNCN()),
+					df.format(luongNV.getLuongThucLanh()),
+					luongNV.getNhanVien().getMaNV()
+			};
+			modelNV.addRow(rowData);
+		}
+	}
+	
+	
+	public void timLuongTheoMaNV() {
+		String maNV = txtTimKiem.getText();
+		listLuongNV = dao_luongNV.timLuongTheoMaNV(maNV);
+		int i = 1;
+		DecimalFormat df = new DecimalFormat("##,###00,000");
+		modelNV.getDataVector().removeAllElements();
+		
+		for (LuongNhanVienHanhChinh luongNV : listLuongNV) {
+			Object[] rowData = {
+					i++,
+					luongNV.getNgayTinhLuong(),
+					luongNV.getMaBangLuongHC(),
+					luongNV.getNam(),
+					luongNV.getThang(),
+					df.format(luongNV.getLuongChinh()),
+					df.format(luongNV.getTienTamUng()),
+					df.format(luongNV.getBaoHiemXaHoi()),
+					df.format(luongNV.getBaoHiemYTe()),
+					df.format(luongNV.getBaoHiemThatNghiep()),
+					df.format(luongNV.getThueTNCN()),
+					df.format(luongNV.getLuongThucLanh()),
+					luongNV.getNhanVien().getMaNV()
+			};
+			modelNV.addRow(rowData);
+		}
+	}
+	
+	/*
+	// Hàm xuất PDF phiếu lương nhân viên
+	public void inPDF() {
+		List<LuongNhanVienHanhChinh> dsLuongNVDuocChon = new ArrayList<LuongNhanVienHanhChinh>();
+		int selectedRow = tableNV.getSelectedRow();
+		
+		// Lấy tên file từ text field
+        String tenFile = txtTimKiem.getText();
+
+        // Tạo file PDF
+        Document document = new Document(PageSize.A4);
+        PdfWriter writer = null;
+        try {
+            writer = PdfWriter.getInstance(document, new FileOutputStream(tenFile));
+        } catch (DocumentException | IOException e1) {
+            e1.printStackTrace();
+        }
+
+        // Thêm nội dung vào file PDF
+        document.open();
+        document.add(new Paragraph("Nội thất Hoàng Gia Phát"));
+        document.add(new Paragraph("12 Nguyễn Văn Bảo, phường 4, quận Gò Vấp, Thành phố Hồ Chí Minh"));
+        document.add(new Paragraph("PHIẾU LƯƠNG NHÂN VIÊN"));
+        document.add(new Paragraph("Mã phiếu lương: " + dsLuongNVDuocChon.get(selectedRow).get("maPhieuLuong")));
+        document.add(new Paragraph("Mã nhân viên: " + dsLuongNVDuocChon.get(selectedRow).get("maNhanVien")));
+        document.add(new Paragraph("Họ tên nhân viên: " + dsLuongNVDuocChon.get(selectedRow).get("hoTenNhanVien")));
+        document.add(new Paragraph("Số ngày công tính lương: " + dsLuongNVDuocChon.get(selectedRow).get("soNgayCongTinhLuong")));
+        document.add(new Paragraph("Số ngày công thực tế: " + dsLuongNVDuocChon.get(selectedRow).get("soNgayCongThucTe")));
+        document.add(new Paragraph("Số ngày nghỉ: " + dsLuongNVDuocChon.get(selectedRow).get("soNgayNghi")));
+        document.add(new Paragraph("Số ngày nghỉ có phép: " + dsLuongNVDuocChon.get(hangDuoc
+	}
+	*/
 	
 	
 	// Hàm xuất file CSV (đuôi .csv)
@@ -492,7 +593,10 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		
 		if (selectedRow >= 0) {
 			txtTienTamUng.setText(modelNV.getValueAt(selectedRow, 6).toString());
-			cbMaNV.setSelectedItem(modelNV.getValueAt(selectedRow, 2).toString());
+			cbMaNV.setSelectedItem(modelNV.getValueAt(selectedRow, 12).toString());
+			txtNam.setText(modelNV.getValueAt(selectedRow, 3).toString());
+			txtThang.setText(modelNV.getValueAt(selectedRow, 4).toString());
+			dcNgayTinhLuong.setDate((Date) modelNV.getValueAt(selectedRow, 1));
 		}
 	}
 	
@@ -540,9 +644,39 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 //			exportExcel(tableNV);
 			exportCSV(tableNV);
 		}
-		else if (o.equals(btnThem)) {
-//			themDuLieuLuongNV();
-//			layDuLieuLuong();
+		else if (o.equals(btnLamMoi)) {
+			modelNV.getDataVector().removeAllElements();
+			layDuLieuLuong();
+		}
+		else if (o.equals(btnLoc)) {
+			locDuLieuLuongNV();
+		}
+		else if (o.equals(btnTimKiem)) {
+			timLuongTheoMaNV();
+		}
+		else if (o.equals(btnInPDF)) {
+//			inPDF();
+		}
+		else if (o.equals(btnSua)) {
+			if (chinhSua) {
+                btnSua.setText("Lưu");
+                txtNam.setText("");
+                txtThang.setText("");
+                txtNam.setEditable(false);
+                txtThang.setEditable(false);
+                txtTienTamUng.setText("");
+            } else {
+                btnSua.setText("Sửa");
+                double tienTamUng = Double.parseDouble(txtTienTamUng.getText());
+                int row = tableNV.getSelectedRow();
+                String maLuong = modelNV.getValueAt(row, 2).toString();
+//                LuongCongNhanSanXuat luongCN = new LuongCongNhanSanXuat(maLuong, tienTamUng);
+                LuongNhanVienHanhChinh luongNV = new LuongNhanVienHanhChinh(maLuong, tienTamUng);
+                dao_luongNV.updateLuongNhanVien(luongNV);
+                modelNV.getDataVector().removeAllElements();
+                layDuLieuLuong();
+            }
+            chinhSua = !chinhSua;
 		}
 	}
 
