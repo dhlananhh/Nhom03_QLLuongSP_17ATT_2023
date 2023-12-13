@@ -44,6 +44,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
@@ -68,13 +69,14 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	private JLabel lblTienTamUng;
 	private JTextField txtNam, txtThang, txtTienTamUng;
 	private JDateChooser dcNgayTinhLuong;
-	private JButton btnThem, btnSua, btnLoc, btnTimKiem, btnXuatExcel;
+	private JButton btnThem, btnSua, btnLoc, btnTimKiem;
+	private JButton btnXuatExcel, btnInPDF, btnLamMoi;
 	private JComboBox cbMaCN;
 	private JComboBox cbLocNam, cbLocThang;
 	private Font BVNPro;
 	private JLabel lblTimKiem;
 	private JTextField txtTimKiem;
-	private JTable tableNV;
+	private JTable tableCN;
 	private DefaultTableModel modelCN;
 	private int soLuongBangLuong;
 	private boolean chinhSua = true;
@@ -112,7 +114,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		//create new color
 		Color headerColor = new Color(0, 102, 204);
 		Color bgColor = new Color(245, 251, 255);
-		Color buttonColor = new Color(0, 153, 204);
+		Color buttonColor = new Color(0, 133, 204);
 		
 		pnContent = new JPanel();
 		pnContent.setLayout(new BorderLayout());
@@ -137,7 +139,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		
 		lblNgayTinhLuong = new JLabel("Ngày tính lương: ");
 		dcNgayTinhLuong = new JDateChooser();
-		dcNgayTinhLuong.getCalendarButton().setToolTipText("Chọn ngày vào");
+		dcNgayTinhLuong.getCalendarButton().setToolTipText("Chọn ngày: ");
 		dcNgayTinhLuong.getCalendarButton().setPreferredSize(new Dimension(30, 24));
 		dcNgayTinhLuong.getCalendarButton().setBackground(Color.WHITE);
 		dcNgayTinhLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
@@ -155,17 +157,17 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		cbMaCN.addItem("---Chọn---");
 		
 		lblTienTamUng = new JLabel("Tiền tạm ứng: ");
-		txtTienTamUng = new JTextField();
+		txtTienTamUng = new JTextField(10);
 		
-		lblNgayTinhLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
- 		lblThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblMaCN.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		cbMaCN.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		lblTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
-		txtTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblNgayTinhLuong.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		lblNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		txtNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+ 		lblThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		txtThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		lblMaCN.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		cbMaCN.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		lblTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		txtTienTamUng.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		
 		Box a = Box.createVerticalBox();
 		Box b = Box.createVerticalBox();
@@ -232,39 +234,43 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		Box t1 = Box.createHorizontalBox();
 		
 		lblLocNam = new JLabel("Năm: ");
-		lblLocNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblLocNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		String[] years = {"0",
 	            "2020", "2021", "2022", "2023", "2024"
 	        };
 		cbLocNam = new JComboBox<>(years);
-		cbLocNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		cbLocNam.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		
 		lblLocThang = new JLabel("Tháng: ");
-		lblLocThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblLocThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		String[] months = {"0",
 	            "1", "2", "3", "4", "5", "6",
 	            "7", "8", "9", "10", "11", "12"
 	        };
 		cbLocThang = new JComboBox<>(months);
-		cbLocThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		cbLocThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		
 		btnLoc = new JButton("Lọc");
 		btnThem = new JButton("Thêm");
 		btnSua = new JButton("Sửa");
 		btnXuatExcel = new JButton("Xuất Excel");
+		btnLamMoi = new JButton("Làm mới");
 		
-		btnLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnLoc.setBackground(buttonColor);
 		btnLoc.setForeground(Color.WHITE);
-		btnThem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnThem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnThem.setBackground(buttonColor);
 		btnThem.setForeground(Color.WHITE);
-		btnSua.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnSua.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnSua.setBackground(buttonColor);
 		btnSua.setForeground(Color.WHITE);
-		btnXuatExcel.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnXuatExcel.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnXuatExcel.setBackground(buttonColor);
 		btnXuatExcel.setForeground(Color.WHITE);
+		btnLamMoi.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		btnLamMoi.setBackground(buttonColor);
+		btnLamMoi.setForeground(Color.WHITE);
 		
 		t1.add(lblLocNam);
 		t1.add(Box.createHorizontalStrut(10));
@@ -280,8 +286,9 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		t1.add(Box.createHorizontalStrut(10));
 		t1.add(btnSua);
 		t1.add(Box.createHorizontalStrut(10));
+		t1.add(btnLamMoi);
 		t1.add(Box.createHorizontalStrut(10));
-		t1.add(Box.createHorizontalStrut(10));
+//		t1.add(Box.createHorizontalStrut(10));
 		t1.add(btnXuatExcel);
 		
 		t.add(t1);
@@ -299,14 +306,14 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		
 		JLabel lblTieuDeBang = new JLabel("Bảng lương công nhân sản xuất");
 		pnTieuDeBang.add(lblTieuDeBang);
-		lblTieuDeBang.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 15));
+		lblTieuDeBang.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
 		
 		lblTimKiem = new JLabel(" | Tìm kiếm theo mã công nhân: ");
-		lblTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		lblTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		txtTimKiem = new JTextField();
 		
 		btnTimKiem = new JButton("Tìm kiếm");
-		btnTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 15));
+		btnTimKiem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnTimKiem.setBackground(buttonColor);
 		btnTimKiem.setForeground(Color.WHITE);
 		
@@ -315,7 +322,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		pnTieuDeBang.add(btnTimKiem);
 		
 		// tạo bảng chứa thông tin của NV
-		createTableNV();
+		createTableCN();
 		
 		// load bảng NV
 		layDuLieuLuongCongNhan();
@@ -331,15 +338,16 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		btnLoc.addActionListener(this);
 		btnSua.addActionListener(this);
 		btnXuatExcel.addActionListener(this);
+		btnLamMoi.addActionListener(this);
 		btnTimKiem.addActionListener(this);
-		tableNV.addMouseListener(this);
+		tableCN.addMouseListener(this);
 	}
 	
 	
-	public void createTableNV() {
+	public void createTableCN() {
 		modelCN = new DefaultTableModel();
-		tableNV = new JTable(modelCN);
-		tableNV.setRowHeight(25);
+		tableCN = new JTable(modelCN);
+		tableCN.setRowHeight(25);
 		
 		modelCN.addColumn("STT");
 		modelCN.addColumn("Ngày tính lương");
@@ -355,7 +363,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		modelCN.addColumn("Lương thực lãnh");
 		modelCN.addColumn("Mã CN");
 		
-		JScrollPane scrollPaneCN = new 	JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		JScrollPane scrollPaneCN = new 	JScrollPane(tableCN, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 											JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPaneCN.setPreferredSize(new Dimension(400, 50));
 		pnTable.add(scrollPaneCN, BorderLayout.CENTER);
@@ -388,7 +396,8 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		soLuongBangLuong = dsLuongCongNhanSanXuat.size();
 		int i = 1;
 		for (LuongCongNhanSanXuat luongCN : dsLuongCongNhanSanXuat) {
-			modelCN.addRow(new Object[] {i++, luongCN.getNgayTinhLuong(), luongCN.getMaBangLuongCN(), luongCN.getNam(),
+			modelCN.addRow(new Object[] {
+					i++, luongCN.getNgayTinhLuong(), luongCN.getMaBangLuongCN(), luongCN.getNam(),
 					luongCN.getThang(), luongCN.getLuongSanPham(), luongCN.getTamUng(), luongCN.getBaoHiemXaHoi(),
 					luongCN.getBaoHiemYTe(), luongCN.getBaoHiemThatNghiep(), luongCN.getThueTNCN(), luongCN.getLuongThucLanh(),
 					luongCN.getCongNhan().getMaCN()});
@@ -462,7 +471,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	
 	
 	public void hienThiDuLieuDuocChon() {
-		int selectedRow = tableNV.getSelectedRow();
+		int selectedRow = tableCN.getSelectedRow();
 		
 		if (selectedRow >= 0) {
 			txtTienTamUng.setText(modelCN.getValueAt(selectedRow, 6).toString());
@@ -513,12 +522,16 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		Object o = e.getSource();
 		
 		if (o.equals(btnXuatExcel)) {
-//			exportExcel(tableNV);
-			exportCSV(tableNV);
+//			exportExcel(tableCN);
+			exportCSV(tableCN);
 		}
 		if (o.equals(btnThem)) {
 //			themDuLieuLuongNV();
 //			layDuLieuLuong();
+		}
+		if (o.equals(btnLamMoi)) {
+			modelCN.getDataVector().removeAllElements();
+			layDuLieuLuongCongNhan();
 		}
 		if(o.equals(btnLoc)) {
 			String strThang = (String) cbLocThang.getSelectedItem();
@@ -567,7 +580,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
             } else {
                 btnSua.setText("Sửa");
                 double tienTamUng = Double.parseDouble(txtTienTamUng.getText());
-                int row = tableNV.getSelectedRow();
+                int row = tableCN.getSelectedRow();
                 String maLuong = modelCN.getValueAt(row, 2).toString();
                 LuongCongNhanSanXuat luongCN = new LuongCongNhanSanXuat(maLuong, tienTamUng);
                 dao_luongCNSX.capNhatLuong(luongCN);

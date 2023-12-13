@@ -9,12 +9,8 @@ public class LuongNhanVienHanhChinh {
 	private Date ngayTinhLuong;
 	private int nam;
 	private int thang;
-	private int soNgayDiLam;
-	private int soNgayNghi;
-	private int soNghiPhep;
 	// lương chính = (lương CB * hệ số lương) / 26 * số ngày đi làm
 	private double luongChinh;
-	private double tienPhuCapTrongThang;
 	private double tienTamUng;
 	private double baoHiemXaHoi;
 	private double baoHiemYTe;
@@ -32,23 +28,25 @@ public class LuongNhanVienHanhChinh {
 	public LuongNhanVienHanhChinh(String maBangLuongHC) {
 		this.maBangLuongHC = maBangLuongHC;
 	}
+	
+	
+	public LuongNhanVienHanhChinh (String maBangLuongHC, double tienTamUng) {
+		this.maBangLuongHC = maBangLuongHC;
+		this.tienTamUng = tienTamUng;
+	}
 
 
-	public LuongNhanVienHanhChinh (String maBangLuongHC, Date ngayTinhLuong, 
-			int nam, int thang, int soNgayDiLam, int soNgayNghi, int soNghiPhep, 
-			double tienTamUng, NhanVienHanhChinh nhanVien) {
+	public LuongNhanVienHanhChinh (String maBangLuongHC, 
+			Date ngayTinhLuong, int nam, int thang, double tienTamUng, 
+			NhanVienHanhChinh nhanVien) {
 		this.maBangLuongHC = maBangLuongHC;
 		this.ngayTinhLuong = ngayTinhLuong;
 		this.nam = nam;
 		this.thang = thang;
-		this.soNgayDiLam = soNgayDiLam;
-		this.soNgayNghi = soNgayNghi;
-		this.soNghiPhep = soNghiPhep;
 		this.tienTamUng = tienTamUng;
 		this.nhanVien = nhanVien;
 		
 		setLuongChinh();
-		setTienPhuCapTrongThang();
 		setBaoHiemXaHoi();
 		setBaoHiemYTe();
 		setBaoHiemThatNghiep();
@@ -57,19 +55,15 @@ public class LuongNhanVienHanhChinh {
 	}
 	
 
-	public LuongNhanVienHanhChinh(String maBangLuongHC, Date ngayTinhLuong, int nam, int thang, int soNgayDiLam,
-			int soNgayNghi, int soNghiPhep, double luongChinh, double tienPhuCapTrongThang, double tienTamUng,
-			double baoHiemXaHoi, double baoHiemYTe, double baoHiemThatNghiep, double thueTNCN, double luongThucLanh,
-			NhanVienHanhChinh nhanVien) {
+	public LuongNhanVienHanhChinh(String maBangLuongHC, Date ngayTinhLuong, int nam, int thang, 
+			double luongChinh, double tienTamUng,
+			double baoHiemXaHoi, double baoHiemYTe, double baoHiemThatNghiep, double thueTNCN, 
+			double luongThucLanh, NhanVienHanhChinh nhanVien) {
 		this.maBangLuongHC = maBangLuongHC;
 		this.ngayTinhLuong = ngayTinhLuong;
 		this.nam = nam;
 		this.thang = thang;
-		this.soNgayDiLam = soNgayDiLam;
-		this.soNgayNghi = soNgayNghi;
-		this.soNghiPhep = soNghiPhep;
 		this.luongChinh = luongChinh;
-		this.tienPhuCapTrongThang = tienPhuCapTrongThang;
 		this.tienTamUng = tienTamUng;
 		this.baoHiemXaHoi = baoHiemXaHoi;
 		this.baoHiemYTe = baoHiemYTe;
@@ -120,48 +114,6 @@ public class LuongNhanVienHanhChinh {
 	}
 
 
-	public int getSoNgayDiLam() {
-		return soNgayDiLam;
-	}
-
-
-	public void setSoNgayDiLam(int soNgayDiLam) throws Exception {
-		if (soNgayDiLam < 0)
-			throw new Exception("Số ngày đi làm không được nhỏ hơn 0");
-		else
-			this.soNgayDiLam = soNgayDiLam;
-		
-		setTienPhuCapTrongThang();
-	}
-
-
-	public int getSoNgayNghi() {
-		return soNgayNghi;
-	}
-
-
-	public void setSoNgayNghi(int soNgayNghi) throws Exception {
-		if (soNgayNghi < 0)
-			throw new Exception("Số ngày nghỉ không được nhỏ hơn 0");
-		else
-			this.soNgayNghi = soNgayNghi;
-	}
-
-
-	public int getSoNghiPhep() {
-		return soNghiPhep;
-	}
-
-
-	public void setSoNghiPhep(int soNghiPhep) throws Exception {
-		if (soNghiPhep > soNgayNghi)
-			throw new Exception("Số ngày nghỉ phép không được nhiều hơn số ngày nghỉ");
-		else if (soNghiPhep < 0)
-			throw new Exception("Số ngày nghỉ phép không được nhỏ hơn 0");
-		else
-			this.soNghiPhep = soNghiPhep;
-	}
-
 
 	public double getLuongChinh() {
 		return luongChinh;
@@ -169,17 +121,7 @@ public class LuongNhanVienHanhChinh {
 
 
 	public void setLuongChinh(){
-		this.luongChinh = (getNhanVien().getLuongCoBan() * getNhanVien().getHeSoLuong()) / 26 * soNgayDiLam;
-	}
-	
-
-	public double getTienPhuCapTrongThang() {
-		return tienPhuCapTrongThang;
-	}
-
-
-	public void setTienPhuCapTrongThang() {
-		this.tienPhuCapTrongThang = getNhanVien().getPhuCap() * soNgayDiLam;
+//		this.luongChinh = (getNhanVien().getLuongCoBan() * getNhanVien().getHeSoLuong()) / 26 * soNgayDiLam;
 	}
 
 
@@ -319,7 +261,7 @@ public class LuongNhanVienHanhChinh {
 
 
 	public void setLuongThucLanh() {
-		this.luongThucLanh = getLuongChinh() + getTienPhuCapTrongThang() - getTienTamUng() - getBaoHiemXaHoi() - getBaoHiemYTe() - getBaoHiemThatNghiep() - getThueTNCN();
+		this.luongThucLanh = getLuongChinh() - getTienTamUng() - getBaoHiemXaHoi() - getBaoHiemYTe() - getBaoHiemThatNghiep() - getThueTNCN();
 	}
 
 
@@ -365,11 +307,10 @@ public class LuongNhanVienHanhChinh {
 	@Override
 	public String toString() {
 		return "LuongNhanVienHanhChinh [maBangLuongHC=" + maBangLuongHC + ", ngayTinhLuong=" + ngayTinhLuong + ", nam="
-				+ nam + ", thang=" + thang + ", soNgayDiLam=" + soNgayDiLam + ", soNgayNghi=" + soNgayNghi
-				+ ", soNghiPhep=" + soNghiPhep + ", luongChinh=" + luongChinh + ", tienPhuCapTrongThang="
-				+ tienPhuCapTrongThang + ", tienTamUng=" + tienTamUng + ", baoHiemXaHoi=" + baoHiemXaHoi
-				+ ", baoHiemYTe=" + baoHiemYTe + ", baoHiemThatNghiep=" + baoHiemThatNghiep + ", thueTNCN=" + thueTNCN
-				+ ", luongThucLanh=" + luongThucLanh + ", nhanVien=" + nhanVien + "]";
+				+ nam + ", thang=" + thang + ", luongChinh=" + luongChinh + ", tienTamUng=" + tienTamUng
+				+ ", baoHiemXaHoi=" + baoHiemXaHoi + ", baoHiemYTe=" + baoHiemYTe + ", baoHiemThatNghiep="
+				+ baoHiemThatNghiep + ", thueTNCN=" + thueTNCN + ", luongThucLanh=" + luongThucLanh + ", nhanVien="
+				+ nhanVien + "]";
 	}
 
 }

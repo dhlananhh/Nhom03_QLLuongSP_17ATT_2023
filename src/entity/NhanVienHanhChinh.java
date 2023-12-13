@@ -32,8 +32,13 @@ public class NhanVienHanhChinh implements Serializable {
 		
 	}
 
+	
+	public NhanVienHanhChinh (String maNV) {
+		this.maNV = maNV;
+	}
+	
 
-	public NhanVienHanhChinh(String maNV, String hoTenNV) {
+	public NhanVienHanhChinh (String maNV, String hoTenNV) {
 		this.maNV = maNV;
 		this.hoTenNV = hoTenNV;
 	}
