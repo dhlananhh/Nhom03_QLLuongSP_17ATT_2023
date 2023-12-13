@@ -33,6 +33,22 @@ public class DAO_ChamCong {
 
 		return false;
 	}
+	public boolean suaPhanCong(ChamCong phanCong) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		try {
+			PreparedStatement ps = con.prepareStatement("update ChamCong set maCD = ?, chiTieu = ? where maCN = ? and ngayCham = ?");
+			ps.setString(1, phanCong.getMaCD());
+			ps.setInt(2, phanCong.getChiTieu());
+			ps.setString(3, phanCong.getMaCN());
+			ps.setDate(4, phanCong.getNgayCham());
+
+			return ps.executeUpdate() > 0;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return false;
+	}
 	public boolean chamCong(ChamCong o) throws SQLException {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();

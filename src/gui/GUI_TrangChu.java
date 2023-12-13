@@ -21,7 +21,7 @@ public class GUI_TrangChu extends javax.swing.JFrame {
         setIconImage(img);
 		initComponents();
 		showForm(new HomeForm().getParent());
-		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 				
 		menu1.setEvent(new MenuEvent() {
 			@Override

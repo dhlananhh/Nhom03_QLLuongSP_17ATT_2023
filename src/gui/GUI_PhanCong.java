@@ -293,8 +293,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		
 		Box b5 = Box.createHorizontalBox();
 		pnInput.add(b5);
-		btnLuu = new JButton(icon.iconLuu);
-		btnLuu.setText("Lưu");
+		btnLuu = new JButton(icon.iconThem);
+		btnLuu.setText("Thêm");
 		btnLuu.setBackground(new Color(0, 153, 204));
 		btnLuu.setForeground(Color.WHITE);
 		b5.add(btnLuu);
@@ -338,10 +338,13 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
 		if(o.equals(btnLuu)) {
-			CongDoan cd= congDoan_dao.getCongDoanTheoMa(cbMaCD.getSelectedItem().toString());
-            String maCDTruoc = String.format("%s%02d","CD",Integer.parseInt(cd.getMaCD().split("CD")[1])-1);
+			//CongDoan cd= congDoan_dao.getCongDoanTheoMa(cbMaCD.getSelectedItem().toString());
+            //String maCDTruoc = String.format("%s%02d","CD",Integer.parseInt(cd.getMaCD().split("CD")[1])-1);
             //if(cd.getThuTu()!=1 && (Integer) spinChiTieu.getValue())
-			themPhanCong();
+			if(btnLuu.getText().equals("Thêm"))
+				themPhanCong();
+			else
+				suaPhanCong();
 			clear();
 		}
 		else if(o.equals(btnXoa)) {
@@ -413,7 +416,13 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		String object[] = {maCN, tenCN, maSP, tenSP, maCD, tenCD, chiTieu};
 		modelPhanCong.addRow(object);
 	}
-
+	public void suaPhanCong() {
+		String maCN = txtMaCN.getText();
+		String maCD = cbMaCD.getSelectedItem().toString();
+		String chiTieu = spinChiTieu.getValue().toString();
+		ChamCong phanCong = new ChamCong(maCN, maCD, new java.sql.Date(chooserNgay.getDate().getTime()) , Integer.parseInt(chiTieu));
+		chamCong_dao.suaPhanCong(phanCong);
+	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -421,8 +430,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		int rowCN = tableCongNhan.getSelectedRow();
 		if(rowCN != -1) {
 			btnXoa.setEnabled(false);
-			cbMaCD.setEnabled(true);
-			cbMaSP.setEnabled(true);
+			btnLuu.setIcon(icon.iconThem);
+			btnLuu.setText("Thêm");
 			txtMaCN.setText(modelCongNhan.getValueAt(rowCN, 0).toString());
 			txtTenCN.setText(modelCongNhan.getValueAt(rowCN, 1).toString());
 			cbMaSP.setSelectedIndex(0);
@@ -432,8 +441,8 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		
 		if(rowPC != -1){
 			btnXoa.setEnabled(true);
-			//cbMaCD.setEnabled(false);
-			//cbMaSP.setEnabled(false);
+			btnLuu.setIcon(icon.iconSua);
+			btnLuu.setText("Sửa");
 			txtMaCN.setText(modelPhanCong.getValueAt(rowPC, 0).toString());
 			txtTenCN.setText(modelPhanCong.getValueAt(rowPC, 1).toString());
 			cbMaSP.setSelectedItem(modelPhanCong.getValueAt(rowPC, 2));

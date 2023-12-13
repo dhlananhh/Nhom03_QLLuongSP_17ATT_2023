@@ -181,6 +181,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		btnThem.setText("Thêm");
 		b3_6.add(Box.createHorizontalStrut(50));
 		b3_6.add(btnSua = new JButton(icon.iconSua));
+		btnSua.setText("Sửa");
 		b3_6.add(Box.createHorizontalStrut(50));
 		b3_6.add(btnTaiLai = new JButton("Tải lại"));
 		b3_6.add(Box.createHorizontalStrut(50));
