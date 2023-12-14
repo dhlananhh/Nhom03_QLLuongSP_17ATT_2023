@@ -53,8 +53,7 @@ public class Menu extends JComponent {
     private Icon getIcon(int index) {
         URL url = getClass().getResource("/icons/" + index + ".png");
     	//ImageIcon i = new ImageIcon(Menu.class.getResource("/image/0.png"));
-    	//System.out.println(i);
-        System.out.println();
+    	//System.out.println(index);
         if (url != null) {
             return new ImageIcon(url);
         } else {
@@ -99,6 +98,10 @@ public class Menu extends JComponent {
         panel.setBackground(new Color(0, 102, 204));
         for (int i = 1; i < length; i++) {
             MenuItem subItem = new MenuItem(menuItems[index][i], i, false);
+            Icon icon = getIcon(Integer.parseInt(index+""+i));
+            if (icon != null) {
+            	subItem.setIcon(icon);
+            }
             subItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
