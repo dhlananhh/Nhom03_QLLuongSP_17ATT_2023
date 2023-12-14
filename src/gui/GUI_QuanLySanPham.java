@@ -15,10 +15,12 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -190,6 +192,8 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		//b3_6.add(Box.createHorizontalStrut(50));
 		b3_6.add( btnLuu = new JButton(icon.iconLuu));
 		btnLuu.setText("Lưu");
+		btnLuu.setEnabled(false);
+		btnSua.setEnabled(false);
 		
 		btnThem.setBackground(new Color(0, 153, 204));
 		btnThem.setForeground(Color.WHITE);
@@ -241,7 +245,8 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		modelSP = new DefaultTableModel(col2, 0);
 		tableSP = new JTable(modelSP);
         
-		JScrollPane scrollSP = new JScrollPane(tableSP);
+		JScrollPane scrollSP = new JScrollPane(tableSP, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollSP.setPreferredSize(new Dimension(500, 250));
 		pnSP.add(scrollSP);
 		c.add(pnSP);
@@ -253,13 +258,13 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		String col3[] = {"Mã công đoạn", "Tên công đoạn","Lương SP","Thứ tự"};
 		modelCD = new DefaultTableModel(col3, 0);
 		tableCD = new JTable(modelCD);
-		JScrollPane scrollCD = new JScrollPane(tableCD);
+		JScrollPane scrollCD = new JScrollPane(tableCD, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollCD.setPreferredSize(new Dimension(500, 250));
 		pnCD.add(scrollCD);
 		c.add(pnCD);
 		pnBot.add(c);
 		//docdulieu
-		//docDuLieuCDVaoTable();
 		docDuLieuSPVaoTable();
 		txtMSP.setEditable(false);
 		txtMCD.setEditable(false);
@@ -269,7 +274,6 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		btnSua.addActionListener(this);
 		btnTaiLai.addActionListener(this);
 		btnLoc.addActionListener(this);
-		//btnXoaTrang.addActionListener(this);
 		btnLuu.addActionListener(this);
 		tableSP.addMouseListener(this);
 		tableCD.addMouseListener(this);
@@ -285,6 +289,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 			if(txtTenSP.isEditable()) {
 				if(kiemTraRangBuocSP()) {
 					themDuLieuSP();
+					JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công");
 					khoaSP();
 					moCD();
 				}
@@ -292,6 +297,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 			else if(txtTenCD.isEditable()) {
 				if(kiemTraRangBuocCD()) {
 					themDuLieuCD(txtMSP.getText());
+					JOptionPane.showMessageDialog(this, "Thêm công đoạn thành công");
 					txtMCD.setText("");
 					txtTenCD.setText("");
 					txtLuongSP.setText("");
@@ -301,22 +307,17 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 			
 		}
 		if(o.equals(btnSua)) {
+			btnLuu.setEnabled(true);
 			if(!txtTenSP.getText().equals("") && !txtTenCD.getText().equals("")) {
 				if(cbTrangThai.getSelectedItem().equals("Ngưng sản xuất")) {
 					JOptionPane.showMessageDialog(this, "Sản phẩm ngưng sản xuất, không thể sửa công đoạn");
 					return;
 				}
-				txtTenCD.setText("");
-				txtLuongSP.setText("");
-				txtThuTu.setText("");
 				moCD();
 			}
 			else {
 				moSP();
 				khoaCD();
-				txtTenSP.setText("");
-				txtGiaThanh.setText("");
-				txtSoLuong.setText("");
 			}
 		}
 		if(o.equals(btnLuu)) {
@@ -327,14 +328,17 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 				suaDuLieuCD();
 				modelCD.getDataVector().removeAllElements();
 				docDuLieuCDVaoTable(txtMSP.getText());
+				
 			}
 			else if(txtTenSP.getText().equals("")) {
 				suaDuLieuCD();
+				JOptionPane.showMessageDialog(this, "Sửa công đoạn thành công");
 				modelCD.getDataVector().removeAllElements();
 				docDuLieuCDVaoTable(txtMSP.getText());
 			}
 			else {
 				suaDuLieuSP();
+				JOptionPane.showMessageDialog(this, "Sửa sản phẩm thành công");
 				modelSP.getDataVector().removeAllElements();
 				docDuLieuSPVaoTable();
 			}
@@ -342,6 +346,14 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		if(o.equals(btnTaiLai)) {
 			modelSP.getDataVector().removeAllElements();
 			docDuLieuSPVaoTable();
+			txtMSP.setText("");
+			txtTenSP.setText("");
+			txtMCD.setText("");
+			txtTenCD.setText("");
+			txtLuongSP.setText("");
+			txtGiaThanh.setText("");
+			txtThuTu.setText("");
+			txtSoLuong.setText("");
 		}
 		
 		if(o.equals(btnLoc)) {
@@ -358,40 +370,27 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 				timSPTheoTrangThai();
 			}
 		}
-		if(o.equals(btnXoaTrang)) {
-			txtMSP.setText("");
-			txtTenSP.setText("");
-			txtMCD.setText("");
-			txtTenCD.setText("");
-			txtLuongSP.setText("");
-			txtGiaThanh.setText("");
-			txtThuTu.setText("");
-			txtSoLuong.setText("");
-			soLuongCD = 0;
-			int row = tableCD.getRowCount();
-            for (int i = row - 1; i >= 0; i--) {
-                modelCD.removeRow(i);     
-            }
-			khoaCD();
-			moSP();
-		}
 	}
 	public void docDuLieuSPVaoTable() {
 		List<SanPham> dsSP  = sp_dao.getalltbSanPham();
 		soLuongSP = dsSP.size();
+		Locale locale = new Locale("vi", "VN");
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 		for (SanPham sp : dsSP) {
 			modelSP.addRow(new Object[] {
-				sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon(), sp.getGiaThanh(),
+				sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon(), currencyFormatter.format(sp.getGiaThanh()),
 				sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"
 			});
 		}
 	}
 	public void docDuLieuCDVaoTable(String maSP) {
 		List<CongDoan> dsCD = cd_dao.getAllCongDoanTheoSP(maSP);
+		Locale locale = new Locale("vi", "VN");
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 		soLuongCD = dsCD.size();
 		for (CongDoan cd : dsCD) {
 			modelCD.addRow(new Object[] {cd.getMaCD(), cd.getTenCD()
-					,cd.getLuongTheoSanPham(),
+					,currencyFormatter.format(cd.getLuongTheoSanPham()),
 					cd.getThuTu()});
 		}
 	}
@@ -585,7 +584,8 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 	public void mouseClicked(MouseEvent e) {
 		Object o = e.getSource();
 		if(o.equals(tableSP)) {
-		int rowSP = tableSP.getSelectedRow();
+			btnSua.setEnabled(true);
+			int rowSP = tableSP.getSelectedRow();
 			txtMSP.setText(modelSP.getValueAt(rowSP, 0).toString());
 			txtTenSP.setText(modelSP.getValueAt(rowSP, 1).toString());
 			txtSoLuong.setText(modelSP.getValueAt(rowSP, 2).toString());
