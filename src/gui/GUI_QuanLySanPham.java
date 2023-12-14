@@ -186,8 +186,8 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		b3_6.add(btnTaiLai = new JButton(icon.iconTaiLai));
 		btnTaiLai.setText("Tải lại");
 		b3_6.add(Box.createHorizontalStrut(50));
-		b3_6.add(btnXoaTrang = new JButton("Xóa Trắng"));
-		b3_6.add(Box.createHorizontalStrut(50));
+		//b3_6.add(btnXoaTrang = new JButton("Xóa Trắng"));
+		//b3_6.add(Box.createHorizontalStrut(50));
 		b3_6.add( btnLuu = new JButton(icon.iconLuu));
 		btnLuu.setText("Lưu");
 		
@@ -197,8 +197,8 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
         btnSua.setForeground(Color.WHITE);
         btnTaiLai.setBackground(new Color(0, 153, 204));
         btnTaiLai.setForeground(Color.WHITE);
-        btnXoaTrang.setBackground(new Color(0, 153, 204));
-        btnXoaTrang.setForeground(Color.WHITE);
+       // btnXoaTrang.setBackground(new Color(0, 153, 204));
+       // btnXoaTrang.setForeground(Color.WHITE);
         btnLuu.setBackground(new Color(0, 153, 204));
         btnLuu.setForeground(Color.WHITE);
 		//preferencec b3
@@ -269,7 +269,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		btnSua.addActionListener(this);
 		btnTaiLai.addActionListener(this);
 		btnLoc.addActionListener(this);
-		btnXoaTrang.addActionListener(this);
+		//btnXoaTrang.addActionListener(this);
 		btnLuu.addActionListener(this);
 		tableSP.addMouseListener(this);
 		tableCD.addMouseListener(this);

@@ -148,29 +148,9 @@ INSERT [dbo].[PhongBan] ([maPhongBan], [tenPhongBan], [soLuongNV], [moTa]) VALUE
 GO
 INSERT [dbo].[PhongBan] ([maPhongBan], [tenPhongBan], [soLuongNV], [moTa]) VALUES (N'PB05', N'Công nghệ thông tin', 300, N'Không')
 GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'admin', N'1234')
+INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'ketoan', N'1234')
 GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'anlevan', N'P@ssw0rd2')
-GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'ducle', N'P@ssw0rd8')
-GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'hiennhuyen', N'P@ssw0rd7')
-GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'hoangtruong', N'P@ssw0rd6')
-GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'maipham', N'P@ssw0rd4')
-GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'minhtran', N'P@ssw0rd1')
-GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'phuctran', N'P@ssw0rd10')
-GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'qlnv', N'1234')
-GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'tamvo', N'P@ssw0rd5')
-GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'tudo', N'P@ssw0rd9')
-GO
-INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'tungnguyen', N'P@ssw0rd3')
+INSERT [dbo].[TaiKhoan] ([tenTK], [matKhau]) VALUES (N'quanly', N'1234')
 GO
 INSERT [dbo].[NhanVienHanhChinh] ([maNV], [hoTenNV], [gioiTinh], [ngaySinh], [diaChi], [CCCD], [SDT], [ngayVao], [maPhongBan], [trangThai], [bangCap], [luongCoBan], [phuCap], [heSoLuong], [tenTK], [email]) VALUES (N'NV01', N'Trần Thị Minh', 0, CAST(0x8C070B00 AS Date), N'123 Lê Lợi, Quận 1, TP.HCM', N'123456789012', N'0971234567', CAST(0x3B450B00 AS Date), N'PB01', 1, N'Cử nhân', 5000000, 1000000, 2, N'minhtran', N'minhtran@example.com')
 GO
