@@ -15,6 +15,7 @@ import entity.SanPham;
 import entity.ToSanXuat;
 
 public class DAO_CongNhan {
+	// lấy dscn
 	public List<CongNhanSanXuat> getDSCongNhan(){
 		ArrayList<CongNhanSanXuat> dsCN = new ArrayList<>();
 		try {
@@ -46,6 +47,9 @@ public class DAO_CongNhan {
 		}
 		return dsCN;
 	}
+	
+	
+	// lấy dscn theo mã
 	public CongNhanSanXuat getCongNhanTheoMa(String ma) {
 		CongNhanSanXuat cn = new CongNhanSanXuat(ma);
 		try {
@@ -62,6 +66,9 @@ public class DAO_CongNhan {
 		}
 		return cn;
 	}
+	
+	
+	// lấy dscn theo giới tính
 	public ArrayList<CongNhanSanXuat> layCongNhanTheoGioiTinh(boolean gt){
 		ArrayList<CongNhanSanXuat> dsCN = new ArrayList<CongNhanSanXuat>();
 		ConnectDB.getInstance();
@@ -95,6 +102,9 @@ public class DAO_CongNhan {
 		}
 		return dsCN;
 	}
+	
+	
+	// lấy dscn theo trạng thái
 	public ArrayList<CongNhanSanXuat> layCongNhanTheoTrangThai(boolean tt){
 		ArrayList<CongNhanSanXuat> dsCN = new ArrayList<CongNhanSanXuat>();
 		ConnectDB.getInstance();
@@ -128,6 +138,8 @@ public class DAO_CongNhan {
 		}
 		return dsCN;
 	}
+	
+	
 	public ArrayList<CongNhanSanXuat> layCongNhanTheoTSX(int tsx){
 		ArrayList<CongNhanSanXuat> dsCN = new ArrayList<CongNhanSanXuat>();
 		ConnectDB.getInstance();
@@ -161,6 +173,8 @@ public class DAO_CongNhan {
 		}
 		return dsCN;
 	}
+	
+	
 	public boolean themCN(CongNhanSanXuat cn) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
@@ -188,6 +202,8 @@ public class DAO_CongNhan {
 		}
 		return n > 0;
 	}
+	
+	
 	public boolean capNhatCN(CongNhanSanXuat cn) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
@@ -216,5 +232,49 @@ public class DAO_CongNhan {
 			e.printStackTrace();
 		}
 		return n > 0;
+	}
+	
+	
+	// hàm lấy tiền phụ cấp của công nhân
+	public double layTienPhuCap (String maCongNhan) {
+		double tienPhuCap = 0;
+		
+		try {
+			Connection con = ConnectDB.getInstance().getConnection();
+			String sql = 	"SELECT phuCap AS tienPhuCap \r\n" +
+							"FROM CongNhanSanXuat WHERE maCN = '" + maCongNhan + "'" + "\r\n"; 
+							
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				tienPhuCap = Double.parseDouble(rs.getString(1));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return tienPhuCap;
+	}
+	
+	
+	// hàm lấy tay nghề của công nhân
+	public int layTayNghe (String maCongNhan) {
+		int tayNghe = 0;
+		
+		try {
+			Connection con = ConnectDB.getInstance().getConnection();
+			String sql = 	"SELECT tayNghe AS tayNghe \r\n" +
+							"FROM CongNhanSanXuat WHERE maCN = '" + maCongNhan + "'" + "\r\n"; 
+							
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				tayNghe = Integer.parseInt(rs.getString(1));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return tayNghe;
 	}
 }

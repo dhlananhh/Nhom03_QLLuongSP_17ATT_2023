@@ -43,8 +43,18 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
@@ -69,7 +79,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	private JLabel lblTienTamUng;
 	private JTextField txtNam, txtThang, txtTienTamUng;
 	private JDateChooser dcNgayTinhLuong;
-	private JButton btnThem, btnSua, btnLoc, btnTimKiem;
+	private JButton btnSua, btnLoc, btnTimKiem;
 	private JButton btnXuatExcel, btnInPDF, btnLamMoi;
 	private JComboBox cbMaCN;
 	private JComboBox cbLocNam, cbLocThang;
@@ -251,17 +261,14 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		cbLocThang.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		
 		btnLoc = new JButton("Lọc");
-		btnThem = new JButton("Thêm");
 		btnSua = new JButton("Sửa");
 		btnXuatExcel = new JButton("Xuất Excel");
 		btnLamMoi = new JButton("Làm mới");
+		btnInPDF = new JButton("In PDF");
 		
 		btnLoc.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnLoc.setBackground(buttonColor);
 		btnLoc.setForeground(Color.WHITE);
-		btnThem.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
-		btnThem.setBackground(buttonColor);
-		btnThem.setForeground(Color.WHITE);
 		btnSua.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnSua.setBackground(buttonColor);
 		btnSua.setForeground(Color.WHITE);
@@ -271,6 +278,9 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		btnLamMoi.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		btnLamMoi.setBackground(buttonColor);
 		btnLamMoi.setForeground(Color.WHITE);
+		btnInPDF.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
+		btnInPDF.setBackground(buttonColor);
+		btnInPDF.setForeground(Color.WHITE);
 		
 		t1.add(lblLocNam);
 		t1.add(Box.createHorizontalStrut(10));
@@ -282,13 +292,12 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		t1.add(Box.createHorizontalStrut(20));
 		t1.add(btnLoc);
 		t1.add(Box.createHorizontalStrut(10));
-		t1.add(btnThem);
-		t1.add(Box.createHorizontalStrut(10));
 		t1.add(btnSua);
 		t1.add(Box.createHorizontalStrut(10));
 		t1.add(btnLamMoi);
 		t1.add(Box.createHorizontalStrut(10));
-//		t1.add(Box.createHorizontalStrut(10));
+		t1.add(btnInPDF);
+		t1.add(Box.createHorizontalStrut(10));
 		t1.add(btnXuatExcel);
 		
 		t.add(t1);
@@ -334,9 +343,9 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		Container container = getContentPane();
 		container.add(pnContent);
 		
-		btnThem.addActionListener(this);
 		btnLoc.addActionListener(this);
 		btnSua.addActionListener(this);
+		btnInPDF.addActionListener(this);
 		btnXuatExcel.addActionListener(this);
 		btnLamMoi.addActionListener(this);
 		btnTimKiem.addActionListener(this);
@@ -370,9 +379,6 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	}
 	
 	
-	
-	
-	
 	// lấy data vô combobox phòng ban
 	public void getDataIntoCombobox() {
 		try {
@@ -404,70 +410,94 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		}
 	}
 	
-	/*
-	// thêm dữ liệu lương NV vào database
-	public boolean themDuLieuLuongNV() {
-		LuongNhanVienHanhChinh luongNV = new LuongNhanVienHanhChinh();
-		
-		dao_luongNV.themMoiLuongNhanVien(luongNV);
-		
-		Object[] rowData = {
-				luongNV.getMaBangLuongHC(), luongNV.getNam(), luongNV.getThang(), 
-				luongNV.isTrangThai() == true ? "Đã được trả lương" : "Chưa được trả lương",
-				luongNV.getNhanVien().getMaNV(),
-				luongNV.getHeSoLuong(),
-				luongNV.getLuongCoBan(), luongNV.getPhuCap(),
-				luongNV.getLuongThucLanh()
+	
+	// hàm xuất excel
+	public void exportExcel (JTable table) {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Chọn nơi lưu tệp Excel");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Tệp Excel (.xls)", "xls");
+		fileChooser.setFileFilter(filter);
+
+		int userSelection = fileChooser.showSaveDialog(null);
+
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			try {
+				File fileToSave = fileChooser.getSelectedFile();
+				String filePath = fileToSave.getAbsolutePath();
+				if (fileToSave.exists()) {
+					int response = JOptionPane.showConfirmDialog(null, "Tệp đã tồn tại. Bạn có muốn ghi đè không?",
+							"Xác nhận ghi đè", JOptionPane.YES_NO_OPTION);
+
+					if (response != JOptionPane.YES_OPTION) {
+						return;
+					}
+				}
+				if (!filePath.endsWith(".xls")) {
+					filePath += ".xls";
+				}
+
+				Workbook workbook = new HSSFWorkbook();
+				Sheet sheet = workbook.createSheet("DanhSachNhanVien");
+
+				org.apache.poi.ss.usermodel.Font titleFont = sheet.getWorkbook().createFont();
+				titleFont.setBold(true);
+				titleFont.setFontHeightInPoints((short) 16);
+
+				CellStyle titleCellStyle = sheet.getWorkbook().createCellStyle();
+				titleCellStyle.setFont(titleFont);
+				titleCellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+				Row titleRow = sheet.createRow(0);
+
+				Cell titleCell = titleRow.createCell(0);
+				int nam = Integer.parseInt(cbLocNam.getSelectedItem().toString());
+				int thang = Integer.parseInt(cbLocThang.getSelectedItem().toString());
 				
-		};
-		modelCN.addRow(rowData);
-		JOptionPane.showMessageDialog(this, "Thêm thành công!");
-		
-		return true;
+				String txt = "Danh sách lương nhân viên Tháng " + thang + " Năm " + nam;
+				titleCell.setCellValue(txt);
+				titleCell.setCellStyle(titleCellStyle);
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, tableCN.getColumnCount() - 1));
+
+				Row headerRow = sheet.createRow(1);
+				for (int col = 0; col < tableCN.getColumnCount(); col++) {
+					Cell cell = headerRow.createCell(col);
+					cell.setCellValue(tableCN.getColumnName(col));
+					sheet.autoSizeColumn(col);
+				}
+
+				for (int row = 0; row < tableCN.getRowCount(); row++) {
+					Row dataRow = sheet.createRow(row + 2);
+					for (int col = 0; col < tableCN.getColumnCount(); col++) {
+						Cell cell = dataRow.createCell(col);
+						Object cellValue = tableCN.getValueAt(row, col);
+						if (cellValue != null) {
+							if (cellValue instanceof String) {
+								cell.setCellValue((String) cellValue);
+							} else if (cellValue instanceof Number) {
+								cell.setCellValue(((Number) cellValue).doubleValue());
+							} else {
+								cell.setCellValue(cellValue.toString());
+							}
+						}
+					}
+				}
+
+				for (int col = 0; col < tableCN.getColumnCount(); col++) {
+					sheet.autoSizeColumn(col);
+				}
+
+				try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+					workbook.write(fileOut);
+					JOptionPane.showMessageDialog(null, "Tạo và lưu tệp Excel thành công!");
+				} catch (Exception e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Lỗi khi tạo và lưu tệp Excel!");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
-	*/
-	
-	
-	
-	
-	// Hàm xuất file CSV (đuôi .csv)
-	public void exportCSV(JTable table) {
-        JFileChooser fileChooser = new JFileChooser();
-        int i = fileChooser.showSaveDialog(fileChooser);
-        if (i == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(file + ".csv"), StandardCharsets.UTF_8);
-                 BufferedWriter bwrite = new BufferedWriter(out)) {
-
-                DefaultTableModel modelCN = (DefaultTableModel) table.getModel();
-
-                // Ten Cot
-                for (int j = 0; j < modelCN.getColumnCount(); j++) {
-                    bwrite.write(modelCN.getColumnName(j));
-                    if (j < modelCN.getColumnCount() - 1) {
-                        bwrite.write(","); // Phân tách giữa các cột
-                    }
-                }
-                bwrite.write("\n");
-
-                // Lay du lieu dong
-                for (int j = 0; j < modelCN.getRowCount(); j++) {
-                    for (int k = 0; k < modelCN.getColumnCount(); k++) {
-                        bwrite.write(modelCN.getValueAt(j, k).toString());
-                        if (k < modelCN.getColumnCount() - 1) {
-                            bwrite.write(","); // Phân tách giữa các cột
-                        }
-                    }
-                    bwrite.write("\n");
-                }
-
-                JOptionPane.showMessageDialog(null, "Lưu file thành công!");
-            } catch (IOException e2) {
-                e2.printStackTrace(); // In lỗi ra console để debug
-                JOptionPane.showMessageDialog(null, "Lỗi khi lưu file!");
-            }
-        }
-    }
 	
 	
 	public void hienThiDuLieuDuocChon() {
@@ -522,12 +552,7 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		Object o = e.getSource();
 		
 		if (o.equals(btnXuatExcel)) {
-//			exportExcel(tableCN);
-			exportCSV(tableCN);
-		}
-		if (o.equals(btnThem)) {
-//			themDuLieuLuongNV();
-//			layDuLieuLuong();
+			exportExcel(tableCN);
 		}
 		if (o.equals(btnLamMoi)) {
 			modelCN.getDataVector().removeAllElements();
@@ -582,13 +607,19 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
                 double tienTamUng = Double.parseDouble(txtTienTamUng.getText());
                 int row = tableCN.getSelectedRow();
                 String maLuong = modelCN.getValueAt(row, 2).toString();
+                double luongCu = Double.parseDouble(modelCN.getValueAt(row, 11).toString());
+                double tienCu = Double.parseDouble(modelCN.getValueAt(row, 6).toString());
                 LuongCongNhanSanXuat luongCN = new LuongCongNhanSanXuat(maLuong, tienTamUng);
-                dao_luongCNSX.capNhatLuong(luongCN);
+                dao_luongCNSX.capNhatLuong(luongCN, luongCu, tienCu);
                 modelCN.getDataVector().removeAllElements();
                 layDuLieuLuongCongNhan();
             }
             chinhSua = !chinhSua;
         }
+		if (o.equals(btnInPDF)) {
+			String maCN = (String) cbMaCN.getSelectedItem();
+			gui.PDFLuongCN.InPhieuLuongCN(maCN);
+		}
 	}
 
 	

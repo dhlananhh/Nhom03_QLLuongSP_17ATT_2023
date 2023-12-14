@@ -45,6 +45,8 @@ public class DAO_LuongCongNhanSanXuat {
 		}
 		return dsLuongCN;
 	}
+	
+	
 	public ArrayList<LuongCongNhanSanXuat> timLuongTheoThangNam(int soNam, int soThang){
 		ArrayList<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
 		ConnectDB.getInstance();
@@ -77,6 +79,8 @@ public class DAO_LuongCongNhanSanXuat {
 		}
 		return dsLuong;
 	}
+	
+	
 	public ArrayList<LuongCongNhanSanXuat> timLuongTheoThang(int soThang){
 		ArrayList<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
 		ConnectDB.getInstance();
@@ -108,6 +112,8 @@ public class DAO_LuongCongNhanSanXuat {
 		}
 		return dsLuong;
 	}
+	
+	
 	public ArrayList<LuongCongNhanSanXuat> timLuongTheoNam(int soNam){
 		ArrayList<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
 		ConnectDB.getInstance();
@@ -139,6 +145,8 @@ public class DAO_LuongCongNhanSanXuat {
 		}
 		return dsLuong;
 	}
+	
+	
 	public ArrayList<LuongCongNhanSanXuat> timLuongTheoMaCN(String maCN){
 		ArrayList<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
 		ConnectDB.getInstance();
@@ -170,7 +178,41 @@ public class DAO_LuongCongNhanSanXuat {
 		}
 		return dsLuong;
 	}
-	public boolean capNhatLuong(LuongCongNhanSanXuat luongCN) {
+	
+	
+	public LuongCongNhanSanXuat timLuongCNTheoMaCN(String maCN){
+		LuongCongNhanSanXuat lcnsx = null;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement statement = null;
+		try {
+			String sql = "Select * from LuongCongNhanSanXuat where maCN = ?";
+			statement = con.prepareStatement(sql);
+			statement.setString(1, maCN);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) {
+				String maBangLuongCN = rs.getString("maBangLuongCN");
+				Date ngayTinhLuong = rs.getDate("ngayTinhLuong");
+				int nam = rs.getInt("nam");
+				int thang = rs.getInt("thang");
+				double luongSanPham = rs.getDouble("luongSanPham");
+				double tamUng = rs.getDouble("tienTamUng");
+				double baoHiemXaHoi = rs.getDouble("baoHiemXaHoi");
+				double baoHiemYTe = rs.getDouble("baoHiemYTe");
+				double baoHiemThatNghiep = rs.getDouble("baoHiemThatNghiep");
+				double thueTNCN = rs.getDouble("thueTNCN");
+				double luongThucLanh = rs.getDouble("luongThucLanh");
+				CongNhanSanXuat congNhan = new CongNhanSanXuat(rs.getString("maCN"));
+				lcnsx = new LuongCongNhanSanXuat(maBangLuongCN, ngayTinhLuong, thang, nam, luongSanPham, tamUng, baoHiemXaHoi, baoHiemYTe, baoHiemThatNghiep, thueTNCN, luongThucLanh, congNhan);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lcnsx;
+	}
+	
+	
+	public boolean capNhatLuong(LuongCongNhanSanXuat luongCN, double luongCu, double tienCu) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
@@ -178,7 +220,7 @@ public class DAO_LuongCongNhanSanXuat {
 		try {
 			statement = con.prepareStatement("update LuongCongNhanSanXuat set tienTamUng =?, luongThucLanh = ?  where maBangLuongCN = ?");
 			statement.setDouble(1, luongCN.getTamUng());
-			statement.setDouble(2, luongCN.getLuongThucLanh());
+			statement.setDouble(2, luongCu-(luongCN.getTamUng()-tienCu));
 			statement.setString(3, luongCN.getMaBangLuongCN());
 			n = statement.executeUpdate();
 		} catch (SQLException e) {

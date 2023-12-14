@@ -1,9 +1,13 @@
 package gui;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import javax.swing.JOptionPane;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -11,12 +15,14 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import dao.DAO_CongNhan;
 import dao.DAO_LuongCongNhanSanXuat;
@@ -35,6 +41,7 @@ public class PDFLuongCN {
 	
 	private static List<LuongCongNhanSanXuat> dsLuongCN = new ArrayList<LuongCongNhanSanXuat>();
 	private static double luongThucLanh = 0;
+	
 	
 	public static String convertMoney(double gia) {
 		return NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(gia);
@@ -189,8 +196,8 @@ public class PDFLuongCN {
 	}
 	
 	
-	private static void addBottomPanel (Document document, LuongNhanVienHanhChinh luongNV) throws DocumentException {
-		Paragraph luongThucLanh = new Paragraph("Lương thực lãnh nhận được: " + convertMoney(luongNV.getLuongThucLanh()), BOLD_ITALIC_FONT);
+	private static void addBottomPanel (Document document, LuongCongNhanSanXuat luongCN) throws DocumentException {
+		Paragraph luongThucLanh = new Paragraph("Lương thực lãnh nhận được: " + convertMoney(luongCN.getLuongThucLanh()), BOLD_ITALIC_FONT);
 		luongThucLanh.setAlignment(Element.ALIGN_LEFT);
 		document.add(luongThucLanh);
     }
@@ -233,5 +240,32 @@ public class PDFLuongCN {
     	table.addCell(createCell(String.valueOf(stt), GLOBAL_FONT));
     	table.addCell(createCell(deMuc, GLOBAL_FONT));
     	table.addCell(createCell(soTien, GLOBAL_FONT));
+    }
+    
+    
+    public static void InPhieuLuongCN (String maCN) {
+    	String outputPdfPath = "data/exportedPDF/" + maCN + ".pdf";
+        DAO_LuongCongNhanSanXuat dao_luongCN = new DAO_LuongCongNhanSanXuat();
+        DAO_CongNhan dao_cn = new DAO_CongNhan();
+        List<LuongCongNhanSanXuat> dsLuongCN = new ArrayList<LuongCongNhanSanXuat>();
+        dsLuongCN = dao_luongCN.timLuongTheoMaCN(maCN);
+        LuongCongNhanSanXuat luongCongNhan = dao_luongCN.timLuongCNTheoMaCN(maCN);
+
+        try {
+        	Document document = new Document(PageSize.A4.rotate());
+            PdfWriter.getInstance(document, new FileOutputStream(new File(outputPdfPath)));
+
+            document.open();
+            addTopPanel(document, luongCongNhan);
+            addMiddlePanel(document, luongCongNhan, dsLuongCN);
+            addBottomPanel(document, luongCongNhan);
+            document.close();
+
+            JOptionPane.showMessageDialog(null, "Tạo và lưu tệp PDF thành công: " + outputPdfPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi khi tạo và lưu tệp PDF!");
+        }
+    	
     }
 }
