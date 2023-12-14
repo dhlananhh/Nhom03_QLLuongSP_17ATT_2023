@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 
 import javax.swing.Box;
@@ -41,11 +42,15 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 	private JButton btnXacNhan, btnHuy;
 	private JCheckBox chkShowPwd;
 	private DAO_TaiKhoan tk_dao;
+	private JButton btnGetOTP;
+	private JTextField txtOTP;
+	private Container b35;
+	private int OTP = 0;
 	
 	
 	public GUI_QuenMatKhau() {
 		setTitle("Quên mật khẩu");
-		setSize(500, 400);
+		setSize(500, 450);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		//connect
@@ -82,6 +87,7 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		b1 = Box.createVerticalBox();
 		b2 = Box.createVerticalBox();
 		b3 = Box.createVerticalBox();
+		b35 = Box.createHorizontalBox();		
 		b4 = Box.createHorizontalBox();	
 		//b1
 		b1.add(lblTaiKhoan = new JLabel("Tài khoản: "));
@@ -95,6 +101,11 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		b3.add(lblNhapLaiMKMoi = new JLabel("Nhập lại mật khẩu mới: "));
 		b3.add(Box.createVerticalStrut(10));
 		b3.add(txtNhapLaiMKMoi = new JPasswordField(20));
+		//b35
+		b35.add(btnGetOTP = new JButton("Lấy mã OTP"));
+		b35.add(Box.createHorizontalStrut(10));
+		b35.add(txtOTP = new JTextField(6));
+		txtOTP.setEditable(false);
 		//b4
 		chkShowPwd = new JCheckBox("Hiển thị mật khẩu");
 		b4.add(chkShowPwd);
@@ -113,6 +124,8 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		b.add(Box.createRigidArea(new Dimension(0, 20)));
 		b.add(b3);
 		b.add(Box.createRigidArea(new Dimension(0, 20)));
+		b.add(b35);
+		b.add(Box.createRigidArea(new Dimension(0, 20)));
 		b.add(b4);
 		pnCenter.add(b);
 		//btn
@@ -123,6 +136,7 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		btnHuy.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		btnXacNhan.setBackground(new Color(0, 102, 204));
 		btnXacNhan.setForeground(Color.WHITE);
+		btnXacNhan.setEnabled(false);
 		btnHuy.setBackground(new Color(0, 102, 204));
 		btnHuy.setForeground(Color.WHITE);
 		//action			
@@ -130,13 +144,36 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		btnHuy.addActionListener(this);
 		btnHuy.setPreferredSize(btnXacNhan.getPreferredSize());
 		chkShowPwd.addActionListener(this);
+        btnGetOTP.addActionListener(this);
 		
 	}
 
+	private void btnXacNhanOTPMouseClicked() {//GEN-FIRST:event_btnXacNhanOTPMouseClicked
+        TaiKhoan tk = tk_dao.layTKTheoTen(txtTaiKhoan.getText().toString());
+        if(tk.getTenTK() == null) {
+        	JOptionPane.showMessageDialog(null, "Tài khoản không đúng!");
+			txtTaiKhoan.setText("");
+			txtTaiKhoan.requestFocus();
+			return;
+        } else {
+            String email = tk_dao.layEmailTheoTK(tk.getTenTK());
+            OTP = tk_dao.sendEmail(email);
+            System.out.println(OTP);
+        	JOptionPane.showMessageDialog(null, "Đã gửi mã OTP về địa chỉ email "+email.trim()+", hãy kiểm tra hộp thư của bạn!");
+        	btnGetOTP.setEnabled(false);
+        	txtOTP.setEditable(true);
+        	btnXacNhan.setEnabled(true);
+        }
+
+
+    }
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
+		if(o.equals(btnGetOTP)) {
+			btnXacNhanOTPMouseClicked();
+		}
 		if (o.equals(btnXacNhan)) {
 			String tenTK = txtTaiKhoan.getText();
             String matKhauMoi = txtMatKhauMoi.getText();
@@ -160,10 +197,22 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
             	txtNhapLaiMKMoi.requestFocus();
             	return;
             }
-            else  {
-            	tk_dao.doiMatKhau(tk, matKhauMoi);
-                JOptionPane.showMessageDialog(this, "Thay đổi thành công");
-                this.setVisible(false);
+            if(!(txtOTP.getText().matches("\\d{6,6}")) && !(Integer.parseInt(txtOTP.getText()) == OTP)) {
+            	JOptionPane.showMessageDialog(this, "Mã OTP không đúng");
+            	txtOTP.setText("");
+            	txtOTP.requestFocus();
+            	return;
+            }
+            else {
+            	
+            	if(tk_dao.doiMatKhau(tk, matKhauMoi)) {
+                    JOptionPane.showMessageDialog(this, "Thay đổi thành công");
+                    this.setVisible(false);	
+            	} else {
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra, vui lòng thử lại sau");
+                    this.setVisible(false);	
+            	}
+
             }
 		}
 		else if (o.equals(btnHuy)) {
