@@ -41,6 +41,8 @@ import java.text.SimpleDateFormat;
 //import java.sql.Date;
 import java.util.Date;
 import java.util.List;
+import java.awt.Component;
+import javax.swing.BoxLayout;
 
 
 public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseListener {
@@ -60,6 +62,12 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseL
 	private JDateChooser dcNgaySinh, dcNgayVao;
 	private JLabel lblTrangThai, lblLuongSP, lblPhuCap, lblBangCap;
 	private JTextField txtLoc;
+	private Icon icon = new Icon();
+	private Component horizontalStrut;
+	private Component horizontalStrut_1;
+	private Component horizontalStrut_2;
+	private Component horizontalStrut_3;
+	private Component horizontalStrut_4;
 
 	public GUI_QuanLyCongNhan() {
 		setSize(new Dimension(1300, 700));
@@ -214,6 +222,10 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseL
 		Box b = Box.createVerticalBox();
 		Box c = Box.createVerticalBox();
 		Box d = Box.createVerticalBox();
+		pnThongTin.setLayout(new BoxLayout(pnThongTin, BoxLayout.X_AXIS));
+		
+		horizontalStrut = Box.createHorizontalStrut(20);
+		pnThongTin.add(horizontalStrut);
 		
 		pnThongTin.add(a);
 		pnThongTin.add(Box.createHorizontalStrut(30));
@@ -309,7 +321,6 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseL
 		Box d1 = Box.createHorizontalBox();
 		Box d2 = Box.createHorizontalBox();
 		Box d3 = Box.createHorizontalBox();
-		Box d4 = Box.createHorizontalBox();
 		
 		d1.add(lblTayNghe);
 		d1.add(txtTayNghe);
@@ -327,20 +338,25 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseL
 		d.add(Box.createVerticalStrut(10));
 		d.add(d3);
 		d.add(Box.createVerticalStrut(10));
-		d.add(d4);
-		d.add(Box.createVerticalStrut(10));
 		
 		JPanel pnTacVu = new JPanel();
 		pnCenter.add(pnTacVu, BorderLayout.CENTER);
 		pnTacVu.setBackground(bgColor);
 		
 		cbLoc = new JComboBox<String>();
+		cbLoc.setPreferredSize(new Dimension(100, 15));
 		cbLoc.addItem("---Chọn---");
 		cbLoc.addItem("Giới tính");
 		cbLoc.addItem("Trạng thái");
 		cbLoc.addItem("Tổ sản xuất");
 		txtLoc = new JTextField();
-		btnLoc = new JButton("Lọc");
+		txtLoc.setPreferredSize(new Dimension(10, 15));
+		btnLoc = new JButton(icon.iconTim);
+		btnLoc.setText("Lọc");
+		pnTacVu.setLayout(new BoxLayout(pnTacVu, BoxLayout.X_AXIS));
+		
+		horizontalStrut_2 = Box.createHorizontalStrut(300);
+		pnTacVu.add(horizontalStrut_2);
 		
 		pnTacVu.add(cbLoc);
 		pnTacVu.add(txtLoc);
@@ -353,7 +369,31 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseL
 		btnLoc.setBackground(buttonColor);
 		btnLoc.setForeground(Color.WHITE);
 		
+		horizontalStrut_3 = Box.createHorizontalStrut(20);
+		pnTacVu.add(horizontalStrut_3);
+		Box d4 = Box.createHorizontalBox();
+		pnTacVu.add(d4);
+		//
+		d4.add(btnThem = new JButton(icon.iconThem));
+		btnThem.setText("Thêm");
+		d4.add(btnSua = new JButton(icon.iconSua));
+		btnSua.setText("Sửa");
+		d4.add(btnXoa = new JButton(icon.iconXoa));
+		btnXoa.setText("Xóa");
+		d4.add(btnXoaTrang = new JButton(icon.iconTaiLai));
+		
+		horizontalStrut_4 = Box.createHorizontalStrut(100);
+		horizontalStrut_4.setPreferredSize(new Dimension(300, 0));
+		pnTacVu.add(horizontalStrut_4);
+		btnXoaTrang.setText("Tải lại");
+		//Action
+		btnSua.addActionListener(this);
+		btnThem.addActionListener(this);
+		btnXoa.addActionListener(this);
+		btnXoaTrang.addActionListener(this);
+		
 		JPanel pnTable = new JPanel();
+		pnTable.setPreferredSize(new Dimension(3, 430));
 		pnCenter.add(pnTable, BorderLayout.SOUTH);
 		pnTable.setBackground(bgColor);
 		
@@ -387,17 +427,10 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseL
 		
 		Container container = getContentPane();
 		container.add(pnContent);
-		//
-		d4.add(btnThem = new JButton("Thêm"));
-		d4.add(btnSua = new JButton("Sửa"));
-		d4.add(btnXoa = new JButton("Xóa"));
-		d4.add(btnXoaTrang = new JButton("Xóa trắng"));
-		//Action
-		btnSua.addActionListener(this);
-		btnThem.addActionListener(this);
-		btnXoa.addActionListener(this);
+		
+		horizontalStrut_1 = Box.createHorizontalStrut(20);
+		pnThongTin.add(horizontalStrut_1);
 		btnLoc.addActionListener(this);
-		btnXoaTrang.addActionListener(this);
 		table.addMouseListener(this);
 		cbLoc.addActionListener(this);
 		//

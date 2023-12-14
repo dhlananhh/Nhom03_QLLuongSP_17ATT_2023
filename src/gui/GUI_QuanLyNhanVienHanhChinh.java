@@ -229,26 +229,6 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		lblEmail = new JLabel("Email: ");
 		txtEmail = new JTextField();
 		
-		btnThem = new JButton("Thêm");
-		btnThem.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
-		btnThem.setBackground(buttonColor);
-		btnThem.setForeground(Color.WHITE);
-		
-		btnSua = new JButton("Sửa");
-		btnSua.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
-		btnSua.setBackground(buttonColor);
-		btnSua.setForeground(Color.WHITE);
-		
-		btnXoa = new JButton("Xóa");
-		btnXoa.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
-		btnXoa.setBackground(buttonColor);
-		btnXoa.setForeground(Color.WHITE);
-		
-		btnXoaRong = new JButton("Xóa rỗng");
-		btnXoaRong.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
-		btnXoaRong.setBackground(buttonColor);
-		btnXoaRong.setForeground(Color.WHITE);
-		
 		lblHoTenNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		txtHoTenNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		lblNgaySinh.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
@@ -391,13 +371,9 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		d2.add(txtPhuCap);
 		d3.add(lblHeSoLuong);
 		d3.add(txtHeSoLuong);
-		d4.add(btnThem);
 		d4.add(Box.createHorizontalStrut(10));
-		d4.add(btnSua);
 		d4.add(Box.createHorizontalStrut(10));
-		d4.add(btnXoa);
 		d4.add(Box.createHorizontalStrut(10));
-		d4.add(btnXoaRong);
 		
 		lblPhuCap.setPreferredSize(lblLuongCoBan.getPreferredSize());
 		lblHeSoLuong.setPreferredSize(lblLuongCoBan.getPreferredSize());
@@ -434,6 +410,34 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		btnLoc.setBackground(buttonColor);
 		btnLoc.setForeground(Color.WHITE);
 		
+		btnThem = new JButton("Thêm");
+		pnTacVu.add(btnThem);
+		btnThem.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
+		btnThem.setBackground(buttonColor);
+		btnThem.setForeground(Color.WHITE);
+		
+		btnSua = new JButton("Sửa");
+		pnTacVu.add(btnSua);
+		btnSua.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
+		btnSua.setBackground(buttonColor);
+		btnSua.setForeground(Color.WHITE);
+		
+		btnXoa = new JButton("Xóa");
+		pnTacVu.add(btnXoa);
+		btnXoa.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
+		btnXoa.setBackground(buttonColor);
+		btnXoa.setForeground(Color.WHITE);
+		
+		btnXoaRong = new JButton("Xóa rỗng");
+		pnTacVu.add(btnXoaRong);
+		btnXoaRong.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
+		btnXoaRong.setBackground(buttonColor);
+		btnXoaRong.setForeground(Color.WHITE);
+		btnXoaRong.addActionListener(this);
+		btnXoa.addActionListener(this);
+		btnSua.addActionListener(this);
+		btnThem.addActionListener(this);
+		
 		
 		
 		//pnSouth chứa các table
@@ -456,10 +460,6 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		container.add(pnContent);
 		
 		btnLoc.addActionListener(this);
-		btnThem.addActionListener(this);
-		btnXoa.addActionListener(this);
-		btnXoaRong.addActionListener(this);
-		btnSua.addActionListener(this);
 		cbLoc.addActionListener(this);
 		tableNV.addMouseListener(this);
 	}
