@@ -40,7 +40,7 @@ public class GUI_ThayDoiMatKhau extends JFrame implements ActionListener {
 	private JButton btnXacNhan, btnHuy;
 	private JCheckBox chkShowPwd;
 	private DAO_TaiKhoan tk_dao;
-
+	private Icon icon = new Icon();
 
 	public GUI_ThayDoiMatKhau() {
 		setTitle("Đổi mật khẩu");
@@ -63,7 +63,7 @@ public class GUI_ThayDoiMatKhau extends JFrame implements ActionListener {
 		pnContent.add(pnTop, BorderLayout.NORTH);
 		pnTop.setBackground(new Color(0, 102, 204));
 
-		lblTieuDe = new JLabel("QUÊN MẬT KHẨU");
+		lblTieuDe = new JLabel("THAY ĐỔI MẬT KHẨU");
 		lblTieuDe.setFont(new Font("Arial", Font.BOLD, 25));
 		lblTieuDe.setForeground(Color.WHITE);
 		pnTop.add(lblTieuDe);
@@ -115,8 +115,10 @@ public class GUI_ThayDoiMatKhau extends JFrame implements ActionListener {
 		b.add(b4);
 		pnCenter.add(b);
 		//btn
-		pnBot.add(btnXacNhan = new JButton("Xác nhận"));
-		pnBot.add(btnHuy = new JButton("Hủy"));
+		pnBot.add(btnXacNhan = new JButton(icon.iconCheck));
+		btnXacNhan.setText("Xác nhận");
+		pnBot.add(btnHuy = new JButton(icon.iconHuy));
+		btnHuy.setText("Hủy");
 
 		btnXacNhan.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		btnHuy.setFont(new Font("Times New Roman", Font.BOLD, 15));
@@ -144,7 +146,6 @@ public class GUI_ThayDoiMatKhau extends JFrame implements ActionListener {
             String matKhauMoi = txtMatKhauMoi.getText();
 			String nhapLaiMK = txtNhapLaiMKMoi.getText();
             TaiKhoan tk = tk_dao.layTKTheoMatKhau(matKhauCu);
-            //Sy//stem.out.println(tk.getMatKhau());
             if(tk.getMatKhau() == null) {
     			JOptionPane.showMessageDialog(null, "Mật khẩu không đúng!");
     			txtMatKhauCu.setText("");
