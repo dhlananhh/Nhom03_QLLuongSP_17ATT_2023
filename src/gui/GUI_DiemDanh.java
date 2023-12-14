@@ -340,6 +340,7 @@ public class GUI_DiemDanh extends JFrame implements MouseListener, ActionListene
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				// TODO Auto-generated method stub
+				txtTenPB.setText(dao_PhongBan.getPhongBanTheoMa(cbMaPB.getSelectedItem().toString()).getTenPhongBan());
 				if(tableDiemDanh.getSelectedRow()==-1) {
 					cbMaNV.removeAllItems();
 					cbMaNV.addItem("");

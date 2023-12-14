@@ -295,6 +295,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		pnInput.add(b5);
 		btnLuu = new JButton(icon.iconThem);
 		btnLuu.setText("Thêm");
+		btnLuu.setEnabled(false);
 		btnLuu.setBackground(new Color(0, 153, 204));
 		btnLuu.setForeground(Color.WHITE);
 		b5.add(btnLuu);
@@ -360,6 +361,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 		tableCongNhan.clearSelection();
 		tablePhanCong.clearSelection();
 		btnXoa.setEnabled(false);
+		btnLuu.setEnabled(false);
 		spinChiTieu.setValue(1);
 		loadBangPhanCong();
 		loadBangCN();
@@ -432,6 +434,7 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 			btnXoa.setEnabled(false);
 			btnLuu.setIcon(icon.iconThem);
 			btnLuu.setText("Thêm");
+			btnLuu.setEnabled(true);
 			txtMaCN.setText(modelCongNhan.getValueAt(rowCN, 0).toString());
 			txtTenCN.setText(modelCongNhan.getValueAt(rowCN, 1).toString());
 			cbMaSP.setSelectedIndex(0);
@@ -443,10 +446,12 @@ public class GUI_PhanCong extends JFrame implements ActionListener, MouseListene
 			btnXoa.setEnabled(true);
 			btnLuu.setIcon(icon.iconSua);
 			btnLuu.setText("Sửa");
+			btnLuu.setEnabled(true);
 			txtMaCN.setText(modelPhanCong.getValueAt(rowPC, 0).toString());
 			txtTenCN.setText(modelPhanCong.getValueAt(rowPC, 1).toString());
 			cbMaSP.setSelectedItem(modelPhanCong.getValueAt(rowPC, 2));
-			cbMaCD.setSelectedItem(modelPhanCong.getValueAt(rowPC, 3));
+			cbMaCD.setSelectedItem(modelPhanCong.getValueAt(rowPC, 4));
+			spinChiTieu.setValue(Integer.parseInt(modelPhanCong.getValueAt(rowPC, 6).toString()));
 			tableCongNhan.clearSelection();
 		}
 	}
