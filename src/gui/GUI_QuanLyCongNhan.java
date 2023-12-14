@@ -41,6 +41,8 @@ import java.text.SimpleDateFormat;
 //import java.sql.Date;
 import java.util.Date;
 import java.util.List;
+import java.awt.Component;
+import javax.swing.BoxLayout;
 
 
 public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseListener {
@@ -60,6 +62,8 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseL
 	private JDateChooser dcNgaySinh, dcNgayVao;
 	private JLabel lblTrangThai, lblLuongSP, lblPhuCap, lblBangCap;
 	private JTextField txtLoc;
+	private Component horizontalStrut;
+	private Icon icon = new Icon();
 
 	public GUI_QuanLyCongNhan() {
 		setSize(new Dimension(1300, 700));
@@ -212,8 +216,15 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseL
 		
 		Box a = Box.createVerticalBox();
 		Box b = Box.createVerticalBox();
+		b.setPreferredSize(new Dimension(150, 0));
 		Box c = Box.createVerticalBox();
+		c.setPreferredSize(new Dimension(200, 0));
 		Box d = Box.createVerticalBox();
+		d.setPreferredSize(new Dimension(150, 0));
+		pnThongTin.setLayout(new BoxLayout(pnThongTin, BoxLayout.X_AXIS));
+		
+		horizontalStrut = Box.createHorizontalStrut(20);
+		pnThongTin.add(horizontalStrut);
 		
 		pnThongTin.add(a);
 		pnThongTin.add(Box.createHorizontalStrut(30));
@@ -340,7 +351,8 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseL
 		cbLoc.addItem("Trạng thái");
 		cbLoc.addItem("Tổ sản xuất");
 		txtLoc = new JTextField();
-		btnLoc = new JButton("Lọc");
+		btnLoc = new JButton(icon.iconTim);
+		btnLoc.setText("Lọc");
 		
 		pnTacVu.add(cbLoc);
 		pnTacVu.add(txtLoc);
@@ -388,10 +400,14 @@ public class GUI_QuanLyCongNhan extends JFrame implements ActionListener, MouseL
 		Container container = getContentPane();
 		container.add(pnContent);
 		//
-		d4.add(btnThem = new JButton("Thêm"));
-		d4.add(btnSua = new JButton("Sửa"));
-		d4.add(btnXoa = new JButton("Xóa"));
-		d4.add(btnXoaTrang = new JButton("Xóa trắng"));
+		d4.add(btnThem = new JButton(icon.iconThem));
+		btnThem.setText("Thêm");
+		d4.add(btnSua = new JButton(icon.iconSua));
+		btnSua.setText("Sửa");
+		d4.add(btnXoa = new JButton(icon.iconXoa));
+		btnXoa.setText("Xóa");
+		d4.add(btnXoaTrang = new JButton(icon.iconTaiLai));
+		btnXoaTrang.setText("Tải lại");
 		//Action
 		btnSua.addActionListener(this);
 		btnThem.addActionListener(this);

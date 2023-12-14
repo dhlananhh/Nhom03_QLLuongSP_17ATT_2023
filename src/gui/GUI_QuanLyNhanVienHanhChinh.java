@@ -64,6 +64,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import javax.swing.BoxLayout;
+import java.awt.Component;
 
 
 public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListener, MouseListener, PropertyChangeListener {
@@ -98,7 +100,7 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 	private List<TaiKhoan> listTaiKhoan = new ArrayList<TaiKhoan>();
 	
 	private Map<String, Boolean> daNhap = new HashMap<>();
-	
+	private Icon icon = new Icon();
 	
 	public GUI_QuanLyNhanVienHanhChinh() {
 		//get sql connection
@@ -220,6 +222,7 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		txtLuongCoBan = new JTextField();
 		lblPhuCap = new JLabel("Phụ cấp: ");
 		txtPhuCap = new JTextField();
+		txtPhuCap.setColumns(10);
 		lblHeSoLuong = new JLabel("Hệ số lương: ");
 		txtHeSoLuong = new JTextField();
 		
@@ -228,26 +231,6 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		
 		lblEmail = new JLabel("Email: ");
 		txtEmail = new JTextField();
-		
-		btnThem = new JButton("Thêm");
-		btnThem.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
-		btnThem.setBackground(buttonColor);
-		btnThem.setForeground(Color.WHITE);
-		
-		btnSua = new JButton("Sửa");
-		btnSua.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
-		btnSua.setBackground(buttonColor);
-		btnSua.setForeground(Color.WHITE);
-		
-		btnXoa = new JButton("Xóa");
-		btnXoa.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
-		btnXoa.setBackground(buttonColor);
-		btnXoa.setForeground(Color.WHITE);
-		
-		btnXoaRong = new JButton("Xóa rỗng");
-		btnXoaRong.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
-		btnXoaRong.setBackground(buttonColor);
-		btnXoaRong.setForeground(Color.WHITE);
 		
 		lblHoTenNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
 		txtHoTenNV.setFont(new Font("Be Vietnam Pro Regular", Font.PLAIN, 13));
@@ -286,14 +269,19 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		
 		Box a = Box.createVerticalBox();
 		Box b = Box.createVerticalBox();
+		b.setPreferredSize(new Dimension(200, 0));
 		Box c = Box.createVerticalBox();
+		c.setPreferredSize(new Dimension(100, 0));
 		Box d = Box.createVerticalBox();
+		d.setPreferredSize(new Dimension(100, 0));
 		Box e = Box.createVerticalBox();
+		pnThongTin.setLayout(new BoxLayout(pnThongTin, BoxLayout.X_AXIS));
 		
+		pnThongTin.add(Box.createHorizontalStrut(30));
 		pnThongTin.add(a);
-		pnThongTin.add(Box.createHorizontalStrut(30));
+		pnThongTin.add(Box.createHorizontalStrut(50));
 		pnThongTin.add(b);
-		pnThongTin.add(Box.createHorizontalStrut(30));
+		pnThongTin.add(Box.createHorizontalStrut(50));
 		pnThongTin.add(c);
 		pnThongTin.add(Box.createHorizontalStrut(30));
 		pnThongTin.add(d);
@@ -391,13 +379,9 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		d2.add(txtPhuCap);
 		d3.add(lblHeSoLuong);
 		d3.add(txtHeSoLuong);
-		d4.add(btnThem);
 		d4.add(Box.createHorizontalStrut(10));
-		d4.add(btnSua);
 		d4.add(Box.createHorizontalStrut(10));
-		d4.add(btnXoa);
 		d4.add(Box.createHorizontalStrut(10));
-		d4.add(btnXoaRong);
 		
 		lblPhuCap.setPreferredSize(lblLuongCoBan.getPreferredSize());
 		lblHeSoLuong.setPreferredSize(lblLuongCoBan.getPreferredSize());
@@ -408,7 +392,7 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		d.add(d2);
 		d.add(Box.createVerticalStrut(10));
 		d.add(d3);
-		d.add(Box.createVerticalStrut(10));
+		d.add(Box.createVerticalStrut(30));
 		d.add(d4);
 		
 		JPanel pnTacVu = new JPanel();
@@ -421,7 +405,8 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		cbLoc.addItem("Trạng thái");
 		cbLoc.addItem("Phòng ban");
 		txtLoc = new JTextField();
-		btnLoc = new JButton("Lọc");
+		btnLoc = new JButton(icon.iconTim);
+		btnLoc.setText("Lọc");
 		
 		pnTacVu.add(cbLoc);
 		pnTacVu.add(txtLoc);
@@ -433,6 +418,38 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		btnLoc.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
 		btnLoc.setBackground(buttonColor);
 		btnLoc.setForeground(Color.WHITE);
+		
+		btnThem = new JButton(icon.iconThem);
+		btnThem.setText("Thêm");
+		pnTacVu.add(btnThem);
+		btnThem.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
+		btnThem.setBackground(buttonColor);
+		btnThem.setForeground(Color.WHITE);
+		
+		btnSua = new JButton(icon.iconSua);
+		btnSua.setText("Sửa");
+		pnTacVu.add(btnSua);
+		btnSua.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
+		btnSua.setBackground(buttonColor);
+		btnSua.setForeground(Color.WHITE);
+		
+		btnXoa = new JButton(icon.iconXoa);
+		btnXoa.setText("Xóa");
+		pnTacVu.add(btnXoa);
+		btnXoa.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
+		btnXoa.setBackground(buttonColor);
+		btnXoa.setForeground(Color.WHITE);
+		
+		btnXoaRong = new JButton(icon.iconTaiLai);
+		btnXoaRong.setText("Tải lại");
+		pnTacVu.add(btnXoaRong);
+		btnXoaRong.setFont(new Font("Be Vietnam Pro Regular", Font.BOLD, 13));
+		btnXoaRong.setBackground(buttonColor);
+		btnXoaRong.setForeground(Color.WHITE);
+		btnXoaRong.addActionListener(this);
+		btnXoa.addActionListener(this);
+		btnSua.addActionListener(this);
+		btnThem.addActionListener(this);
 		
 		
 		
@@ -456,10 +473,6 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		container.add(pnContent);
 		
 		btnLoc.addActionListener(this);
-		btnThem.addActionListener(this);
-		btnXoa.addActionListener(this);
-		btnXoaRong.addActionListener(this);
-		btnSua.addActionListener(this);
 		cbLoc.addActionListener(this);
 		tableNV.addMouseListener(this);
 	}
