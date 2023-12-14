@@ -24,5 +24,6 @@
 	<classpathentry kind="lib" path="libraries/jfreechart-1.0.19-swt.jar"/>
 	<classpathentry kind="lib" path="libraries/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="lib" path="libraries/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="libraries/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
