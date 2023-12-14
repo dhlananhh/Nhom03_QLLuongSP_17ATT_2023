@@ -4,7 +4,12 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
+import dao.DAO_LuongNhanVienHanhChinh;
+
 public class LuongNhanVienHanhChinh {
+	private DAO_LuongNhanVienHanhChinh dao_luongNV = new DAO_LuongNhanVienHanhChinh();
+	private int soNgayDiLam = dao_luongNV.laySoNgayDiLam(getMaBangLuongHC(), getNam(), getThang());
+	
 	private String maBangLuongHC;
 	private Date ngayTinhLuong;
 	private int nam;
@@ -16,6 +21,7 @@ public class LuongNhanVienHanhChinh {
 	private double baoHiemYTe;
 	private double baoHiemThatNghiep;
 	private double thueTNCN;
+	// lương thực lãnh = lương chính - tiền tạm ứng - bhxh - bhyt - bhtn - thuế TNCN
 	private double luongThucLanh;
 	private NhanVienHanhChinh nhanVien;
 	
@@ -121,7 +127,7 @@ public class LuongNhanVienHanhChinh {
 
 
 	public void setLuongChinh(){
-//		this.luongChinh = (getNhanVien().getLuongCoBan() * getNhanVien().getHeSoLuong()) / 26 * soNgayDiLam;
+		this.luongChinh = (getNhanVien().getLuongCoBan() * getNhanVien().getHeSoLuong()) / 26 * soNgayDiLam;
 	}
 
 

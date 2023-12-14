@@ -85,7 +85,7 @@ public class DAO_LuongNhanVienHanhChinh {
 	}
 	
 	
-	public boolean updateLuongNhanVien (LuongNhanVienHanhChinh luongNV) {
+	public boolean updateLuongNhanVien (LuongNhanVienHanhChinh luongNV, double luongCu, double tienCu) {
 		Connection con = ConnectDB.getInstance().getConnection();
 		
 		if (con == null)
@@ -96,12 +96,12 @@ public class DAO_LuongNhanVienHanhChinh {
 		
 		try {
 			String sql = 	"UPDATE LuongNhanVienHanhChinh " +
-							"SET tienTamUng = ?, luongThucLanh = ? " +
+							"SET tienTamUng = ?, luongThucLanh = ? \r\n" +
 							"WHERE maBangLuongHC = ?";
 			stmt = con.prepareStatement(sql);
 			
 			stmt.setDouble(1, luongNV.getTienTamUng());
-			stmt.setDouble(2, luongNV.getLuongThucLanh());
+			stmt.setDouble(2, luongCu - (luongNV.getTienTamUng() - tienCu));
 			stmt.setString(3, luongNV.getMaBangLuongHC());
 			
 			n = stmt.executeUpdate();
@@ -115,33 +115,41 @@ public class DAO_LuongNhanVienHanhChinh {
 	}
 	
 	
-	/*
-	public boolean deleteLuongNhanVien (String maLuongNV) {
+	public LuongNhanVienHanhChinh timLuongNVTheoMaNV (String maNV) {
+		LuongNhanVienHanhChinh luongNhanVien = new LuongNhanVienHanhChinh();
 		Connection con = ConnectDB.getInstance().getConnection();
-		
-		if (con == null)
-			return false;
-		
 		PreparedStatement stmt = null;
-		int n = 0;
 		
 		try {
-			String sql = 	"DELETE FROM LuongNhanVienHanhChinh " +
-							"WHERE maBangLuongHC = '" + maLuongNV + "'";
+			String sql = 	"SELECT * FROM LuongNhanVienHanhChinh \r\n" +
+							"WHERE maNV = '" + maNV + "'";
 			stmt = con.prepareStatement(sql);
-			stmt.setString(1, maLuongNV);
-							
-			n = stmt.executeUpdate();
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				String maLuongNV = rs.getString(1);
+				Date ngayTinhLuong = rs.getDate(2);
+				int nam = rs.getInt(3);
+				int thang = rs.getInt(4);
+				double luongChinh = rs.getDouble(5);
+				double tienTamUng = rs.getDouble(6);
+				double baoHiemXaHoi = rs.getDouble(7);
+				double baoHiemYTe = rs.getDouble(8);
+				double baoHiemThatNghiep = rs.getDouble(9);
+				double thueTNCN = rs.getDouble(10);
+				double luongThucLanh = rs.getDouble(11);
+				String maNhanVien = rs.getString(12);
+				
+				NhanVienHanhChinh nhanVien = new NhanVienHanhChinh(maNhanVien);
+				luongNhanVien = new LuongNhanVienHanhChinh(maLuongNV, ngayTinhLuong, nam, thang, luongChinh, tienTamUng, baoHiemXaHoi, baoHiemYTe, baoHiemThatNghiep, thueTNCN, luongThucLanh, nhanVien);
+				
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			close(stmt);
 		}
 		
-		return n > 0;
+		return luongNhanVien;
 	}
-	
-	*/
 	
 	
 	public List<LuongNhanVienHanhChinh> timLuongTheoMaNV (String maNV) {
@@ -269,7 +277,6 @@ public class DAO_LuongNhanVienHanhChinh {
 			String sql = 	"SELECT * FROM LuongNhanVienHanhChinh \r\n" +
 							"WHERE thang = '" + month + "'";
 			stmt = con.prepareStatement(sql);
-			stmt.setInt(1, month);
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
@@ -298,6 +305,51 @@ public class DAO_LuongNhanVienHanhChinh {
 		return dsLuongNV;
 	}
 	
+	
+	// hàm lấy số ngày đi làm của nhân viên
+	public int laySoNgayDiLam (String maNhanVien, int nam, int thang) {
+		int soNgayDiLam = 0;
+		try {
+			Connection con = ConnectDB.getInstance().getConnection();
+			String sql = 	"SELECT COUNT(DISTINCT ngayCham) AS SoNgayDiLam \r\n" +
+							"FROM DiemDanh WHERE maNV = '" + maNhanVien + "'" + "\r\n" +  
+							"AND YEAR(ngayCham) = " + nam + "\r\n" +
+							"AND MONTH(ngayCham) = " + thang + "\r\n" +
+							"AND trangThai = N' ' \r\n";
+							
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				soNgayDiLam = Integer.parseInt(rs.getString(1));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return soNgayDiLam;
+	}
+	
+	
+	// hàm lấy số ngày đi nghỉ của nhân viên
+	public int laySoNgayNghi (String maNhanVien, int nam, int thang) {
+		int soNgayNghi = 0;
+		try {
+			Connection con = ConnectDB.getInstance().getConnection();
+			String sql = 	"SELECT COUNT(DISTINCT ngayCham) AS SoNgayNghi \r\n" +
+							"FROM DiemDanh WHERE maNV = '" + maNhanVien + "'" + "\r\n" +  
+							"AND YEAR(ngayCham) = " + nam + "\r\n" +
+							"AND MONTH(ngayCham) = " + thang + "\r\n" +
+							"AND trangThai = N'K' \r\n";
+							
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				soNgayNghi = Integer.parseInt(rs.getString(1));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return soNgayNghi;
+	}
 	
 	
 	public void close (PreparedStatement stmt) {

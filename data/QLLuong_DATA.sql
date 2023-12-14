@@ -194,16 +194,16 @@ INSERT [dbo].[NhanVienHanhChinh] ([maNV], [hoTenNV], [gioiTinh], [ngaySinh], [di
 GO
 INSERT INTO LuongNhanVienHanhChinh (maBangLuongHC, nam, thang, luongChinh, tienTamUng, baoHiemXaHoi, baoHiemYTe, baoHiemThatNghiep, thueTNCN, luongThucLanh, maNV)
 VALUES
-('LHCNV01', 2023, 12, 8000000, 1000000, 1200000, 500000, 200000, 800000, 6300000, 'NV01'),
-('LHCNV02', 2023, 12, 8500000, 1200000, 1400000, 600000, 250000, 850000, 6700000, 'NV02'),
-('LHCNV03', 2023, 12, 7500000, 800000, 1000000, 400000, 150000, 750000, 5900000, 'NV03'),
-('LHCNV04', 2023, 12, 9000000, 1500000, 1600000, 700000, 300000, 900000, 7200000, 'NV04'),
-('LHCNV05', 2023, 12, 9500000, 1800000, 1800000, 800000, 350000, 950000, 7600000, 'NV05'),
-('LHCNV06', 2023, 12, 7000000, 600000, 800000, 300000, 100000, 700000, 5500000, 'NV06'),
-('LHCNV07', 2023, 12, 8200000, 1100000, 1300000, 550000, 220000, 820000, 6500000, 'NV07'),
-('LHCNV08', 2023, 12, 7800000, 900000, 1100000, 450000, 180000, 780000, 6200000, 'NV08'),
-('LHCNV09', 2023, 12, 8700000, 1300000, 1500000, 650000, 270000, 870000, 6900000, 'NV09'),
-('LHCNV10', 2023, 12, 9200000, 1600000, 1700000, 750000, 320000, 920000, 7600000, 'NV10');
+('LHCNV01', '2023-12-01', 2023, 12, 8000000, 1000000, 1200000, 500000, 200000, 800000, 6300000, 'NV01'),
+('LHCNV02', '2023-12-01', 2023, 12, 8500000, 1200000, 1400000, 600000, 250000, 850000, 6700000, 'NV02'),
+('LHCNV03', '2023-12-01', 2023, 12, 7500000, 800000, 1000000, 400000, 150000, 750000, 5900000, 'NV03'),
+('LHCNV04', '2023-12-01', 2023, 12, 9000000, 1500000, 1600000, 700000, 300000, 900000, 7200000, 'NV04'),
+('LHCNV05', '2023-12-01', 2023, 12, 9500000, 1800000, 1800000, 800000, 350000, 950000, 7600000, 'NV05'),
+('LHCNV06', '2023-12-01', 2023, 12, 7000000, 600000, 800000, 300000, 100000, 700000, 5500000, 'NV06'),
+('LHCNV07', '2023-12-01', 2023, 12, 8200000, 1100000, 1300000, 550000, 220000, 820000, 6500000, 'NV07'),
+('LHCNV08', '2023-12-01', 2023, 12, 7800000, 900000, 1100000, 450000, 180000, 780000, 6200000, 'NV08'),
+('LHCNV09', '2023-12-01', 2023, 12, 8700000, 1300000, 1500000, 650000, 270000, 870000, 6900000, 'NV09'),
+('LHCNV10', '2023-12-01', 2023, 12, 9200000, 1600000, 1700000, 750000, 320000, 920000, 7600000, 'NV10');
 GO
 INSERT INTO LuongCongNhanSanXuat (maBangLuongCN, ngayTinhLuong, nam, thang, luongSanPham, tienTamUng, baoHiemXaHoi, baoHiemYTe, baoHiemThatNghiep, thueTNCN, luongThucLanh, maCN)
 VALUES
@@ -218,123 +218,125 @@ VALUES
 ('LSPCN09', '2023-12-01', 2023, 12, 100, 500000, 100000, 50000, 20000, 50000, 450000, 'CN09'),
 ('LSPCN10', '2023-12-01', 2023, 12, 120, 600000, 120000, 60000, 24000, 60000, 480000, 'CN10');
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV01', CAST(0x08460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV01', CAST(0x08460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV01', CAST(0x09460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV01', CAST(0x08460B00 AS Date), N' ')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV01', CAST(0x0A460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV01', CAST(0x09460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV01', CAST(0x0B460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV01', CAST(0x0A460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV01', CAST(0x0C460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV01', CAST(0x0B460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV01', CAST(0x0D460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV01', CAST(0x0C460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV02', CAST(0x08460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV01', CAST(0x0D460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV02', CAST(0x09460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV02', CAST(0x08460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV02', CAST(0x0A460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV02', CAST(0x09460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV02', CAST(0x0B460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV02', CAST(0x0A460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV02', CAST(0x0C460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV02', CAST(0x0B460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV02', CAST(0x0D460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV02', CAST(0x0C460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV03', CAST(0x08460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV02', CAST(0x0D460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV03', CAST(0x09460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV03', CAST(0x08460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV03', CAST(0x0A460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV03', CAST(0x09460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV03', CAST(0x0B460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV03', CAST(0x0A460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV03', CAST(0x0C460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV03', CAST(0x0B460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV03', CAST(0x0D460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV03', CAST(0x0C460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV04', CAST(0x08460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV03', CAST(0x0D460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV04', CAST(0x09460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV04', CAST(0x08460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV04', CAST(0x0A460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV04', CAST(0x09460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV04', CAST(0x0B460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV04', CAST(0x0A460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV04', CAST(0x0C460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV04', CAST(0x0B460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV04', CAST(0x0D460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV04', CAST(0x0C460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV05', CAST(0x08460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV04', CAST(0x0D460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV05', CAST(0x09460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV05', CAST(0x08460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV05', CAST(0x0A460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV05', CAST(0x09460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV05', CAST(0x0B460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV05', CAST(0x0A460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV05', CAST(0x0C460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV05', CAST(0x0B460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV05', CAST(0x0D460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV05', CAST(0x0C460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV06', CAST(0x08460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV05', CAST(0x0D460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV06', CAST(0x09460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV06', CAST(0x08460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV06', CAST(0x0A460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV06', CAST(0x09460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV06', CAST(0x0B460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV06', CAST(0x0A460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV06', CAST(0x0C460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV06', CAST(0x0B460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV06', CAST(0x0D460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV06', CAST(0x0C460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV07', CAST(0x08460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV06', CAST(0x0D460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV07', CAST(0x09460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV07', CAST(0x08460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV07', CAST(0x0A460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV07', CAST(0x09460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV07', CAST(0x0B460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV07', CAST(0x0A460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV07', CAST(0x0C460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV07', CAST(0x0B460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV07', CAST(0x0D460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV07', CAST(0x0C460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV08', CAST(0x08460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV07', CAST(0x0D460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV08', CAST(0x09460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV08', CAST(0x08460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV08', CAST(0x0A460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV08', CAST(0x09460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV08', CAST(0x0B460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV08', CAST(0x0A460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV08', CAST(0x0C460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV08', CAST(0x0B460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV08', CAST(0x0D460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV08', CAST(0x0C460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV09', CAST(0x08460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV08', CAST(0x0D460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV09', CAST(0x09460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV09', CAST(0x08460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV09', CAST(0x0A460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV09', CAST(0x09460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV09', CAST(0x0B460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV09', CAST(0x0A460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV09', CAST(0x0C460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV09', CAST(0x0B460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV09', CAST(0x0D460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV09', CAST(0x0C460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV10', CAST(0x08460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV09', CAST(0x0D460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV10', CAST(0x09460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV10', CAST(0x08460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV10', CAST(0x0A460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV10', CAST(0x09460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV10', CAST(0x0B460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV10', CAST(0x0A460B00 AS Date), N'K')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV10', CAST(0x0C460B00 AS Date), N'K')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV10', CAST(0x0B460B00 AS Date), N'P')
 GO
-INSERT [dbo].[DiemDanh] ([maNV], [ngayNghi], [trangThai]) VALUES (N'NV10', CAST(0x0D460B00 AS Date), N'P')
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV10', CAST(0x0C460B00 AS Date), N'K')
+GO
+INSERT [dbo].[DiemDanh] ([maNV], [ngayCham], [trangThai]) VALUES (N'NV10', CAST(0x0D460B00 AS Date), N'P')
 GO

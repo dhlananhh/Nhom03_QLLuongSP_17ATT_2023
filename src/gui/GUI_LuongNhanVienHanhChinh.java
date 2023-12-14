@@ -16,12 +16,15 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 
 import java.io.File;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
@@ -34,6 +37,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -54,6 +58,15 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+
 import connection.ConnectDB;
 import dao.DAO_LuongCongNhanSanXuat;
 import dao.DAO_LuongNhanVienHanhChinh;
@@ -61,7 +74,6 @@ import dao.DAO_NhanVienHanhChinh;
 import entity.LuongCongNhanSanXuat;
 import entity.LuongNhanVienHanhChinh;
 import entity.NhanVienHanhChinh;
-
 
 
 public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener, MouseListener {
@@ -400,7 +412,9 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		listLuongNV = dao_luongNV.getDanhSachLuongNhanVien();
 		modelNV.setRowCount(0);
 		int i = 1;
-		DecimalFormat df = new DecimalFormat("##,###00,000");
+		
+		Locale locale = new Locale("vi", "VN");
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 		
 		for (LuongNhanVienHanhChinh luongNV : listLuongNV) {
 			Object[] rowData = {
@@ -409,13 +423,13 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 					luongNV.getMaBangLuongHC(),
 					luongNV.getNam(),
 					luongNV.getThang(),
-					df.format(luongNV.getLuongChinh()),
-					df.format(luongNV.getTienTamUng()),
-					df.format(luongNV.getBaoHiemXaHoi()),
-					df.format(luongNV.getBaoHiemYTe()),
-					df.format(luongNV.getBaoHiemThatNghiep()),
-					df.format(luongNV.getThueTNCN()),
-					df.format(luongNV.getLuongThucLanh()),
+					currencyFormatter.format(luongNV.getLuongChinh()),
+					currencyFormatter.format(luongNV.getTienTamUng()),
+					currencyFormatter.format(luongNV.getBaoHiemXaHoi()),
+					currencyFormatter.format(luongNV.getBaoHiemYTe()),
+					currencyFormatter.format(luongNV.getBaoHiemThatNghiep()),
+					currencyFormatter.format(luongNV.getThueTNCN()),
+					currencyFormatter.format(luongNV.getLuongThucLanh()),
 					luongNV.getNhanVien().getMaNV()
 			};
 			modelNV.addRow(rowData);
@@ -453,10 +467,11 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		int thang = Integer.parseInt(strThang);
 		
 		int i = 1;
-		DecimalFormat df = new DecimalFormat("##,###00,000");
-		
 		listLuongNV = new ArrayList<LuongNhanVienHanhChinh>();
 		modelNV.getDataVector().removeAllElements();
+		
+		Locale locale = new Locale("vi", "VN");
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 		
 		if (thang == 0 && nam != 0) {
 			listLuongNV = dao_luongNV.timLuongNVTheoNam(nam);
@@ -473,13 +488,13 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 					luongNV.getMaBangLuongHC(),
 					luongNV.getNam(),
 					luongNV.getThang(),
-					df.format(luongNV.getLuongChinh()),
-					df.format(luongNV.getTienTamUng()),
-					df.format(luongNV.getBaoHiemXaHoi()),
-					df.format(luongNV.getBaoHiemYTe()),
-					df.format(luongNV.getBaoHiemThatNghiep()),
-					df.format(luongNV.getThueTNCN()),
-					df.format(luongNV.getLuongThucLanh()),
+					currencyFormatter.format(luongNV.getLuongChinh()),
+					currencyFormatter.format(luongNV.getTienTamUng()),
+					currencyFormatter.format(luongNV.getBaoHiemXaHoi()),
+					currencyFormatter.format(luongNV.getBaoHiemYTe()),
+					currencyFormatter.format(luongNV.getBaoHiemThatNghiep()),
+					currencyFormatter.format(luongNV.getThueTNCN()),
+					currencyFormatter.format(luongNV.getLuongThucLanh()),
 					luongNV.getNhanVien().getMaNV()
 			};
 			modelNV.addRow(rowData);
@@ -491,8 +506,10 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		String maNV = txtTimKiem.getText();
 		listLuongNV = dao_luongNV.timLuongTheoMaNV(maNV);
 		int i = 1;
-		DecimalFormat df = new DecimalFormat("##,###00,000");
 		modelNV.getDataVector().removeAllElements();
+		
+		Locale locale = new Locale("vi", "VN");
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 		
 		for (LuongNhanVienHanhChinh luongNV : listLuongNV) {
 			Object[] rowData = {
@@ -501,91 +518,107 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 					luongNV.getMaBangLuongHC(),
 					luongNV.getNam(),
 					luongNV.getThang(),
-					df.format(luongNV.getLuongChinh()),
-					df.format(luongNV.getTienTamUng()),
-					df.format(luongNV.getBaoHiemXaHoi()),
-					df.format(luongNV.getBaoHiemYTe()),
-					df.format(luongNV.getBaoHiemThatNghiep()),
-					df.format(luongNV.getThueTNCN()),
-					df.format(luongNV.getLuongThucLanh()),
+					currencyFormatter.format(luongNV.getLuongChinh()),
+					currencyFormatter.format(luongNV.getTienTamUng()),
+					currencyFormatter.format(luongNV.getBaoHiemXaHoi()),
+					currencyFormatter.format(luongNV.getBaoHiemYTe()),
+					currencyFormatter.format(luongNV.getBaoHiemThatNghiep()),
+					currencyFormatter.format(luongNV.getThueTNCN()),
+					currencyFormatter.format(luongNV.getLuongThucLanh()),
 					luongNV.getNhanVien().getMaNV()
 			};
 			modelNV.addRow(rowData);
 		}
 	}
 	
-	/*
-	// Hàm xuất PDF phiếu lương nhân viên
-	public void inPDF() {
-		List<LuongNhanVienHanhChinh> dsLuongNVDuocChon = new ArrayList<LuongNhanVienHanhChinh>();
-		int selectedRow = tableNV.getSelectedRow();
-		
-		// Lấy tên file từ text field
-        String tenFile = txtTimKiem.getText();
+	
+	public void exportExcel (JTable table) {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Chọn nơi lưu tệp Excel");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Tệp Excel (.xls)", "xls");
+		fileChooser.setFileFilter(filter);
 
-        // Tạo file PDF
-        Document document = new Document(PageSize.A4);
-        PdfWriter writer = null;
-        try {
-            writer = PdfWriter.getInstance(document, new FileOutputStream(tenFile));
-        } catch (DocumentException | IOException e1) {
-            e1.printStackTrace();
-        }
+		int userSelection = fileChooser.showSaveDialog(null);
 
-        // Thêm nội dung vào file PDF
-        document.open();
-        document.add(new Paragraph("Nội thất Hoàng Gia Phát"));
-        document.add(new Paragraph("12 Nguyễn Văn Bảo, phường 4, quận Gò Vấp, Thành phố Hồ Chí Minh"));
-        document.add(new Paragraph("PHIẾU LƯƠNG NHÂN VIÊN"));
-        document.add(new Paragraph("Mã phiếu lương: " + dsLuongNVDuocChon.get(selectedRow).get("maPhieuLuong")));
-        document.add(new Paragraph("Mã nhân viên: " + dsLuongNVDuocChon.get(selectedRow).get("maNhanVien")));
-        document.add(new Paragraph("Họ tên nhân viên: " + dsLuongNVDuocChon.get(selectedRow).get("hoTenNhanVien")));
-        document.add(new Paragraph("Số ngày công tính lương: " + dsLuongNVDuocChon.get(selectedRow).get("soNgayCongTinhLuong")));
-        document.add(new Paragraph("Số ngày công thực tế: " + dsLuongNVDuocChon.get(selectedRow).get("soNgayCongThucTe")));
-        document.add(new Paragraph("Số ngày nghỉ: " + dsLuongNVDuocChon.get(selectedRow).get("soNgayNghi")));
-        document.add(new Paragraph("Số ngày nghỉ có phép: " + dsLuongNVDuocChon.get(hangDuoc
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			try {
+				File fileToSave = fileChooser.getSelectedFile();
+				String filePath = fileToSave.getAbsolutePath();
+				if (fileToSave.exists()) {
+					int response = JOptionPane.showConfirmDialog(null, "Tệp đã tồn tại. Bạn có muốn ghi đè không?",
+							"Xác nhận ghi đè", JOptionPane.YES_NO_OPTION);
+
+					if (response != JOptionPane.YES_OPTION) {
+						return;
+					}
+				}
+				if (!filePath.endsWith(".xls")) {
+					filePath += ".xls";
+				}
+
+				Workbook workbook = new HSSFWorkbook();
+				Sheet sheet = workbook.createSheet("DanhSachNhanVien");
+
+				org.apache.poi.ss.usermodel.Font titleFont = sheet.getWorkbook().createFont();
+				titleFont.setBold(true);
+				titleFont.setFontHeightInPoints((short) 16);
+
+				CellStyle titleCellStyle = sheet.getWorkbook().createCellStyle();
+				titleCellStyle.setFont(titleFont);
+				titleCellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+				Row titleRow = sheet.createRow(0);
+
+				Cell titleCell = titleRow.createCell(0);
+				int nam = Integer.parseInt(cbLocNam.getSelectedItem().toString());
+				int thang = Integer.parseInt(cbLocThang.getSelectedItem().toString());
+				
+				String txt = "Danh sách lương nhân viên Tháng " + thang + " Năm " + nam;
+				titleCell.setCellValue(txt);
+				titleCell.setCellStyle(titleCellStyle);
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, tableNV.getColumnCount() - 1));
+
+				Row headerRow = sheet.createRow(1);
+				for (int col = 0; col < tableNV.getColumnCount(); col++) {
+					Cell cell = headerRow.createCell(col);
+					cell.setCellValue(tableNV.getColumnName(col));
+					sheet.autoSizeColumn(col);
+				}
+
+				for (int row = 0; row < tableNV.getRowCount(); row++) {
+					Row dataRow = sheet.createRow(row + 2);
+					for (int col = 0; col < tableNV.getColumnCount(); col++) {
+						Cell cell = dataRow.createCell(col);
+						Object cellValue = tableNV.getValueAt(row, col);
+						if (cellValue != null) {
+							if (cellValue instanceof String) {
+								cell.setCellValue((String) cellValue);
+							} else if (cellValue instanceof Number) {
+								cell.setCellValue(((Number) cellValue).doubleValue());
+							} else {
+								cell.setCellValue(cellValue.toString());
+							}
+						}
+					}
+				}
+
+				for (int col = 0; col < tableNV.getColumnCount(); col++) {
+					sheet.autoSizeColumn(col);
+				}
+
+				try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+					workbook.write(fileOut);
+					JOptionPane.showMessageDialog(null, "Tạo và lưu tệp Excel thành công!");
+				} catch (Exception e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Lỗi khi tạo và lưu tệp Excel!");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
-	*/
 	
-	
-	// Hàm xuất file CSV (đuôi .csv)
-	public void exportCSV(JTable table) {
-        JFileChooser fileChooser = new JFileChooser();
-        int i = fileChooser.showSaveDialog(fileChooser);
-        if (i == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(file + ".csv"), StandardCharsets.UTF_8);
-                 BufferedWriter bwrite = new BufferedWriter(out)) {
-
-                DefaultTableModel modelNV = (DefaultTableModel) table.getModel();
-
-                // Ten Cot
-                for (int j = 0; j < modelNV.getColumnCount(); j++) {
-                    bwrite.write(modelNV.getColumnName(j));
-                    if (j < modelNV.getColumnCount() - 1) {
-                        bwrite.write(","); // Phân tách giữa các cột
-                    }
-                }
-                bwrite.write("\n");
-
-                // Lay du lieu dong
-                for (int j = 0; j < modelNV.getRowCount(); j++) {
-                    for (int k = 0; k < modelNV.getColumnCount(); k++) {
-                        bwrite.write(modelNV.getValueAt(j, k).toString());
-                        if (k < modelNV.getColumnCount() - 1) {
-                            bwrite.write(","); // Phân tách giữa các cột
-                        }
-                    }
-                    bwrite.write("\n");
-                }
-
-                JOptionPane.showMessageDialog(null, "Lưu file thành công!");
-            } catch (IOException e2) {
-                e2.printStackTrace(); // In lỗi ra console để debug
-                JOptionPane.showMessageDialog(null, "Lỗi khi lưu file!");
-            }
-        }
-    }
 	
 	
 	public void hienThiDuLieuDuocChon() {
@@ -642,7 +675,8 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		
 		if (o.equals(btnXuatExcel)) {
 //			exportExcel(tableNV);
-			exportCSV(tableNV);
+//			exportCSV(tableNV);
+			exportExcel(tableNV);
 		}
 		else if (o.equals(btnLamMoi)) {
 			modelNV.getDataVector().removeAllElements();
@@ -655,7 +689,8 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 			timLuongTheoMaNV();
 		}
 		else if (o.equals(btnInPDF)) {
-//			inPDF();
+			String maNV = (String) cbMaNV.getSelectedItem();
+			gui.PDFLuongNV.InPhieuLuongNV(maNV);
 		}
 		else if (o.equals(btnSua)) {
 			if (chinhSua) {
@@ -670,13 +705,15 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
                 double tienTamUng = Double.parseDouble(txtTienTamUng.getText());
                 int row = tableNV.getSelectedRow();
                 String maLuong = modelNV.getValueAt(row, 2).toString();
-//                LuongCongNhanSanXuat luongCN = new LuongCongNhanSanXuat(maLuong, tienTamUng);
+                double luongCu = listLuongNV.get(row).getLuongThucLanh();
+                double tienCu = listLuongNV.get(row).getTienTamUng();
                 LuongNhanVienHanhChinh luongNV = new LuongNhanVienHanhChinh(maLuong, tienTamUng);
-                dao_luongNV.updateLuongNhanVien(luongNV);
+                dao_luongNV.updateLuongNhanVien(luongNV, luongCu, tienCu);
                 modelNV.getDataVector().removeAllElements();
                 layDuLieuLuong();
+                
             }
-            chinhSua = !chinhSua;
+			chinhSua = !chinhSua;
 		}
 	}
 

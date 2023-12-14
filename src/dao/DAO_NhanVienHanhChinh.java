@@ -5,6 +5,9 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
+
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -405,6 +408,50 @@ public class DAO_NhanVienHanhChinh {
 		
 		
 		return n > 0;
+	}
+	
+	
+	// lấy hệ số lương
+	public double layHeSoLuong (String maNhanVien) {
+		double heSoLuong = 0;
+		
+		try {
+			Connection con = ConnectDB.getInstance().getConnection();
+			String sql = 	"SELECT heSoLuong AS heSoLuong \r\n" +
+							"FROM NhanVienHanhChinh WHERE maNV = '" + maNhanVien + "'" + "\r\n"; 
+							
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				heSoLuong = Double.parseDouble(rs.getString(1));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return heSoLuong;
+	}
+	
+	
+	// lấy số tiền phụ cấp của nhân viên
+	public double layTienPhuCap (String maNhanVien) {
+		double tienPhuCap = 0;
+		
+		try {
+			Connection con = ConnectDB.getInstance().getConnection();
+			String sql = 	"SELECT phuCap AS tienPhuCap \r\n" +
+							"FROM NhanVienHanhChinh WHERE maNV = '" + maNhanVien + "'" + "\r\n"; 
+							
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				tienPhuCap = Double.parseDouble(rs.getString(1));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return tienPhuCap;
 	}
 	
 	
