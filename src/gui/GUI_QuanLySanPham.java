@@ -354,6 +354,8 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 			txtGiaThanh.setText("");
 			txtThuTu.setText("");
 			txtSoLuong.setText("");
+			moSP();
+			khoaCD();
 		}
 		
 		if(o.equals(btnLoc)) {
@@ -605,6 +607,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 			}
 		}
 		if(o.equals(tableCD)) {
+			khoaCD();
 			int rowCD = tableCD.getSelectedRow();
 			txtMCD.setText(modelCD.getValueAt(rowCD, 0).toString());
 			txtTenCD.setText(modelCD.getValueAt(rowCD, 1).toString());
