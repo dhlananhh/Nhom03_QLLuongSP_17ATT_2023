@@ -95,6 +95,10 @@ public class Menu extends JComponent {
         panel.setBackground(new Color(0, 102, 204));
         for (int i = 1; i < length; i++) {
             MenuItem subItem = new MenuItem(menuItems[index][i], i, false);
+            Icon icon = getIcon(Integer.parseInt(index+""+i));
+            if (icon != null) {
+            	subItem.setIcon(icon);
+            }
             subItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
