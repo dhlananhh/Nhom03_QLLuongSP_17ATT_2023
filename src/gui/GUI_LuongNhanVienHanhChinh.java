@@ -68,10 +68,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import connection.ConnectDB;
-import dao.DAO_LuongCongNhanSanXuat;
 import dao.DAO_LuongNhanVienHanhChinh;
 import dao.DAO_NhanVienHanhChinh;
-import entity.LuongCongNhanSanXuat;
 import entity.LuongNhanVienHanhChinh;
 import entity.NhanVienHanhChinh;
 
@@ -436,29 +434,6 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
 		}
 	}
 	
-	/*
-	// thêm dữ liệu lương NV vào database
-	public boolean themDuLieuLuongNV() {
-		LuongNhanVienHanhChinh luongNV = new LuongNhanVienHanhChinh();
-		
-		dao_luongNV.themMoiLuongNhanVien(luongNV);
-		
-		Object[] rowData = {
-				luongNV.getMaBangLuongHC(), luongNV.getNam(), luongNV.getThang(), 
-				luongNV.isTrangThai() == true ? "Đã được trả lương" : "Chưa được trả lương",
-				luongNV.getNhanVien().getMaNV(),
-				luongNV.getHeSoLuong(),
-				luongNV.getLuongCoBan(), luongNV.getPhuCap(),
-				luongNV.getLuongThucLanh()
-				
-		};
-		modelNV.addRow(rowData);
-		JOptionPane.showMessageDialog(this, "Thêm thành công!");
-		
-		return true;
-	}
-	*/
-	
 	
 	public void locDuLieuLuongNV() {
 		String strNam = (String) cbLocNam.getSelectedItem();
@@ -711,8 +686,9 @@ public class GUI_LuongNhanVienHanhChinh extends JFrame implements ActionListener
                 dao_luongNV.updateLuongNhanVien(luongNV, luongCu, tienCu);
                 modelNV.getDataVector().removeAllElements();
                 layDuLieuLuong();
-                
+                JOptionPane.showMessageDialog(null, "Sửa thành công!");
             }
+			
 			chinhSua = !chinhSua;
 		}
 	}

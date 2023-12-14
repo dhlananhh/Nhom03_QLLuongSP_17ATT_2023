@@ -141,7 +141,7 @@ public class GUI_DangNhap extends JFrame implements ActionListener {
 
 			{
 				try {
-					backgroundImage = ImageIO.read(new File("icons/loginLogo.png"));
+					backgroundImage = ImageIO.read(new File("src/icons/loginLogo.png"));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

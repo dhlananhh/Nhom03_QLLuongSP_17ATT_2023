@@ -16,6 +16,8 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -34,6 +36,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -64,6 +67,7 @@ import dao.DAO_CongNhan;
 import dao.DAO_LuongCongNhanSanXuat;
 import dao.DAO_LuongNhanVienHanhChinh;
 import dao.DAO_NhanVienHanhChinh;
+import entity.CongNhanSanXuat;
 import entity.LuongCongNhanSanXuat;
 import entity.LuongNhanVienHanhChinh;
 import entity.NhanVienHanhChinh;
@@ -93,6 +97,9 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 	
 	private DAO_LuongCongNhanSanXuat dao_luongCNSX;
 	private DAO_CongNhan dao_cn;
+	
+	private List<LuongCongNhanSanXuat> dsLuongCN = new ArrayList<LuongCongNhanSanXuat>();
+	private List<CongNhanSanXuat> dsCongNhan = new ArrayList<CongNhanSanXuat>();
 	
 	public GUI_LuongCongNhanSanXuat() {
 		//get sql connection
@@ -401,12 +408,86 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 		List<LuongCongNhanSanXuat> dsLuongCongNhanSanXuat = dao_luongCNSX.layDuLieuLuongCN();
 		soLuongBangLuong = dsLuongCongNhanSanXuat.size();
 		int i = 1;
+		
+		Locale locale = new Locale("vi", "VN");
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+		
 		for (LuongCongNhanSanXuat luongCN : dsLuongCongNhanSanXuat) {
 			modelCN.addRow(new Object[] {
-					i++, luongCN.getNgayTinhLuong(), luongCN.getMaBangLuongCN(), luongCN.getNam(),
-					luongCN.getThang(), luongCN.getLuongSanPham(), luongCN.getTamUng(), luongCN.getBaoHiemXaHoi(),
-					luongCN.getBaoHiemYTe(), luongCN.getBaoHiemThatNghiep(), luongCN.getThueTNCN(), luongCN.getLuongThucLanh(),
+					i++, luongCN.getNgayTinhLuong(), 
+					luongCN.getMaBangLuongCN(), luongCN.getNam(), luongCN.getThang(), 
+					currencyFormatter.format(luongCN.getLuongSanPham()), 
+					currencyFormatter.format(luongCN.getTamUng()), 
+					currencyFormatter.format(luongCN.getBaoHiemXaHoi()),
+					currencyFormatter.format(luongCN.getBaoHiemYTe()), 
+					currencyFormatter.format(luongCN.getBaoHiemThatNghiep()), 
+					currencyFormatter.format(luongCN.getThueTNCN()), 
+					currencyFormatter.format(luongCN.getLuongThucLanh()),
 					luongCN.getCongNhan().getMaCN()});
+		}
+	}
+	
+	
+	public void locDuLieuLuongCN() {
+		String strThang = (String) cbLocThang.getSelectedItem();
+		String strNam = (String) cbLocNam.getSelectedItem();
+		int thang = Integer.parseInt(strThang);
+		int nam = Integer.parseInt(strNam);
+		List<LuongCongNhanSanXuat> dsLuongCN = new ArrayList<>();
+		int i = 1;
+		
+		Locale locale = new Locale("vi", "VN");
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+		
+		modelCN.getDataVector().removeAllElements();
+
+		if (thang == 0 && nam != 0) {
+		    dsLuongCN = dao_luongCNSX.timLuongTheoNam(nam);
+		} else if (nam == 0 && thang != 0) {
+		    dsLuongCN = dao_luongCNSX.timLuongTheoThang(thang);
+		} else {
+		    dsLuongCN = dao_luongCNSX.timLuongTheoThangNam(nam, thang);
+		}
+
+		for (LuongCongNhanSanXuat luongCN : dsLuongCN) {
+		    modelCN.addRow(new Object[] {
+			    		i++, luongCN.getNgayTinhLuong(), 
+			    		currencyFormatter.format(luongCN.getLuongSanPham()), 
+						currencyFormatter.format(luongCN.getTamUng()), 
+						currencyFormatter.format(luongCN.getBaoHiemXaHoi()),
+						currencyFormatter.format(luongCN.getBaoHiemYTe()), 
+						currencyFormatter.format(luongCN.getBaoHiemThatNghiep()), 
+						currencyFormatter.format(luongCN.getThueTNCN()), 
+						currencyFormatter.format(luongCN.getLuongThucLanh()),
+			            luongCN.getCongNhan().getMaCN()
+		            }
+		    );
+		}
+	}
+	
+	
+	public void timLuongTheoMaCN() {
+		String maCN = txtTimKiem.getText();
+		List<LuongCongNhanSanXuat> dsluongCN = dao_luongCNSX.timLuongTheoMaCN(maCN);
+		int i = 1;
+		
+		Locale locale = new Locale("vi", "VN");
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+		
+		modelCN.getDataVector().removeAllElements();
+		for (LuongCongNhanSanXuat luongCN : dsluongCN) {
+		    modelCN.addRow(new Object[] {
+			    		i++, luongCN.getNgayTinhLuong(), 
+			    		currencyFormatter.format(luongCN.getLuongSanPham()), 
+						currencyFormatter.format(luongCN.getTamUng()), 
+						currencyFormatter.format(luongCN.getBaoHiemXaHoi()),
+						currencyFormatter.format(luongCN.getBaoHiemYTe()), 
+						currencyFormatter.format(luongCN.getBaoHiemThatNghiep()), 
+						currencyFormatter.format(luongCN.getThueTNCN()), 
+						currencyFormatter.format(luongCN.getLuongThucLanh()),
+			            luongCN.getCongNhan().getMaCN()
+		            }
+		    );
 		}
 	}
 	
@@ -559,40 +640,10 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
 			layDuLieuLuongCongNhan();
 		}
 		if(o.equals(btnLoc)) {
-			String strThang = (String) cbLocThang.getSelectedItem();
-			String strNam = (String) cbLocNam.getSelectedItem();
-			int thang = Integer.parseInt(strThang);
-			int nam = Integer.parseInt(strNam);
-			ArrayList<LuongCongNhanSanXuat> dsLuongCN = new ArrayList<>();
-			int i = 1;
-			modelCN.getDataVector().removeAllElements();
-
-			if (thang == 0 && nam != 0) {
-			    dsLuongCN = dao_luongCNSX.timLuongTheoNam(nam);
-			} else if (nam == 0 && thang != 0) {
-			    dsLuongCN = dao_luongCNSX.timLuongTheoThang(thang);
-			} else {
-			    dsLuongCN = dao_luongCNSX.timLuongTheoThangNam(nam, thang);
-			}
-
-			for (LuongCongNhanSanXuat luongCN : dsLuongCN) {
-			    modelCN.addRow(new Object[] {i++, luongCN.getNgayTinhLuong(), luongCN.getMaBangLuongCN(), luongCN.getNam(),
-			            luongCN.getThang(), luongCN.getLuongSanPham(), luongCN.getTamUng(), luongCN.getBaoHiemXaHoi(),
-			            luongCN.getBaoHiemYTe(), luongCN.getBaoHiemThatNghiep(), luongCN.getThueTNCN(), luongCN.getLuongThucLanh(),
-			            luongCN.getCongNhan().getMaCN()});
-			}
+			locDuLieuLuongCN();
 		}
 		if(o.equals(btnTimKiem)) {
-			String maCN = txtTimKiem.getText();
-			ArrayList<LuongCongNhanSanXuat> dsluongCN = dao_luongCNSX.timLuongTheoMaCN(maCN);
-			int i = 1;
-			modelCN.getDataVector().removeAllElements();
-			for (LuongCongNhanSanXuat luongCN : dsluongCN) {
-			    modelCN.addRow(new Object[] {i++, luongCN.getNgayTinhLuong(), luongCN.getMaBangLuongCN(), luongCN.getNam(),
-			            luongCN.getThang(), luongCN.getLuongSanPham(), luongCN.getTamUng(), luongCN.getBaoHiemXaHoi(),
-			            luongCN.getBaoHiemYTe(), luongCN.getBaoHiemThatNghiep(), luongCN.getThueTNCN(), luongCN.getLuongThucLanh(),
-			            luongCN.getCongNhan().getMaCN()});
-			}
+			timLuongTheoMaCN();
 		}
 		if (o.equals(btnSua)) {
             if (chinhSua) {
@@ -608,11 +659,12 @@ public class GUI_LuongCongNhanSanXuat extends JFrame implements ActionListener, 
                 int row = tableCN.getSelectedRow();
                 String maLuong = modelCN.getValueAt(row, 2).toString();
                 double luongCu = Double.parseDouble(modelCN.getValueAt(row, 11).toString());
-                double tienCu = Double.parseDouble(modelCN.getValueAt(row, 6).toString());
+                double tienCu = Double.parseDouble(modelCN.getValueAt(row, 11).toString());
                 LuongCongNhanSanXuat luongCN = new LuongCongNhanSanXuat(maLuong, tienTamUng);
                 dao_luongCNSX.capNhatLuong(luongCN, luongCu, tienCu);
                 modelCN.getDataVector().removeAllElements();
                 layDuLieuLuongCongNhan();
+                JOptionPane.showMessageDialog(null, "Sửa thành công!");
             }
             chinhSua = !chinhSua;
         }

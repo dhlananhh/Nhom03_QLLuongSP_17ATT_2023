@@ -16,8 +16,8 @@ import entity.CongNhanSanXuat;
 import entity.LuongCongNhanSanXuat;
 
 public class DAO_LuongCongNhanSanXuat {
-	public ArrayList<LuongCongNhanSanXuat> layDuLieuLuongCN(){
-		ArrayList<LuongCongNhanSanXuat> dsLuongCN = new ArrayList<LuongCongNhanSanXuat>();
+	public List<LuongCongNhanSanXuat> layDuLieuLuongCN(){
+		List<LuongCongNhanSanXuat> dsLuongCN = new ArrayList<LuongCongNhanSanXuat>();
 		try {
 			ConnectDB.getInstance();
 			Connection con = ConnectDB.getConnection();
@@ -47,8 +47,8 @@ public class DAO_LuongCongNhanSanXuat {
 	}
 	
 	
-	public ArrayList<LuongCongNhanSanXuat> timLuongTheoThangNam(int soNam, int soThang){
-		ArrayList<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
+	public List<LuongCongNhanSanXuat> timLuongTheoThangNam(int soNam, int soThang){
+		List<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
@@ -81,8 +81,8 @@ public class DAO_LuongCongNhanSanXuat {
 	}
 	
 	
-	public ArrayList<LuongCongNhanSanXuat> timLuongTheoThang(int soThang){
-		ArrayList<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
+	public List<LuongCongNhanSanXuat> timLuongTheoThang(int soThang){
+		List<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
@@ -114,8 +114,8 @@ public class DAO_LuongCongNhanSanXuat {
 	}
 	
 	
-	public ArrayList<LuongCongNhanSanXuat> timLuongTheoNam(int soNam){
-		ArrayList<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
+	public List<LuongCongNhanSanXuat> timLuongTheoNam(int soNam){
+		List<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
@@ -147,8 +147,8 @@ public class DAO_LuongCongNhanSanXuat {
 	}
 	
 	
-	public ArrayList<LuongCongNhanSanXuat> timLuongTheoMaCN(String maCN){
-		ArrayList<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
+	public List<LuongCongNhanSanXuat> timLuongTheoMaCN(String maCN){
+		List<LuongCongNhanSanXuat> dsLuong = new ArrayList<LuongCongNhanSanXuat>();
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement statement = null;
@@ -225,7 +225,20 @@ public class DAO_LuongCongNhanSanXuat {
 			n = statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			close(statement);
 		}
 		return n > 0;
+	}
+	
+	
+	public void close (PreparedStatement stmt) {
+		if (stmt != null) {
+			try {
+				stmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

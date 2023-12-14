@@ -9,8 +9,65 @@ import java.util.ArrayList;
 
 import connection.ConnectDB;
 import entity.TaiKhoan;
+import java.util.Properties;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 
 public class DAO_TaiKhoan {
+	
+    public int sendEmail(String email){
+        final String from = "hieutrungminecraft@gmail.com";
+        final String password = "dkkl yitv pwsa cmji";
+        
+        Properties props = new Properties();
+        props.put("mail.smtp.host","smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth","true");
+        props.put("mail.smtp.starttls.enable","true");
+       
+        Authenticator auth;
+        auth = new Authenticator() {
+            @Override
+            protected  PasswordAuthentication getPasswordAuthentication(){
+                return new PasswordAuthentication(from,password);
+            }       
+        };
+        
+        Session session = Session.getInstance(props, auth);
+        final String to = email;
+        MimeMessage msg = new MimeMessage(session);
+        
+        try {
+            msg.addHeader("Content-type", "text/HTML;charset=UTF-8");
+
+            msg.setFrom(from);
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to,false));
+            msg.setSubject("Đặt lại mật khẩu");
+            msg.setSentDate(new java.util.Date());
+            Random generator = new Random();
+            int OTP =  100000 + generator.nextInt(900000);
+           
+            if(OTP<0) OTP = OTP * (-1);
+            msg.setText("Xin chào!\nBạn đang đặt lại mật khẩu cho tài khoản với email "+email+"\nTUYỆT ĐỐI KHÔNG CHIA SẺ MÃ OTP NÀY CHO BẤT KÌ AI!\n\nMã OTP của bạn là: "+String.valueOf(OTP),"UTF-8");
+            Transport.send(msg);
+            return OTP;
+        } catch (Exception e) {
+            
+            e.printStackTrace();
+            return -1;
+        }
+        
+    }
+        
 	public ArrayList<TaiKhoan> layDuLieuTK(){
 		ArrayList<TaiKhoan> dsTaiKhoan = new ArrayList<TaiKhoan>();
 		try {
@@ -51,6 +108,24 @@ public class DAO_TaiKhoan {
 			}
 		}
 		return n > 0;
+	}
+	public String layEmailTheoTK(String tenTK) {
+		String email = "";
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		TaiKhoan tk = new TaiKhoan();
+		try {
+			Statement stm = con.createStatement();
+			ResultSet rs = stm.executeQuery("select nv.email from NhanVienHanhChinh nv join TaiKhoan tk on nv.tenTK = tk.tenTK where tk.tenTK = '"+tenTK+"'");
+			while(rs.next()) {
+				email = rs.getString("email");
+			}
+		}
+		catch (SQLException e) {
+				e.printStackTrace();
+			}	
+		
+		return email;
 	}
 	public TaiKhoan layTKTheoTen(String tenTK) {
 		ConnectDB.getInstance();
