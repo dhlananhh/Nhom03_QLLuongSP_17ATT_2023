@@ -7,24 +7,21 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import java.awt.Frame;
+
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
 import java.util.Locale;
 
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 
-import com.toedter.calendar.JDateChooser;
+
+
 import com.formdev.flatlaf.FlatLightLaf;
-import com.toedter.calendar.JCalendar;
-import com.toedter.components.JSpinField;
+
 
 import charts.ChartPanelTongCongDoan;
 import charts.ChartPanelTongLuong;
@@ -32,9 +29,7 @@ import charts.PanelDanhSachCongNhan;
 import charts.PanelDanhSachNhanVien;
 import charts.PanelDanhSachSanPham;
 import connection.ConnectDB;
-//import controller.ChuyenManHinh;
-//import dao.TongSoHoaDon_DAO;
-//import entity.DanhMuc;
+
 import dao.DAO_TongLuongCongNhan;
 import dao.DAO_TongLuongNhanVien;
 import dao.DAO_TongSanPham;
@@ -47,32 +42,13 @@ import entity.TongSanPham;
 //import entity.TongSoHoaDon;
 
 import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import java.awt.Component;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+
 
 //import org.jfree.data.category.DefaultCategoryDataset;
 
-import com.toedter.calendar.JMonthChooser;
-import javax.swing.DefaultComboBoxModel;
-import com.toedter.calendar.JDayChooser;
-import com.toedter.calendar.JYearChooser;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.JTextArea;
-import java.awt.Canvas;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EtchedBorder;
+
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.Year;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
@@ -107,7 +83,6 @@ public class GUI_ThongKe extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FlatLightLaf.setup();
 					GUI_ThongKe frame = new GUI_ThongKe();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -158,10 +133,12 @@ public class GUI_ThongKe extends JFrame implements ActionListener {
 		panelTong.add(panelGiua);
 		panelGiua.setLayout(null);
 
-		btnThongKe = new JButton("Thống kê");
+		btnThongKe = new JButton();
+		btnThongKe.setIcon(new ImageIcon("icons/stat.png"));
+		btnThongKe.setText("Thống kê");
 		btnThongKe.setBackground(Color.WHITE);
 		btnThongKe.setFont(new Font("Arial", Font.PLAIN, 12));
-		btnThongKe.setBounds(542, 22, 115, 25);
+		btnThongKe.setBounds(382, 22, 115, 30);
 		panelGiua.add(btnThongKe);
 
 		cboThang = new JComboBox<>();
@@ -172,11 +149,11 @@ public class GUI_ThongKe extends JFrame implements ActionListener {
 
 		JLabel lblcboNam = new JLabel("Năm:");
 		lblcboNam.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblcboNam.setBounds(271, 24, 76, 23);
+		lblcboNam.setBounds(139, 22, 76, 23);
 		panelGiua.add(lblcboNam);
 
 		cboNam = new JComboBox<>();
-		cboNam.setBounds(345, 22, 146, 25);
+		cboNam.setBounds(191, 22, 146, 25);
 		for (int i = Year.now().getValue() - 3; i <= Year.now().getValue(); i++) {
 			cboNam.addItem(i);
 		}
@@ -211,34 +188,30 @@ public class GUI_ThongKe extends JFrame implements ActionListener {
 		btnLuongNhanVien = new JButton("Lương nhân viên");
 		btnLuongNhanVien.setBackground(new Color(220, 220, 220));
 		btnLuongNhanVien.setBorder(new LineBorder(Color.WHITE, 1, true));
-		btnLuongNhanVien.setBounds(10, 77, 146, 66);
+		btnLuongNhanVien.setBounds(32, 77, 146, 66);
 		panelGiua.add(btnLuongNhanVien);
 		btnLuongNhanVien.setLayout(null);
 
 		btnLuongCongNhan = new JButton("Lương công nhân");
 		btnLuongCongNhan.setBackground(new Color(220, 220, 220));
 		btnLuongCongNhan.setBorder(new LineBorder(Color.WHITE, 1, true));
-		btnLuongCongNhan.setBounds(175, 77, 146, 66);
+		btnLuongCongNhan.setBounds(254, 77, 146, 66);
 		panelGiua.add(btnLuongCongNhan);
 		btnLuongCongNhan.setLayout(null);
 
 		btnSoLuongSanPham = new JButton("Số lượng sản phẩm");
 		btnSoLuongSanPham.setBackground(new Color(220, 220, 220));
 		btnSoLuongSanPham.setBorder(new LineBorder(Color.WHITE, 1, true));
-		btnSoLuongSanPham.setBounds(345, 77, 146, 66);
+		btnSoLuongSanPham.setBounds(473, 77, 146, 66);
 		panelGiua.add(btnSoLuongSanPham);
 		btnSoLuongSanPham.setLayout(null);
 
-		btnLoiNhuanTheoNgay = new JButton("test 123 test");
-		btnLoiNhuanTheoNgay.setBackground(new Color(220, 220, 220));
-		btnLoiNhuanTheoNgay.setBorder(new LineBorder(Color.WHITE, 1, true));
-		btnLoiNhuanTheoNgay.setBounds(511, 77, 146, 66);
-		panelGiua.add(btnLoiNhuanTheoNgay);
-		btnLoiNhuanTheoNgay.setLayout(null);
-
+		btnLuongNhanVien.setEnabled(false);
+		btnLuongCongNhan.setEnabled(false);
+		btnSoLuongSanPham.setEnabled(false);
+		
 		// Dang ky su kien cho button Thong ke
 		btnThongKe.addActionListener(this);
-		btnLoiNhuanTheoNgay.addActionListener(this);
 		btnLuongNhanVien.addActionListener(this);
 		btnLuongCongNhan.addActionListener(this);
 		btnSoLuongSanPham.addActionListener(this);
@@ -252,59 +225,67 @@ public class GUI_ThongKe extends JFrame implements ActionListener {
 			
 		}
 		if(o.equals(btnLuongCongNhan)){
+			btnThongKe.setBorder(new LineBorder(Color.WHITE, 2, true));
+			btnThongKe.setBorder(new LineBorder(Color.WHITE, 2, true));
 			int nam = Integer.parseInt(cboNam.getSelectedItem().toString());
 			DAO_TongLuongCongNhan dao_luongCN = new DAO_TongLuongCongNhan();
 			ArrayList<TongLuong> tongLuongList = dao_luongCN.getTongLuongCongNhan(nam);
 			ArrayList<TongLuongCongNhan> tongCN = dao_luongCN.getDanhSachTopCongNhan(nam);
 			ChartPanelTongLuong panelBieuDoNew = new ChartPanelTongLuong(tongLuongList);
+			panelBieuDo.removeAll();
 	        panelGiua.remove(panelBieuDo);
 	        panelBieuDo = panelBieuDoNew;
 	        panelBieuDo.setBounds(10, 172, 647, 418);
 	        panelGiua.add(panelBieuDo);
-	        
 	        PanelDanhSachCongNhan panelDSCN = new PanelDanhSachCongNhan(tongCN);
+	        panelDanhSach.removeAll();
 	        panelGiua.remove(panelDanhSach);
 	        panelDanhSach = panelDSCN;
 	        panelDanhSach.setBounds(678, 11, 595, 579);
 	        panelGiua.add(panelDanhSach);
-
-	        
-	        revalidate();
 	        repaint();
+	        revalidate();
+	        
 		}
 		if(o.equals(btnLuongNhanVien)){
+			btnThongKe.setBorder(new LineBorder(Color.WHITE, 2, true));
+			btnThongKe.setBorder(new LineBorder(Color.WHITE, 2, true));
 			int nam = Integer.parseInt(cboNam.getSelectedItem().toString());
 			DAO_TongLuongNhanVien dao_luongNV = new DAO_TongLuongNhanVien();
 			ArrayList<TongLuong> tongLuongList = dao_luongNV.getTongLuongCongTy(nam);
 			ArrayList<TongLuongNhanVien> tongNV = dao_luongNV.getTongLuongNhanVien(nam);
 			ChartPanelTongLuong panelBieuDoNew = new ChartPanelTongLuong(tongLuongList);
+			panelBieuDo.removeAll();
 	        panelGiua.remove(panelBieuDo);
 	        panelBieuDo = panelBieuDoNew;
 	        panelBieuDo.setBounds(10, 172, 647, 418);
 	        panelGiua.add(panelBieuDo);
-	        
+	        repaint();
+	        revalidate();
 	        PanelDanhSachNhanVien panelDSNV = new PanelDanhSachNhanVien(tongNV);
 	        panelGiua.remove(panelDanhSach);
 	        panelDanhSach = panelDSNV;
 	        panelDanhSach.setBounds(678, 11, 595, 579);
 	        panelGiua.add(panelDanhSach);
 
-	        
-	        revalidate();
 	        repaint();
+	        revalidate();
+	        
 		}
 		if(o.equals(btnSoLuongSanPham)){
+			btnThongKe.setBorder(new LineBorder(Color.WHITE, 2, true));
+			btnThongKe.setBorder(new LineBorder(Color.WHITE, 2, true));
 			int nam = Integer.parseInt(cboNam.getSelectedItem().toString());
 			DAO_TongSanPham dao_tongSP = new DAO_TongSanPham();
 			ArrayList<TongCongDoan> tongCD = dao_tongSP.getSoLuongSanPhamHoanThanh(nam);
 			ChartPanelTongCongDoan panelBieuDoNew = new ChartPanelTongCongDoan(tongCD);
+			panelBieuDo.removeAll();
 	        panelGiua.remove(panelBieuDo);
 	        panelBieuDo = panelBieuDoNew;
 	        panelBieuDo.setBounds(10, 172, 647, 418);
 	        panelGiua.add(panelBieuDo);
 	        
 			ArrayList<TongSanPham> tongSP = dao_tongSP.getTopSanPham(nam);
-			System.out.println(tongSP);
 	        PanelDanhSachSanPham panelSP = new PanelDanhSachSanPham(tongSP);
 	        panelGiua.remove(panelDanhSach);
 	        panelDanhSach = panelSP;
@@ -316,11 +297,24 @@ public class GUI_ThongKe extends JFrame implements ActionListener {
 	        repaint();
 			
 		}
-		
-
 	}
+	
+	
 
 	public void thayDoiMauCacPanelButtonKhiNgayHopLe() {
+		btnLuongNhanVien.setEnabled(true);
+		btnLuongCongNhan.setEnabled(true);
+		btnSoLuongSanPham.setEnabled(true);
+		
+		btnSoLuongSanPham.setBackground(new Color(220, 220, 220));
+		btnSoLuongSanPham.setBorder(new LineBorder(Color.WHITE, 1, true));
+		
+		btnLuongCongNhan.setBackground(new Color(220, 220, 220));
+		btnLuongCongNhan.setBorder(new LineBorder(Color.WHITE, 1, true));
+		
+		btnLuongNhanVien.setBackground(new Color(220, 220, 220));
+		btnLuongNhanVien.setBorder(new LineBorder(Color.WHITE, 1, true));
+		
 		btnLuongNhanVien.setBackground(new Color(116, 214, 128));
 		btnLuongNhanVien.setBorder(new LineBorder(Color.ORANGE, 2, true));
 		btnLuongNhanVien.setForeground(Color.BLACK);
@@ -332,32 +326,9 @@ public class GUI_ThongKe extends JFrame implements ActionListener {
 		btnSoLuongSanPham.setBackground(new Color(116, 214, 128));
 		btnSoLuongSanPham.setBorder(new LineBorder(Color.ORANGE, 2, true));
 		btnSoLuongSanPham.setForeground(Color.BLACK);
+		
 
-		btnLoiNhuanTheoNgay.setBackground(new Color(116, 214, 128));
-		btnLoiNhuanTheoNgay.setBorder(new LineBorder(Color.ORANGE, 2, true));
-		btnLoiNhuanTheoNgay.setForeground(Color.BLACK);
-	}
 
-	public void thayDoiMauCacPanelButtonKhiNgayBiLoi() {
-		panelTongHoaDon.setBackground(new Color(220, 220, 220));
-		panelTongHoaDon.setBorder(new LineBorder(Color.WHITE, 1, true));
-		lblTongHoaDon.setBackground(new Color(220, 220, 220));
-		lblTongHoaDon.setForeground(Color.LIGHT_GRAY);
-
-		panelTongSanPham.setBackground(new Color(220, 220, 220));
-		panelTongSanPham.setBorder(new LineBorder(Color.WHITE, 1, true));
-		lblTongSanPham.setBackground(new Color(220, 220, 220));
-		lblTongSanPham.setForeground(Color.LIGHT_GRAY);
-
-		panelTongThuNhapTheoNgay.setBackground(new Color(220, 220, 220));
-		panelTongThuNhapTheoNgay.setBorder(new LineBorder(Color.WHITE, 1, true));
-		lblTongThuNhapTheoNhay.setBackground(new Color(220, 220, 220));
-		lblTongThuNhapTheoNhay.setForeground(Color.LIGHT_GRAY);
-
-		panelLoiNhuanTheoNgay.setBackground(new Color(220, 220, 220));
-		panelLoiNhuanTheoNgay.setBorder(new LineBorder(Color.WHITE, 1, true));
-		lblLoiNhuanTheoNgay.setBackground(new Color(220, 220, 220));
-		lblLoiNhuanTheoNgay.setForeground(Color.LIGHT_GRAY);
 	}
 
 }

@@ -795,7 +795,6 @@ public class GUI_QuanLyNhanVienHanhChinh extends JFrame implements ActionListene
 		txtHeSoLuong.setText("");
 		txtTaiKhoan.setText("");
 		txtEmail.setText("");
-		lblError.setText("");
 	}
 	
 	

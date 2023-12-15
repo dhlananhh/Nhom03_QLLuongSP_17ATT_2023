@@ -380,7 +380,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 		for (SanPham sp : dsSP) {
 			modelSP.addRow(new Object[] {
-				sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon(), currencyFormatter.format(sp.getGiaThanh()),
+				sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon(), sp.getGiaThanh(),
 				sp.getTrangThai()==true?"Còn sản xuất":"Ngưng sản xuất"
 			});
 		}
@@ -392,7 +392,7 @@ public class GUI_QuanLySanPham extends JFrame implements ActionListener, MouseLi
 		soLuongCD = dsCD.size();
 		for (CongDoan cd : dsCD) {
 			modelCD.addRow(new Object[] {cd.getMaCD(), cd.getTenCD()
-					,currencyFormatter.format(cd.getLuongTheoSanPham()),
+					,cd.getLuongTheoSanPham(),
 					cd.getThuTu()});
 		}
 	}

@@ -68,7 +68,9 @@ public class GUI_DangNhap extends JFrame implements ActionListener {
 		tk_dao = new DAO_TaiKhoan();
 		try {
 			String fileName = "fonts/BeVietnamPro-Regular.ttf";
-			BVNPro = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(15f);
+			
+
+			BVNPro = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResourceAsStream("fonts/BeVietnamPro-Regular.ttf")).deriveFont(15f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(BVNPro);
 		} catch (IOException | FontFormatException e) {
@@ -141,7 +143,7 @@ public class GUI_DangNhap extends JFrame implements ActionListener {
 
 			{
 				try {
-					backgroundImage = ImageIO.read(new File("src/icons/loginLogo.png"));
+					backgroundImage = ImageIO.read(new File("icons/loginLogo.png"));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -211,6 +213,9 @@ public class GUI_DangNhap extends JFrame implements ActionListener {
             } else {
             	txtPassword.setEchoChar('*');
             }
+		} else if(o.equals(btnQuenMatKhau)) {
+			new GUI_QuenMatKhau().setVisible(true);
+			dispose();
 		}
 
 	}

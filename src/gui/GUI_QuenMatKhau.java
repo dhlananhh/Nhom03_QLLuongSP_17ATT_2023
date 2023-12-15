@@ -123,7 +123,7 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
 		b.add(b2);
 		b.add(Box.createRigidArea(new Dimension(0, 20)));
 		b.add(b3);
-		b.add(Box.createRigidArea(new Dimension(0, 20)));
+		b.add(Box.createRigidArea(new Dimension(0, 30)));
 		b.add(b35);
 		b.add(Box.createRigidArea(new Dimension(0, 20)));
 		b.add(b4);
@@ -207,10 +207,12 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
             	
             	if(tk_dao.doiMatKhau(tk, matKhauMoi)) {
                     JOptionPane.showMessageDialog(this, "Thay đổi thành công");
-                    this.setVisible(false);	
+                    dispose();
+                    new GUI_DangNhap().setVisible(true);
             	} else {
                     JOptionPane.showMessageDialog(this, "Có lỗi xảy ra, vui lòng thử lại sau");
                     this.setVisible(false);	
+                    new GUI_DangNhap().setVisible(true);
             	}
 
             }

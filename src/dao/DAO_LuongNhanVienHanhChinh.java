@@ -311,10 +311,10 @@ public class DAO_LuongNhanVienHanhChinh {
 		int soNgayDiLam = 0;
 		try {
 			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = 	"SELECT COUNT(DISTINCT ngayCham) AS SoNgayDiLam \r\n" +
+			String sql = 	"SELECT COUNT(DISTINCT ngayNghi) AS SoNgayDiLam \r\n" +
 							"FROM DiemDanh WHERE maNV = '" + maNhanVien + "'" + "\r\n" +  
-							"AND YEAR(ngayCham) = " + nam + "\r\n" +
-							"AND MONTH(ngayCham) = " + thang + "\r\n" +
+							"AND YEAR(ngayNghi) = " + nam + "\r\n" +
+							"AND MONTH(ngayNghi) = " + thang + "\r\n" +
 							"AND trangThai = N' ' \r\n";
 							
 			Statement statement = con.createStatement();
@@ -334,10 +334,10 @@ public class DAO_LuongNhanVienHanhChinh {
 		int soNgayNghi = 0;
 		try {
 			Connection con = ConnectDB.getInstance().getConnection();
-			String sql = 	"SELECT COUNT(DISTINCT ngayCham) AS SoNgayNghi \r\n" +
+			String sql = 	"SELECT COUNT(DISTINCT ngayNghi) AS SoNgayNghi \r\n" +
 							"FROM DiemDanh WHERE maNV = '" + maNhanVien + "'" + "\r\n" +  
-							"AND YEAR(ngayCham) = " + nam + "\r\n" +
-							"AND MONTH(ngayCham) = " + thang + "\r\n" +
+							"AND YEAR(ngayNghi) = " + nam + "\r\n" +
+							"AND MONTH(ngayNghi) = " + thang + "\r\n" +
 							"AND trangThai = N'K' \r\n";
 							
 			Statement statement = con.createStatement();

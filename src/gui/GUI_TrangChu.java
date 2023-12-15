@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -22,19 +23,22 @@ public class GUI_TrangChu extends javax.swing.JFrame {
 		initComponents();
 		showForm(new HomeForm().getParent());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-				
 		menu1.setEvent(new MenuEvent() {
 			@Override
 			public void selected(int index, int subIndex) {
 				if (index == 0) {
-					//showForm(new GUI_Background().getContentPane());
+					showForm(new GUI_ThongKe().getContentPane());
 				} else if (index == 1) {
 					switch (subIndex) {
 					case 1:
 						new GUI_ThayDoiMatKhau().setVisible(true);
 						break;
 					case 2:
-						System.exit(0);
+						int choice = JOptionPane.showConfirmDialog(null, "Bạn có muốn thoát chương trình không?", "Thoát chương trình",
+			                    JOptionPane.YES_NO_OPTION);
+						if (choice == JOptionPane.YES_OPTION) {
+			                System.exit(0); 
+			            }
 						break;
 					default:
 						break;
@@ -159,6 +163,7 @@ public class GUI_TrangChu extends javax.swing.JFrame {
 
 		// pack();
 		setLocationRelativeTo(null);
+		showForm(new GUI_ThongKe().getContentPane());
 	}
 
 	public static void main(String args[]) {
