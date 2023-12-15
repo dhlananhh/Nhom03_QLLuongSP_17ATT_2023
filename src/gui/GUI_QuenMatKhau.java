@@ -158,7 +158,6 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
         } else {
             String email = tk_dao.layEmailTheoTK(tk.getTenTK());
             OTP = tk_dao.sendEmail(email);
-            System.out.println(OTP);
         	JOptionPane.showMessageDialog(null, "Đã gửi mã OTP về địa chỉ email "+email.trim()+", hãy kiểm tra hộp thư của bạn!");
         	btnGetOTP.setEnabled(false);
         	txtOTP.setEditable(true);
@@ -197,7 +196,7 @@ public class GUI_QuenMatKhau extends JFrame implements ActionListener {
             	txtNhapLaiMKMoi.requestFocus();
             	return;
             }
-            if(!(txtOTP.getText().matches("\\d{6,6}")) && !(Integer.parseInt(txtOTP.getText()) == OTP)) {
+            if(!(Integer.parseInt(txtOTP.getText()) == OTP)) {
             	JOptionPane.showMessageDialog(this, "Mã OTP không đúng");
             	txtOTP.setText("");
             	txtOTP.requestFocus();
